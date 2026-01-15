@@ -15,8 +15,7 @@ return RectorConfig::configure()
     ->withSets([
         // PHP 8.2 features - toutes les améliorations PHP jusqu'à 8.2
         LevelSetList::UP_TO_PHP_82,
-        // Symfony 8 sets - règles spécifiques Symfony 8
-        SymfonySetList::SYMFONY_80,
+        // Symfony sets - règles spécifiques Symfony
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
         // Doctrine sets (si Doctrine est utilisé)
