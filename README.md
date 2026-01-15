@@ -76,6 +76,14 @@ Commandes principales :
 - `task start` : Démarre la stack Docker
 - `task stop` : Arrête la stack
 - `task console php` : Accède à la console PHP
+
+## 🤝 Contribution
+
+Avant de contribuer, veuillez lire le [Guide de Contribution](./CONTRIBUTING.md) qui contient :
+- Les conventions de commit (Conventional Commits)
+- Les règles de qualité du code
+- Le workflow de développement
+- Les outils et commandes disponibles
 - `task migration` : Exécute les migrations
 - `task run-tests` : Lance les tests
 - `task run-qa` : Lance tous les contrôles qualité

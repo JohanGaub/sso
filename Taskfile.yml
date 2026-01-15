@@ -481,35 +481,35 @@ tasks:
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/phpstan analyse
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/phpstan analyse
 
   phpstan:baseline:
     desc: Génère un baseline PHPStan pour ignorer les erreurs existantes
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/phpstan analyse --generate-baseline
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/phpstan analyse --generate-baseline
 
   rector:
     desc: Applique les corrections Rector automatiquement
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/rector process
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/rector process
 
   rector:dry-run:
     desc: Affiche les modifications Rector sans les appliquer
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/rector process --dry-run
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/rector process --dry-run
 
   rector:clear-cache:
     desc: Nettoie le cache Rector
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec php vendor/bin/rector clear-cache
+        docker compose $FILES exec -T php vendor/bin/rector clear-cache
 
   quality:
     desc: Lance PHPStan et Rector (dry-run) pour vérifier la qualité du code
