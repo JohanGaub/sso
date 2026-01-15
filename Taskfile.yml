@@ -495,21 +495,29 @@ tasks:
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/rector process
+        set +e
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/rector process 2>&1 | grep -v "Deprecated:" | grep -v "^$"
+        RECTOR_EXIT=${PIPESTATUS[0]}
+        set -e
+        exit $RECTOR_EXIT
 
   rector:dry-run:
     desc: Affiche les modifications Rector sans les appliquer
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/rector process --dry-run
+        set +e
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/rector process --dry-run 2>&1 | grep -v "Deprecated:" | grep -v "^$"
+        RECTOR_EXIT=${PIPESTATUS[0]}
+        set -e
+        exit $RECTOR_EXIT
 
   rector:clear-cache:
     desc: Nettoie le cache Rector
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -T php vendor/bin/rector clear-cache
+        docker compose $FILES exec -T php vendor/bin/rector clear-cache 2>&1 | grep -v "Deprecated:" | grep -v "^$" || true
 
   quality:
     desc: Lance PHPStan et Rector (dry-run) pour vérifier la qualité du code

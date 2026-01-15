@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Hook commit-msg : Valide le format du message de commit (Conventional Commits)
+# Affiche des messages clairs en cas d'erreur
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Pattern pour Conventional Commits
+# Format: <type>(<scope>): <description>
+# Types valides: feat, fix, docs, style, refactor, perf, test, chore, ci, build
+PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|ci|build)(\(.+\))?: .+"
+
+# Vérifier si le message correspond au pattern
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+    echo ""
+    echo "❌ Format de commit invalide !"
+    echo ""
+    echo "📋 Votre message :"
+    echo "   $COMMIT_MSG"
+    echo ""
+    echo "✅ Format attendu (Conventional Commits) :"
+    echo "   <type>(<scope>): <description>"
+    echo ""
+    echo "📝 Types valides :"
+    echo "   feat     : Nouvelle fonctionnalité"
+    echo "   fix      : Correction de bug"
+    echo "   docs     : Documentation"
+    echo "   style    : Formatage (pas de changement de code)"
+    echo "   refactor : Refactoring"
+    echo "   perf     : Amélioration de performance"
+    echo "   test     : Ajout/modification de tests"
+    echo "   chore    : Tâches de maintenance"
+    echo "   ci       : Configuration CI/CD"
+    echo "   build    : Système de build"
+    echo ""
+    echo "💡 Exemples valides :"
+    echo "   feat(quality): add PHPStan level max configuration"
+    echo "   fix(phpstan): exclude auto-generated reference.php"
+    echo "   docs: update CONTRIBUTING.md with commit conventions"
+    echo "   chore(docker): update docker-compose configuration"
+    echo ""
+    echo "🔗 Documentation complète : CONTRIBUTING.md"
+    echo ""
+    exit 1
+fi
+
+# Vérifier la longueur de la description (recommandation : max 72 caractères pour la première ligne)
+FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
+DESCRIPTION_LENGTH=$(echo "$FIRST_LINE" | sed -E 's/^[^:]+: //' | wc -c)
+
+if [ "$DESCRIPTION_LENGTH" -gt 73 ]; then
+    echo ""
+    echo "⚠️  Attention : La description est trop longue (${DESCRIPTION_LENGTH} caractères)"
+    echo "   Recommandation : maximum 72 caractères pour la première ligne"
+    echo ""
+    echo "   Votre message :"
+    echo "   $FIRST_LINE"
+    echo ""
+    echo "💡 Utilisez le corps du commit pour les détails :"
+    echo "   git commit -m \"type(scope): description courte\" -m \"Détails supplémentaires...\""
+    echo ""
+    # On ne bloque pas, juste un avertissement
+fi
+
+exit 0
+

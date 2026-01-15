@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Hook pre-commit : Vérifie la qualité du code avant le commit
+# Bloque le commit si PHPStan ou Rector détectent des problèmes
+
+echo "🔍 Vérification de la qualité du code avant le commit..."
+echo ""
+
+# Exécuter task quality (PHPStan + Rector dry-run)
+# Rediriger stderr pour masquer les warnings de dépréciation PHP 8.5 (normaux)
+if task quality 2>/dev/null; then
+    echo ""
+    echo "✅ Qualité du code validée !"
+    exit 0
+else
+    echo ""
+    echo "❌ Erreurs détectées par PHPStan ou Rector"
+    echo ""
+    echo "💡 Corrigez les erreurs avant de commiter :"
+    echo "   - Utilisez 'task phpstan' pour voir les erreurs PHPStan"
+    echo "   - Utilisez 'task rector:dry-run' pour voir les améliorations Rector"
+    echo "   - Utilisez 'task rector' pour appliquer les corrections automatiques"
+    echo ""
+    exit 1
+fi
+

@@ -60,5 +60,6 @@ var/cache/rector/
 ###< rector ###
 
 ###> phpstan/phpstan ###
-phpstan.neon
+# phpstan.neon est versionné (configuration du projet)
+# Seuls les baselines sont ignorés
 ###< phpstan/phpstan ###

@@ -1,0 +1,16 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+        - config
+    excludePaths:
+        - src/Kernel.php
+        - config/reference.php
+    symfony:
+        container_xml_path: '%rootDir%/../../../var/cache/dev/App_KernelDevDebugContainer.xml'
+    treatPhpDocTypesAsCertain: false
+    reportUnmatchedIgnoredErrors: true
