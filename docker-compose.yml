@@ -1,0 +1,127 @@
+networks:
+    public-dev:
+        name: public-dev
+        external: true
+    traefik-global-proxy:
+        name: traefik-global-proxy
+        external: true
+    back:
+        driver: bridge
+
+volumes:
+    database:
+    sf_var_cache:
+    sf_var_ci:
+
+services:
+    php:
+        container_name: ${COMPOSE_PROJECT_NAME}_php
+        restart: 'always'
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+            target: dev
+            args:
+                - XDEBUG_ENABLE=${XDEBUG_ENABLE}
+                - APP_ENV=${APP_ENV}
+        environment:
+            APP_ENV: ${APP_ENV}
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8
+            PHP_IDE_CONFIG: serverName=${APP_DOMAIN}
+            SYMFONY_CONTAINER_XML_PATH: ${SYMFONY_CONTAINER_XML_PATH}
+            HMR_SERVER_URL: https://theme-${APP_DOMAIN}
+        networks:
+            - back
+        depends_on:
+            - redis
+            - postgres
+        volumes:
+            - ./:/var/www/symfony
+            - ./docker/php/.bashrc:/root/.bashrc
+            - sf_var_cache:/var/www/symfony/var/cache:rw
+            - sf_var_ci:/var/www/symfony/var/ci:rw
+
+    nginx:
+        container_name: ${COMPOSE_PROJECT_NAME}_nginx
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+            target: base
+        depends_on:
+            - php
+        volumes:
+            - ./public:/var/www/symfony/public
+            - ./var:/var/www/symfony/var
+        networks:
+            - public-dev
+            - traefik-global-proxy
+            - back
+        labels:
+            - "traefik.enable=true"
+            - "traefik.port=80"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.rule=Host(`${APP_DOMAIN}`) || Host(`${APP_DOMAIN_DEVHOST}`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.tls=true"
+            - "traefik.docker.network=traefik-global-proxy"
+
+    postgres:
+        image: postgres:${DB_SERVER_VERSION}
+        restart: "always"
+        container_name: "${COMPOSE_PROJECT_NAME}_postgres"
+        volumes:
+            - database:/var/lib/postgresql/data/
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        ports:
+            - "5432:5432"
+        networks:
+            - back
+
+    redis:
+        image: redis:${REDIS_VERSION}
+        restart: "always"
+        container_name: "${COMPOSE_PROJECT_NAME}_redis"
+        networks:
+            - back
+
+    mailcatcher:
+        container_name: ${COMPOSE_PROJECT_NAME}_mailcatcher
+        image: schickling/mailcatcher
+        restart: 'always'
+        ports:
+            - "1080:1080"
+            - "1025:1025"
+        networks:
+            - back
+            - public-dev
+            - traefik-global-proxy
+        labels:
+            - "traefik.enable=true"
+            - "traefik.port=1080"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.rule=Host(`mail-${APP_DOMAIN}`) || Host(`mail-${APP_DOMAIN_DEVHOST}`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.entrypoints=websecure"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.tls=true"
+            - "traefik.docker.network=traefik-global-proxy"
+
+    adminer:
+        container_name: ${COMPOSE_PROJECT_NAME}_adminer
+        restart: 'always'
+        image: adminer:latest
+        depends_on:
+            - postgres
+        networks:
+            - public-dev
+            - traefik-global-proxy
+            - back
+        labels:
+            - "traefik.enable=true"
+            - "traefik.port=8080"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.rule=Host(`adminer-${APP_DOMAIN}`) || Host(`adminer-${APP_DOMAIN_DEVHOST}`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.entrypoints=websecure"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.tls=true"
+            - "traefik.docker.network=traefik-global-proxy"
+
+

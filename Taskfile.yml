@@ -1,0 +1,449 @@
+version: '3'
+
+# Variables globales
+vars:
+  OS:
+    sh: uname -s
+  DOCKER_COMPOSE_FILES:
+    sh: |
+      FILES="-f docker-compose.yml"
+      OS=$(uname -s)
+      if [ -f "docker-compose-${OS}.yml" ]; then
+        FILES="$FILES -f docker-compose-${OS}.yml"
+      fi
+      if [ -f "docker-compose-local.yml" ]; then
+        FILES="$FILES -f docker-compose-local.yml"
+      fi
+      echo $FILES
+
+tasks:
+  default:
+    desc: Affiche l'aide avec toutes les tâches disponibles
+    cmds:
+      - task --list
+
+  # ============================================================================
+  # Docker 🐳
+  # ============================================================================
+
+  check-env:
+    desc: Vérifie et ajoute les variables Docker manquantes dans .env
+    cmds:
+      - |
+        if [ ! -f .env ]; then
+          echo "❌ Le fichier .env n'existe pas"
+          exit 1
+        fi
+        echo "🔍 Vérification des variables Docker dans .env..."
+        MISSING=0
+        if ! grep -q "^COMPOSE_PROJECT_NAME=" .env && ! grep -q "^# COMPOSE_PROJECT_NAME=" .env; then
+          echo "⚠️  COMPOSE_PROJECT_NAME manquant"
+          MISSING=1
+        fi
+        if ! grep -q "^APP_DOMAIN=" .env && ! grep -q "^# APP_DOMAIN=" .env; then
+          echo "⚠️  APP_DOMAIN manquant"
+          MISSING=1
+        fi
+        if ! grep -q "^DOCKER_DEV_HOST_PATH=" .env && ! grep -q "^# DOCKER_DEV_HOST_PATH=" .env; then
+          echo "⚠️  DOCKER_DEV_HOST_PATH manquant"
+          MISSING=1
+        fi
+        if [ $MISSING -eq 0 ]; then
+          echo "✅ Toutes les variables Docker essentielles sont présentes"
+        else
+          echo ""
+          echo "💡 Ajoutez ces variables à la fin de votre .env :"
+          echo ""
+          echo "###> docker ###"
+          echo "COMPOSE_PROJECT_NAME=sso"
+          echo "APP_DOMAIN=sso.docker.localhost"
+          echo "APP_DOMAIN_DEVHOST=sso.docker.devhost"
+          echo "DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host"
+          echo "DB_SERVER_VERSION=16"
+          echo "DB_USER=symfony"
+          echo "DB_PASSWORD=your-db-password-here"
+          echo "DB_NAME=symfony"
+          echo "REDIS_VERSION=7-alpine"
+          echo "XDEBUG_ENABLE=1"
+          echo "SYMFONY_CONTAINER_XML_PATH="
+          echo "###< docker ###"
+          echo ""
+          echo "💡 La DATABASE_URL sera construite automatiquement par docker-compose.yml à partir de DB_USER, DB_PASSWORD, DB_NAME et DB_SERVER_VERSION"
+          echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@postgres:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
+        fi
+
+  ensure-docker-dev-host:
+    desc: Vérifie et démarre docker-dev-host si nécessaire
+    cmds:
+      - |
+        echo "🔍 Vérification de docker-dev-host..."
+        # Charger la variable depuis .env si elle existe
+        if [ -f .env ]; then
+          export $(grep -v '^#' .env | grep DOCKER_DEV_HOST_PATH | xargs) 2>/dev/null || true
+        fi
+        DOCKER_DEV_HOST_PATH="${DOCKER_DEV_HOST_PATH:-/home/jgaub@niji.fr/Public/Project/docker-dev-host}"
+
+        # Vérifier si traefik est en cours d'exécution
+        TRAEFIK_RUNNING=$(docker ps -q -f name=^traefik$)
+        if [ -z "$TRAEFIK_RUNNING" ]; then
+          # Vérifier si le conteneur existe mais est arrêté
+          TRAEFIK_EXISTS=$(docker ps -aq -f name=^traefik$)
+          if [ -n "$TRAEFIK_EXISTS" ]; then
+            echo "⚠️  Le conteneur traefik existe mais n'est pas démarré. Démarrage..."
+            docker start traefik || true
+            # Attendre un peu que traefik démarre
+            sleep 2
+          else
+            echo "⚠️  docker-dev-host n'est pas démarré. Démarrage en cours..."
+            if [ ! -d "$DOCKER_DEV_HOST_PATH" ]; then
+              echo "❌ Erreur : docker-dev-host introuvable dans $DOCKER_DEV_HOST_PATH"
+              echo "   Veuillez définir la variable DOCKER_DEV_HOST_PATH dans votre .env"
+              exit 1
+            fi
+            if [ ! -f "$DOCKER_DEV_HOST_PATH/Makefile" ]; then
+              echo "❌ Erreur : Makefile introuvable dans $DOCKER_DEV_HOST_PATH"
+              echo "   Vérifiez que le chemin DOCKER_DEV_HOST_PATH est correct"
+              exit 1
+            fi
+            cd "$DOCKER_DEV_HOST_PATH" && make start
+          fi
+          echo "✅ docker-dev-host démarré"
+        else
+          echo "✅ docker-dev-host est déjà démarré"
+        fi
+        # Vérifier que les réseaux existent
+        if ! docker network ls --format '{{.Name}}' | grep -q '^public-dev$'; then
+          echo "⚠️  Le réseau public-dev n'existe pas. Création..."
+          docker network create public-dev || true
+        fi
+        if ! docker network ls --format '{{.Name}}' | grep -q '^traefik-global-proxy$'; then
+          echo "⚠️  Le réseau traefik-global-proxy n'existe pas. Création..."
+          docker network create traefik-global-proxy || true
+        fi
+        echo "✅ Réseaux Docker vérifiés"
+
+  start:
+    desc: Démarre la stack de développement (build + force-recreate)
+    deps: [ensure-docker-dev-host]
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES up -d --force-recreate --build --remove-orphans
+
+  launch:
+    desc: Démarre la stack de développement (simple)
+    deps: [ensure-docker-dev-host]
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES up -d
+
+  stop:
+    desc: Arrête la stack de développement
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES stop
+
+  restart:
+    desc: Redémarre la stack de développement
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES restart
+
+  kill:
+    desc: Tue tous les conteneurs Docker et supprime les volumes
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES kill
+        docker compose $FILES down --volumes --remove-orphans
+
+  # ============================================================================
+  # Base de données
+  # ============================================================================
+
+  create-db:
+    desc: Crée la base de données (supprime l'existante)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console doctrine:database:drop --force
+        docker compose $FILES exec php bin/console doctrine:database:create
+
+  migration:
+    desc: Exécute les migrations Doctrine
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console doctrine:migrations:migrate --no-interaction
+
+  load-default-data:
+    desc: Charge les données par défaut (langues, pays, utilisateurs)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console app:fixtures:inserer-langues
+        docker compose $FILES exec php bin/console app:fixtures:inserer-pays
+        docker compose $FILES exec php bin/console app:fixtures:inserer-utilisateurs
+
+  load-fixtures:
+    desc: Charge les fixtures Doctrine complètes
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console doctrine:fixtures:load --no-interaction
+
+  data:
+    desc: Processus complet (create-db + migration + load-fixtures)
+    deps: [create-db, migration, load-fixtures]
+
+  # ============================================================================
+  # Installation et configuration
+  # ============================================================================
+
+  install:
+    desc: Build et démarre la stack + build du thème
+    deps: [start, theme-build]
+
+  setup:
+    desc: Installation complète du projet (install + create-db + migration + load-fixtures)
+    deps: [install, create-db, migration, load-fixtures]
+
+  update:
+    desc: Met à jour le projet (theme-build + composer install + migration)
+    cmds:
+      - task: theme-build
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php composer install
+      - task: migration
+
+  # ============================================================================
+  # Utilitaires
+  # ============================================================================
+
+  console:
+    desc: "Ouvre une console dans le conteneur spécifié. Usage: CLI_ARGS=php task console"
+    cmds:
+      - 'docker compose {{.DOCKER_COMPOSE_FILES}} exec {{.CLI_ARGS}} bash'
+    vars:
+      CLI_ARGS:
+        sh: echo "${CLI_ARGS:-php}"
+
+  logs:
+    desc: "Affiche les logs du conteneur. Usage: CLI_ARGS=php task logs"
+    cmds:
+      - 'docker compose {{.DOCKER_COMPOSE_FILES}} logs --tail="100" -t -f {{.CLI_ARGS}}'
+    vars:
+      CLI_ARGS:
+        sh: echo "${CLI_ARGS:-}"
+
+  cc:
+    desc: Vide le cache Symfony
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console cache:clear
+
+  update-permissions:
+    desc: Corrige les permissions des fichiers (tous les fichiers)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php chown 1000:1000 -R .
+
+  fix-config-permissions:
+    desc: Corrige les permissions des fichiers de configuration pour Git (.gitignore, composer.json, config/reference.php, etc.)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        echo "🔒 Correction des permissions des fichiers de configuration pour Git..."
+        docker compose $FILES exec php sh -c "
+          CONFIG_FILES='.gitignore composer.json composer.lock symfony.lock .env.example Taskfile.yml'
+          CONFIG_DIR_FILES='config/reference.php'
+          HOST_UID=$(id -u)
+          if command -v setfacl >/dev/null 2>&1; then
+            # Permissions pour le répertoire config/ (CRITIQUE pour Git)
+            setfacl -m u:www-data:rwX -m u:1000:rwX -m u:\$HOST_UID:rwX config/ 2>/dev/null || true
+            setfacl -dR -m u:www-data:rwX -m u:1000:rwX -m u:\$HOST_UID:rwX config/ 2>/dev/null || true
+            chown 1000:1000 config/ 2>/dev/null || true
+            chmod 775 config/ 2>/dev/null || true
+            # Permissions pour les fichiers de configuration
+            for file in \$CONFIG_FILES \$CONFIG_DIR_FILES; do
+              if [ -f \"\$file\" ]; then
+                setfacl -m u:www-data:rw -m u:1000:rw -m u:\$HOST_UID:rw -m g::rw -m o::r \"\$file\" 2>/dev/null || true
+                chown 1000:1000 \"\$file\" 2>/dev/null || true
+              fi
+            done
+            echo '✅ Permissions corrigées avec setfacl (ACL pour votre utilisateur et répertoire config/)'
+          else
+            # Permissions pour le répertoire config/ (CRITIQUE pour Git)
+            chmod 777 config/ 2>/dev/null || true
+            chown 1000:1000 config/ 2>/dev/null || true
+            # Permissions pour les fichiers de configuration
+            for file in \$CONFIG_FILES \$CONFIG_DIR_FILES; do
+              if [ -f \"\$file\" ]; then
+                chmod 666 \"\$file\" 2>/dev/null || true
+                chown 1000:1000 \"\$file\" 2>/dev/null || true
+              fi
+            done
+            echo '✅ Permissions corrigées avec chmod (mode 777 pour config/, 666 pour fichiers)'
+          fi
+        "
+
+  # ============================================================================
+  # Tests unitaires
+  # ============================================================================
+
+  pre-run-tests:
+    desc: Prépare l'environnement de test
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console cache:clear --env=test
+        docker compose $FILES exec php bin/console doctrine:database:drop --if-exists --force --env=test || true
+        docker compose $FILES exec php bin/console doctrine:database:create --env=test
+        docker compose $FILES exec php bin/console doctrine:migrations:migrate -n --env=test
+        docker compose $FILES exec php bin/console doctrine:fixtures:load -n --env=test
+
+  run-tests:
+    desc: "Lance les tests unitaires. Usage: task run-tests [TestName]"
+    deps: [pre-run-tests]
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        if [ -n "${CLI_ARGS}" ]; then
+          docker compose $FILES exec -e APP_ENV=test -e XDEBUG_MODE=off php ./bin/phpunit --filter ${CLI_ARGS}
+        else
+          docker compose $FILES exec -e APP_ENV=test -e XDEBUG_MODE=off php ./bin/phpunit
+        fi
+
+  run-tests-with-debug:
+    desc: Lance les tests avec Xdebug activé
+    deps: [pre-run-tests]
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e APP_ENV=test php bin/phpunit
+
+  run-tests-with-coverage:
+    desc: Lance les tests avec couverture de code (HTML dans var/coverage)
+    deps: [pre-run-tests]
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e XDEBUG_MODE=coverage php bin/phpunit --coverage-html=var/coverage --coverage-clover=coverage.xml
+
+  # ============================================================================
+  # Qualité de code
+  # ============================================================================
+
+  security-check:
+    desc: Vérifie les vulnérabilités de sécurité
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm security --exit-code 1 fs --scanners vuln /app
+
+  phpinsights:
+    desc: Lance l'analyse PHP Insights
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php vendor/bin/phpinsights
+
+  phpinsights-silent:
+    desc: Exporte PHP Insights dans un fichier txt
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php vendor/bin/phpinsights -n -v > phpinsights-$(date +%F).txt
+
+  run-qa:
+    desc: Lance tous les contrôles qualité (finalize-classes, rector, php-cs-fixer, phpstan, doctrine:schema:validate, security-check)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/swiss-knife finalize-classes src tests
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/rector process --config rector.php
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/php-cs-fixer fix --config .php-cs-fixer.dist.php --diff
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/phpstan analyse --configuration phpstan.dist.neon --memory-limit=-1
+        docker compose $FILES exec php bin/console doctrine:schema:validate
+        docker compose $FILES -f docker-compose-tools.yml run --rm security --exit-code 1 fs --scanners vuln /app
+
+  # ============================================================================
+  # Thème/Frontend
+  # ============================================================================
+
+  theme:
+    desc: "Exécute une commande dans le conteneur Node. Usage: task theme \"node -v\""
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme ${CLI_ARGS}
+
+  theme-install:
+    desc: Installe les dépendances npm
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm install
+
+  theme-lint:
+    desc: Vérifie la syntaxe des fichiers SCSS et JS
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm run lint
+
+  theme-fix:
+    desc: Corrige automatiquement les erreurs de style
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm run fix
+
+  theme-dev:
+    desc: Build et lance le thème en mode développement
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm run dev
+
+  theme-build:
+    desc: Build le thème pour la production
+    deps: [theme-install]
+    cmds:
+      - task: theme-fix
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm run build
+      - task: cc
+
+  theme-audit:
+    desc: Audit npm packages pour les vulnérabilités
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm audit
+
+  theme-outdated:
+    desc: Liste les packages npm obsolètes
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES -f docker-compose-tools.yml run --rm theme npm outdated
+
+  # ============================================================================
+  # Messenger
+  # ============================================================================
+
+  run-messenger:
+    desc: "Lance Symfony Messenger. Usage: task run-messenger [worker...]. Défaut: async"
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php bin/console messenger:consume ${CLI_ARGS:-async}
+

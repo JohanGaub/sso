@@ -1,0 +1,68 @@
+networks:
+    public-dev:
+        name: public-dev
+        external: true
+    traefik-global-proxy:
+        name: traefik-global-proxy
+        external: true
+    back:
+        driver: bridge
+
+volumes:
+    database:
+    sf_var_cache:
+    sf_var_ci:
+
+services:
+    theme:
+        container_name: ${COMPOSE_PROJECT_NAME}_theme
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+            target: ci
+        user: root
+        working_dir: /app
+        environment:
+            APP_DOMAIN: ${APP_DOMAIN}
+        volumes:
+            - ./:/app
+        networks:
+            - public-dev
+            - traefik-global-proxy
+        labels:
+            traefik.enable: "true"
+            traefik.docker.network: "traefik-global-proxy"
+            traefik.http.routers.vite.rule: "Host(`theme-${APP_DOMAIN}`)"
+            traefik.http.routers.vite.service: "vite"
+            traefik.http.routers.vite.tls: "true"
+            traefik.http.services.vite.loadbalancer.server.port: "5173"
+
+    security:
+        container_name: ${COMPOSE_PROJECT_NAME}_security
+        image: aquasec/trivy:latest
+        working_dir: /app
+        volumes:
+            - ./:/app
+            - ${HOME}/.trivy/.cache:/root/.cache/
+
+    ci_rector_phpstan:
+        container_name: ${COMPOSE_PROJECT_NAME}_ci
+        build:
+            context: .
+            dockerfile: ./docker/php/Dockerfile
+            target: ci
+        environment:
+            XDEBUG_ENABLE: off
+            APP_ENV: dev
+            SYMFONY_CONTAINER_XML_PATH: ${SYMFONY_CONTAINER_XML_PATH}
+        networks:
+            - public-dev
+            - traefik-global-proxy
+            - back
+        volumes:
+            - ./:/var/www/symfony
+            - ./docker/php/.bashrc:/root/.bashrc
+            - sf_var_cache:/var/www/symfony/var/cache:rw
+            - sf_var_ci:/var/www/symfony/var/ci:rw
+
+
