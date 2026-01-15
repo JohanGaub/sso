@@ -40,10 +40,6 @@ tasks:
           echo "⚠️  COMPOSE_PROJECT_NAME manquant"
           MISSING=1
         fi
-        if ! grep -q "^APP_DOMAIN=" .env && ! grep -q "^# APP_DOMAIN=" .env; then
-          echo "⚠️  APP_DOMAIN manquant"
-          MISSING=1
-        fi
         if ! grep -q "^DOCKER_DEV_HOST_PATH=" .env && ! grep -q "^# DOCKER_DEV_HOST_PATH=" .env; then
           echo "⚠️  DOCKER_DEV_HOST_PATH manquant"
           MISSING=1
@@ -56,8 +52,8 @@ tasks:
           echo ""
           echo "###> docker ###"
           echo "COMPOSE_PROJECT_NAME=sso"
-          echo "APP_DOMAIN=sso.docker.localhost"
-          echo "APP_DOMAIN_DEVHOST=sso.docker.devhost"
+          echo "# APP_DOMAIN est construit automatiquement : \${COMPOSE_PROJECT_NAME}.docker.localhost"
+          echo "# APP_DOMAIN_DEVHOST est construit automatiquement : \${COMPOSE_PROJECT_NAME}.docker.devhost"
           echo "DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host"
           echo "DB_SERVER_VERSION=16"
           echo "DB_USER=symfony"
@@ -122,6 +118,30 @@ tasks:
         fi
         echo "✅ Réseaux Docker vérifiés"
 
+  show-urls:
+    desc: Affiche les URLs du projet (tâche interne)
+    internal: true
+    cmds:
+      - |
+        # Attendre que les conteneurs soient prêts
+        sleep 2
+        # Récupérer COMPOSE_PROJECT_NAME depuis .env ou utiliser le nom du dossier
+        if [ -f .env ]; then
+          PROJECT_NAME=$(grep "^COMPOSE_PROJECT_NAME=" .env | cut -d'=' -f2 | tr -d '"' | tr -d "'" || basename "$(pwd)")
+        else
+          PROJECT_NAME=$(basename "$(pwd)")
+        fi
+        APP_URL="https://${PROJECT_NAME}.docker.localhost"
+        echo ""
+        echo "✅ Stack démarrée avec succès !"
+        echo ""
+        echo "🌐 Accédez à votre application :"
+        echo "   ${APP_URL}"
+        echo ""
+        echo "📧 MailCatcher : https://mail-${PROJECT_NAME}.docker.localhost"
+        echo "🗄️  Adminer : https://adminer-${PROJECT_NAME}.docker.localhost"
+        echo ""
+
   start:
     desc: Démarre la stack de développement (build + force-recreate)
     deps: [ensure-docker-dev-host]
@@ -129,6 +149,7 @@ tasks:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES up -d --force-recreate --build --remove-orphans
+      - task: show-urls
 
   launch:
     desc: Démarre la stack de développement (simple)
@@ -137,6 +158,7 @@ tasks:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES up -d
+      - task: show-urls
 
   stop:
     desc: Arrête la stack de développement
@@ -152,13 +174,106 @@ tasks:
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES restart
 
-  kill:
-    desc: Tue tous les conteneurs Docker et supprime les volumes
+  # ============================================================================
+  # Nettoyage Docker 🧹
+  # ============================================================================
+
+  clean:
+    desc: |
+      Nettoyage simple : arrête et supprime les conteneurs (sans volumes)
+      ✅ Sûr : conserve les données de la base de données
+      📦 Utilisez cette commande pour redémarrer proprement sans perdre de données
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES kill
-        docker compose $FILES down --volumes --remove-orphans
+        echo "🧹 Nettoyage simple des conteneurs..."
+        docker compose $FILES stop
+        docker compose $FILES down --remove-orphans
+        echo "✅ Conteneurs arrêtés et supprimés (volumes conservés)"
+
+  clean:volumes:
+    desc: |
+      Nettoyage avec volumes : supprime conteneurs ET volumes
+      ⚠️  ATTENTION : Supprime les données de la base de données
+      📦 Utilisez cette commande pour repartir de zéro avec une base vide
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        echo "🧹 Nettoyage avec volumes (⚠️  données de la DB seront supprimées)..."
+        docker compose $FILES stop
+        docker compose $FILES down -v --remove-orphans
+        echo "✅ Conteneurs et volumes supprimés"
+
+  clean:images:
+    desc: |
+      Nettoyage des images : supprime les images buildées du projet
+      📦 Utilisez cette commande pour forcer le rebuild des images
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        echo "🧹 Nettoyage des images buildées..."
+        docker compose $FILES down --rmi local --remove-orphans
+        echo "✅ Images buildées supprimées"
+
+  clean:all:
+    desc: |
+      Nettoyage complet : conteneurs + volumes + images buildées
+      ⚠️  ATTENTION : Supprime tout (conteneurs, volumes, images)
+      📦 Utilisez cette commande pour un nettoyage total avant rebuild
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        echo "🧹 Nettoyage complet (conteneurs + volumes + images)..."
+        docker compose $FILES stop
+        docker compose $FILES down -v --rmi local --remove-orphans
+        echo "✅ Nettoyage complet terminé"
+
+  clean:cache:
+    desc: |
+      Nettoyage du cache Docker BuildKit
+      📦 Utilisez cette commande si vous avez des problèmes de build
+    cmds:
+      - |
+        echo "🧹 Nettoyage du cache Docker BuildKit..."
+        docker builder prune -f
+        echo "✅ Cache BuildKit nettoyé"
+
+  clean:system:
+    desc: |
+      Nettoyage système Docker (TOUS les projets)
+      ⚠️  ATTENTION : Supprime TOUT Docker (tous les projets, images, volumes non utilisés)
+      📦 Utilisez avec EXTREME PRUDENCE, uniquement si vous voulez nettoyer tout Docker
+    cmds:
+      - |
+        echo "⚠️  ATTENTION : Cette commande va nettoyer TOUT Docker (tous les projets)"
+        echo "   Appuyez sur Ctrl+C pour annuler, ou attendez 5 secondes..."
+        sleep 5
+        echo "🧹 Nettoyage système Docker..."
+        docker system prune -a --volumes -f
+        echo "✅ Nettoyage système terminé"
+
+  clean:check:
+    desc: |
+      Vérifie l'état des conteneurs, volumes et images du projet
+      📦 Utilisez cette commande pour voir ce qui existe avant nettoyage
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        echo "🔍 État des conteneurs du projet :"
+        docker compose $FILES ps -a || echo "   Aucun conteneur"
+        echo ""
+        echo "🔍 Volumes du projet :"
+        docker volume ls | grep -E "$(docker compose $FILES config --volumes 2>/dev/null | tr '\n' '|' | sed 's/|$//')" || echo "   Aucun volume spécifique"
+        echo ""
+        echo "🔍 Images buildées du projet :"
+        docker images | grep -E "$(basename $(pwd))|sso" || echo "   Aucune image spécifique"
+
+  kill:
+    desc: |
+      Alias vers clean:volumes (compatibilité)
+      ⚠️  Supprime conteneurs ET volumes (données de la DB seront supprimées)
+    cmds:
+      - task: clean:volumes
 
   # ============================================================================
   # Base de données
@@ -360,6 +475,47 @@ tasks:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES exec php vendor/bin/phpinsights -n -v > phpinsights-$(date +%F).txt
+
+  phpstan:
+    desc: Lance l'analyse PHPStan (niveau max)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/phpstan analyse
+
+  phpstan:baseline:
+    desc: Génère un baseline PHPStan pour ignorer les erreurs existantes
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/phpstan analyse --generate-baseline
+
+  rector:
+    desc: Applique les corrections Rector automatiquement
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/rector process
+
+  rector:dry-run:
+    desc: Affiche les modifications Rector sans les appliquer
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -e XDEBUG_MODE=off php vendor/bin/rector process --dry-run
+
+  rector:clear-cache:
+    desc: Nettoie le cache Rector
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec php vendor/bin/rector clear-cache
+
+  quality:
+    desc: Lance PHPStan et Rector (dry-run) pour vérifier la qualité du code
+    cmds:
+      - task: phpstan
+      - task: rector:dry-run
 
   run-qa:
     desc: Lance tous les contrôles qualité (finalize-classes, rector, php-cs-fixer, phpstan, doctrine:schema:validate, security-check)

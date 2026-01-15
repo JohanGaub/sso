@@ -16,7 +16,6 @@ echo "🔍 Vérification des variables Docker dans .env..."
 # Variables Docker requises
 REQUIRED_VARS=(
     "COMPOSE_PROJECT_NAME"
-    "APP_DOMAIN"
     "DOCKER_DEV_HOST_PATH"
     "DB_SERVER_VERSION"
     "DB_USER"
@@ -73,8 +72,8 @@ else
     echo ""
     echo "###> docker ###"
     echo "COMPOSE_PROJECT_NAME=sso"
-    echo "APP_DOMAIN=sso.docker.localhost"
-    echo "APP_DOMAIN_DEVHOST=sso.docker.devhost"
+    echo "# APP_DOMAIN est construit automatiquement : \${COMPOSE_PROJECT_NAME}.docker.localhost"
+    echo "# APP_DOMAIN_DEVHOST est construit automatiquement : \${COMPOSE_PROJECT_NAME}.docker.devhost"
     echo "DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host"
     echo "DB_SERVER_VERSION=16"
     echo "DB_USER=symfony"

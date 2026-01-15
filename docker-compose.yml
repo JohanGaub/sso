@@ -29,9 +29,10 @@ services:
             REDIS_HOST: redis
             REDIS_PORT: 6379
             DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8
-            PHP_IDE_CONFIG: serverName=${APP_DOMAIN}
+            PHP_IDE_CONFIG: serverName=${COMPOSE_PROJECT_NAME}.docker.localhost
             SYMFONY_CONTAINER_XML_PATH: ${SYMFONY_CONTAINER_XML_PATH}
-            HMR_SERVER_URL: https://theme-${APP_DOMAIN}
+            HMR_SERVER_URL: https://theme-${COMPOSE_PROJECT_NAME}.docker.localhost
+            DEFAULT_URI: http://${COMPOSE_PROJECT_NAME}.docker.localhost
         networks:
             - back
         depends_on:
@@ -61,7 +62,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.port=80"
-            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.rule=Host(`${APP_DOMAIN}`) || Host(`${APP_DOMAIN_DEVHOST}`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.rule=Host(`${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`${COMPOSE_PROJECT_NAME}.docker.devhost`)"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.tls=true"
             - "traefik.docker.network=traefik-global-proxy"
 
@@ -101,7 +102,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.port=1080"
-            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.rule=Host(`mail-${APP_DOMAIN}`) || Host(`mail-${APP_DOMAIN_DEVHOST}`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.rule=Host(`mail-${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`mail-${COMPOSE_PROJECT_NAME}.docker.devhost`)"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.entrypoints=websecure"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.tls=true"
             - "traefik.docker.network=traefik-global-proxy"
@@ -119,7 +120,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.port=8080"
-            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.rule=Host(`adminer-${APP_DOMAIN}`) || Host(`adminer-${APP_DOMAIN_DEVHOST}`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.rule=Host(`adminer-${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`adminer-${COMPOSE_PROJECT_NAME}.docker.devhost`)"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.entrypoints=websecure"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.tls=true"
             - "traefik.docker.network=traefik-global-proxy"

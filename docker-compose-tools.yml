@@ -23,7 +23,7 @@ services:
         user: root
         working_dir: /app
         environment:
-            APP_DOMAIN: ${APP_DOMAIN}
+            APP_DOMAIN: ${COMPOSE_PROJECT_NAME}.docker.localhost
         volumes:
             - ./:/app
         networks:
@@ -32,7 +32,7 @@ services:
         labels:
             traefik.enable: "true"
             traefik.docker.network: "traefik-global-proxy"
-            traefik.http.routers.vite.rule: "Host(`theme-${APP_DOMAIN}`)"
+            traefik.http.routers.vite.rule: "Host(`theme-${COMPOSE_PROJECT_NAME}.docker.localhost`)"
             traefik.http.routers.vite.service: "vite"
             traefik.http.routers.vite.tls: "true"
             traefik.http.services.vite.loadbalancer.server.port: "5173"
