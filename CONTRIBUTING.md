@@ -7,7 +7,7 @@ Ce document décrit les conventions et les bonnes pratiques pour contribuer à c
 - [Conventions de Commit](#-conventions-de-commit)
 - [Qualité du Code](#-qualité-du-code)
 - [Workflow de Développement](#-workflow-de-développement)
-- [Outils et Commandes](#️-outils-et-commandes)
+- [Outils et Commandes](#-outils-et-commandes)
 
 ---
 
