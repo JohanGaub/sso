@@ -63,3 +63,8 @@ var/cache/rector/
 # phpstan.neon est versionné (configuration du projet)
 # Seuls les baselines sont ignorés
 ###< phpstan/phpstan ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###

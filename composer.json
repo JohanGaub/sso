@@ -15,10 +15,11 @@
         "symfony/yaml": "8.*"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.11",
-        "phpstan/phpstan-symfony": "^1.3",
-        "phpstan/phpstan-doctrine": "^1.3",
-        "rector/rector": "^1.0"
+        "phpstan/phpstan": "^2.1.33",
+        "phpstan/phpstan-symfony": "^2.0.9",
+        "phpstan/phpstan-doctrine": "^2.0.12",
+        "rector/rector": "^2.3.1",
+        "friendsofphp/php-cs-fixer": "^3.92.5"
     },
     "config": {
         "allow-plugins": {
@@ -65,7 +66,10 @@
         "rector": "rector process",
         "rector:dry-run": "rector process --dry-run",
         "rector:clear-cache": "rector clear-cache",
+        "php-cs-fixer": "php-cs-fixer fix",
+        "php-cs-fixer:dry-run": "php-cs-fixer fix --dry-run --diff",
         "quality": [
+            "@php-cs-fixer:dry-run",
             "@phpstan",
             "@rector:dry-run"
         ]

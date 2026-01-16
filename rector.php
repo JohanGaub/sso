@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Symfony\Set\SymfonySetList;
-use Rector\Doctrine\Set\DoctrineSetList;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -21,7 +21,6 @@ return RectorConfig::configure()
         // Doctrine sets (si Doctrine est utilisé)
         DoctrineSetList::DOCTRINE_CODE_QUALITY,
         DoctrineSetList::DOCTRINE_DBAL_30,
-        DoctrineSetList::DOCTRINE_ORM_29,
     ])
     ->withSkip([
         // Skip Kernel.php car généré automatiquement
@@ -29,4 +28,3 @@ return RectorConfig::configure()
     ])
     ->withParallel()
     ->withCache(__DIR__ . '/var/cache/rector');
-

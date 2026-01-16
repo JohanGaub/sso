@@ -519,12 +519,39 @@ tasks:
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES exec -T php vendor/bin/rector clear-cache 2>&1 | grep -v "Deprecated:" | grep -v "^$" || true
 
-  quality:
-    desc: Lance PHPStan et Rector (dry-run) pour vérifier la qualité du code
+  php-cs-fixer:
+    desc: Corrige automatiquement le style du code avec PHP CS Fixer
     cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php
+
+  php-cs-fixer:dry-run:
+    desc: Affiche les modifications de style sans les appliquer
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php --dry-run --diff
+
+  php-cs-fixer:clear-cache:
+    desc: Nettoie le cache PHP CS Fixer
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -T php vendor/bin/php-cs-fixer cache-clear || true
+
+  quality:
+    desc: Lance PHP CS Fixer (dry-run), PHPStan et Rector (dry-run) pour vérifier la qualité du code
+    cmds:
+      - task: check-tools-versions
+      - task: php-cs-fixer:dry-run
       - task: phpstan
       - task: rector:dry-run
 
+  check-tools-versions:
+    desc: Vérifie que les outils de qualité sont à jour avec les dernières versions
+    cmds:
+      - bash scripts/check-tools-versions.sh
   run-qa:
     desc: Lance tous les contrôles qualité (finalize-classes, rector, php-cs-fixer, phpstan, doctrine:schema:validate, security-check)
     cmds:
