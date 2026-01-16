@@ -425,14 +425,13 @@ tasks:
 
   run-tests:
     desc: "Lance les tests unitaires. Usage: task run-tests [TestName]"
-    deps: [pre-run-tests]
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         if [ -n "${CLI_ARGS}" ]; then
-          docker compose $FILES exec -e APP_ENV=test -e XDEBUG_MODE=off php ./bin/phpunit --filter ${CLI_ARGS}
+          docker compose $FILES exec -T -e APP_ENV=test -e XDEBUG_MODE=off php bin/phpunit --filter ${CLI_ARGS}
         else
-          docker compose $FILES exec -e APP_ENV=test -e XDEBUG_MODE=off php ./bin/phpunit
+          docker compose $FILES exec -T -e APP_ENV=test -e XDEBUG_MODE=off php bin/phpunit
         fi
 
   run-tests-with-debug:
@@ -441,7 +440,7 @@ tasks:
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -e APP_ENV=test php bin/phpunit
+        docker compose $FILES exec -T -e APP_ENV=test php bin/phpunit
 
   run-tests-with-coverage:
     desc: Lance les tests avec couverture de code (HTML dans var/coverage)
@@ -449,7 +448,7 @@ tasks:
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -e XDEBUG_MODE=coverage php bin/phpunit --coverage-html=var/coverage --coverage-clover=coverage.xml
+        docker compose $FILES exec -T -e XDEBUG_MODE=coverage php bin/phpunit --coverage-html=var/coverage --coverage-clover=coverage.xml
 
   # ============================================================================
   # Qualité de code

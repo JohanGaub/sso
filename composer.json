@@ -20,7 +20,9 @@
         "phpstan/phpstan": "^2.1.33",
         "phpstan/phpstan-doctrine": "^2.0.12",
         "phpstan/phpstan-symfony": "^2.0.9",
-        "rector/rector": "^2.3.1"
+        "phpunit/phpunit": "^12.5",
+        "rector/rector": "^2.3.1",
+        "symfony/phpunit-bridge": "^8.0"
     },
     "config": {
         "allow-plugins": {
@@ -71,6 +73,8 @@
         "php-cs-fixer:dry-run": "php-cs-fixer fix --dry-run --diff",
         "phpmd": "phpmd analyze src --format text --ruleset phpmd.xml --ignore-violations-on-exit",
         "security-audit": "composer audit",
+        "test": "phpunit",
+        "test:coverage": "phpunit --coverage-html var/coverage",
         "quality": [
             "@security-audit",
             "@php-cs-fixer:dry-run",
