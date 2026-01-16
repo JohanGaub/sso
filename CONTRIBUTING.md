@@ -252,3 +252,4 @@ git reset --soft HEAD~1
 
 Si vous avez des questions sur les conventions ou le workflow, n'hésitez pas à ouvrir une issue ou à contacter l'équipe.
 
+

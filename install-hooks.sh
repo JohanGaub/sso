@@ -38,3 +38,4 @@ echo "✅ Hooks Git installés avec succès !"
 echo ""
 echo "💡 Les hooks seront automatiquement exécutés lors de vos commits."
 
+

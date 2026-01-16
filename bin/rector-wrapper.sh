@@ -11,3 +11,4 @@ echo "$OUTPUT" | grep -v "Deprecated:" | grep -v "^$"
 # Retourner le code de sortie original
 exit $EXIT_CODE
 
+

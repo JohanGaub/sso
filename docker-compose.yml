@@ -90,7 +90,7 @@ services:
 
     mailcatcher:
         container_name: ${COMPOSE_PROJECT_NAME}_mailcatcher
-        image: schickling/mailcatcher
+        image: sj26/mailcatcher:latest
         restart: 'always'
         ports:
             - "1080:1080"
@@ -105,6 +105,8 @@ services:
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.rule=Host(`mail-${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`mail-${COMPOSE_PROJECT_NAME}.docker.devhost`)"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.entrypoints=websecure"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.tls=true"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_mailcatcher.service=${COMPOSE_PROJECT_NAME}_mailcatcher"
+            - "traefik.http.services.${COMPOSE_PROJECT_NAME}_mailcatcher.loadbalancer.server.port=1080"
             - "traefik.docker.network=traefik-global-proxy"
 
     adminer:
