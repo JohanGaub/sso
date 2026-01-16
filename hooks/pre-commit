@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Hook pre-commit : Vérifie la qualité du code avant le commit
-# Bloque le commit si PHP CS Fixer, PHPStan ou Rector détectent des problèmes
+# Bloque le commit si Composer Audit, PHP CS Fixer, PHPMD, PHPStan ou Rector détectent des problèmes
 
 echo "🔍 Vérification de la qualité du code avant le commit..."
 echo ""
 
-# Exécuter task quality (PHP CS Fixer dry-run + PHPStan + Rector dry-run)
+# Exécuter task quality (Composer Audit + PHP CS Fixer dry-run + PHPMD + PHPStan + Rector dry-run)
 # Rediriger stderr pour masquer les warnings de dépréciation PHP 8.5 (normaux)
 if task quality 2>/dev/null; then
     echo ""
@@ -14,11 +14,13 @@ if task quality 2>/dev/null; then
     exit 0
 else
     echo ""
-    echo "❌ Erreurs détectées par PHP CS Fixer, PHPStan ou Rector"
+    echo "❌ Erreurs détectées par Composer Audit, PHP CS Fixer, PHPMD, PHPStan ou Rector"
     echo ""
     echo "💡 Corrigez les erreurs avant de commiter :"
+    echo "   - Utilisez 'task audit' pour voir les vulnérabilités de sécurité"
     echo "   - Utilisez 'task php-cs-fixer:dry-run' pour voir les problèmes de style"
     echo "   - Utilisez 'task php-cs-fixer' pour corriger automatiquement le style"
+    echo "   - Utilisez 'task phpmd' pour voir les code smells"
     echo "   - Utilisez 'task phpstan' pour voir les erreurs PHPStan"
     echo "   - Utilisez 'task rector:dry-run' pour voir les améliorations Rector"
     echo "   - Utilisez 'task rector' pour appliquer les corrections automatiques"

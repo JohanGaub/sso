@@ -540,11 +540,27 @@ tasks:
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES exec -T php vendor/bin/php-cs-fixer cache-clear || true
 
+  audit:
+    desc: Vérifie les vulnérabilités de sécurité dans les dépendances Composer
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -T php composer audit
+
+  phpmd:
+    desc: Analyse le code avec PHPMD pour détecter les code smells
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        docker compose $FILES exec -T -e XDEBUG_MODE=off php vendor/bin/phpmd analyze src --format text --ruleset phpmd.xml --ignore-violations-on-exit || true
+
   quality:
-    desc: Lance PHP CS Fixer (dry-run), PHPStan et Rector (dry-run) pour vérifier la qualité du code
+    desc: Lance Composer Audit, PHP CS Fixer (dry-run), PHPMD, PHPStan et Rector (dry-run) pour vérifier la qualité du code
     cmds:
       - task: check-tools-versions
+      - task: audit
       - task: php-cs-fixer:dry-run
+      - task: phpmd
       - task: phpstan
       - task: rector:dry-run
 

@@ -1,7 +1,7 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
@@ -15,11 +15,12 @@
         "symfony/yaml": "8.*"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.92.5",
+        "phpmd/phpmd": "3.x-dev",
         "phpstan/phpstan": "^2.1.33",
-        "phpstan/phpstan-symfony": "^2.0.9",
         "phpstan/phpstan-doctrine": "^2.0.12",
-        "rector/rector": "^2.3.1",
-        "friendsofphp/php-cs-fixer": "^3.92.5"
+        "phpstan/phpstan-symfony": "^2.0.9",
+        "rector/rector": "^2.3.1"
     },
     "config": {
         "allow-plugins": {
@@ -68,8 +69,12 @@
         "rector:clear-cache": "rector clear-cache",
         "php-cs-fixer": "php-cs-fixer fix",
         "php-cs-fixer:dry-run": "php-cs-fixer fix --dry-run --diff",
+        "phpmd": "phpmd analyze src --format text --ruleset phpmd.xml --ignore-violations-on-exit",
+        "security-audit": "composer audit",
         "quality": [
+            "@security-audit",
             "@php-cs-fixer:dry-run",
+            "@phpmd",
             "@phpstan",
             "@rector:dry-run"
         ]
