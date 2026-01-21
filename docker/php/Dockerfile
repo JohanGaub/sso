@@ -3,39 +3,48 @@ ARG NODE_VERSION=22.16.0
 
 FROM php:8.5-fpm-alpine AS base
 
-RUN mkdir -p /var/www/symfony/var/uploads
-
-RUN apk add --no-cache \
-        freetype \
-        libjpeg-turbo \
-        libpng \
-        freetype-dev \
-        libjpeg-turbo-dev \
-        libpng-dev \
-        libzip-dev \
-        acl \
-    && docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-        gd \
-        zip
-
-RUN apk add --no-cache --virtual .build-deps \
+RUN mkdir -p /var/www/symfony/var/uploads && \
+    apk add --no-cache --virtual .build-deps-base \
         libc-dev \
         make \
         zlib-dev \
         autoconf \
         postgresql-dev \
         linux-headers \
+        icu-dev \
+        libzip-dev \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
     ; \
-    apk add git zip bash libzip libpq icu icu-libs icu-data-full postgresql-client netcat-openbsd; \
+    apk add --no-cache \
+        git \
+        bash \
+        libzip \
+        libpq \
+        icu \
+        icu-libs \
+        icu-data-full \
+        postgresql-client \
+        netcat-openbsd \
+        acl \
+        freetype \
+        libjpeg-turbo \
+        libpng \
+    ; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql; \
-    docker-php-ext-install intl opcache pdo pdo_pgsql pgsql; \
+    docker-php-ext-install -j$(nproc) \
+        gd \
+        zip \
+        intl \
+        opcache \
+        pdo_pgsql \
+        pgsql \
+    ; \
     printf "\n" | pecl install apcu redis; \
     docker-php-ext-enable apcu redis; \
-    docker-php-ext-configure zip; \
-    apk del .build-deps
+    apk del .build-deps-base
 
 COPY docker/php/docker-php.ini /usr/local/etc/php/conf.d/php.ini
 COPY docker/php/docker-php-ext-redis.ini /usr/local/etc/php/conf.d/docker-php-ext-redis.ini
@@ -46,7 +55,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 FROM base AS devci
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps-devci \
     libc-dev \
     make \
     zlib-dev \
@@ -56,7 +65,7 @@ RUN apk add --no-cache --virtual .build-deps \
     ; \
     pecl install -f xdebug; \
     docker-php-ext-enable xdebug; \
-    apk del .build-deps;
+    apk del .build-deps-devci;
 
 COPY docker/php/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
@@ -89,9 +98,9 @@ FROM devci AS dev
 
 RUN git config --global --add safe.directory /var/www/symfony
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-RUN curl -sS https://get.symfony.com/cli/installer | bash; \
-    mv /root/.symfony5/bin/symfony /usr/local/bin/symfony;
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    curl -sS https://get.symfony.com/cli/installer | bash && \
+    mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]

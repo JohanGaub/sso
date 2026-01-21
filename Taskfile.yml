@@ -292,7 +292,19 @@ tasks:
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec php bin/console doctrine:migrations:migrate --no-interaction
+        set +e
+        OUTPUT=$(docker compose $FILES exec -T php bin/console doctrine:migrations:migrate --no-interaction 2>&1)
+        EXIT_CODE=$?
+        set -e
+        echo "$OUTPUT"
+        # Si l'erreur est due à l'absence de migrations, on considère que c'est OK
+        if [ $EXIT_CODE -ne 0 ]; then
+          if echo "$OUTPUT" | grep -qiE "(no registered migrations|couldn't be reached.*no registered)"; then
+            echo "ℹ️  Aucune migration à exécuter (c'est normal pour un nouveau projet)"
+            exit 0
+          fi
+          exit $EXIT_CODE
+        fi
 
   load-default-data:
     desc: Charge les données par défaut (langues, pays, utilisateurs)
@@ -319,20 +331,23 @@ tasks:
   # ============================================================================
 
   install:
-    desc: Build et démarre la stack + build du thème
-    deps: [start, theme-build]
+    desc: Build et démarre la stack (+ build du thème si présent + correction permissions)
+    deps: [start]
+    cmds:
+      - task: theme-build-optional
+      - task: fix-config-permissions
 
   setup:
     desc: Installation complète du projet (install + create-db + migration + load-fixtures)
     deps: [install, create-db, migration, load-fixtures]
 
   update:
-    desc: Met à jour le projet (theme-build + composer install + migration)
+    desc: Met à jour le projet (composer install + migration + correction permissions)
     cmds:
-      - task: theme-build
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES exec php composer install
+      - task: fix-config-permissions
       - task: migration
 
   # ============================================================================
@@ -370,43 +385,52 @@ tasks:
         docker compose $FILES exec php chown 1000:1000 -R .
 
   fix-config-permissions:
-    desc: Corrige les permissions des fichiers de configuration pour Git (.gitignore, composer.json, config/reference.php, etc.)
+    desc: Corrige les permissions des fichiers de configuration (composer.json, config/, etc.) - Utilise Docker pour éviter sudo
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        echo "🔒 Correction des permissions des fichiers de configuration pour Git..."
-        docker compose $FILES exec php sh -c "
-          CONFIG_FILES='.gitignore composer.json composer.lock symfony.lock .env.example Taskfile.yml'
-          CONFIG_DIR_FILES='config/reference.php'
-          HOST_UID=$(id -u)
-          if command -v setfacl >/dev/null 2>&1; then
-            # Permissions pour le répertoire config/ (CRITIQUE pour Git)
-            setfacl -m u:www-data:rwX -m u:1000:rwX -m u:\$HOST_UID:rwX config/ 2>/dev/null || true
-            setfacl -dR -m u:www-data:rwX -m u:1000:rwX -m u:\$HOST_UID:rwX config/ 2>/dev/null || true
-            chown 1000:1000 config/ 2>/dev/null || true
-            chmod 775 config/ 2>/dev/null || true
-            # Permissions pour les fichiers de configuration
-            for file in \$CONFIG_FILES \$CONFIG_DIR_FILES; do
+        echo "🔒 Correction des permissions des fichiers de configuration..."
+        HOST_UID=$(id -u)
+
+        # Corriger les permissions via Docker (root dans le conteneur peut tout faire)
+        if docker compose $FILES ps php >/dev/null 2>&1; then
+          echo "🐳 Correction des permissions via Docker (root dans le conteneur)..."
+          docker compose $FILES exec php sh -c "
+            HOST_UID=$HOST_UID
+            # Corriger config/ et tous ses sous-répertoires
+            echo '📁 Correction du répertoire config/...'
+            HOST_GID=\$(getent group \$(id -gn) | cut -d: -f3 2>/dev/null || echo 1000)
+            if command -v setfacl >/dev/null 2>&1; then
+              # Permissions avec ACL pour config/ (meilleure solution)
+              setfacl -R -m u:www-data:rwX -m u:1000:rwX -m u:\$HOST_UID:rwX config/ 2>/dev/null || true
+              setfacl -dR -m u:www-data:rwX -m u:1000:rwX -m u:\$HOST_UID:rwX config/ 2>/dev/null || true
+              # Essayer de changer le propriétaire vers l'utilisateur de l'hôte
+              chown -R \$HOST_UID:\$HOST_GID config/ 2>/dev/null || chown -R 1000:1000 config/ 2>/dev/null || true
+              echo '  ✅ config/ corrigé avec setfacl (ACL)'
+            else
+              chmod -R 775 config/ 2>/dev/null || true
+              chown -R \$HOST_UID:\$HOST_GID config/ 2>/dev/null || chown -R 1000:1000 config/ 2>/dev/null || true
+              echo '  ✅ config/ corrigé avec chmod'
+            fi
+
+            # Corriger les fichiers de configuration racine
+            echo '📄 Correction des fichiers de configuration racine...'
+            for file in .gitignore composer.json composer.lock symfony.lock .env.example Taskfile.yml .php-cs-fixer.php phpmd.xml phpstan.neon phpunit.xml.dist rector.php; do
               if [ -f \"\$file\" ]; then
-                setfacl -m u:www-data:rw -m u:1000:rw -m u:\$HOST_UID:rw -m g::rw -m o::r \"\$file\" 2>/dev/null || true
-                chown 1000:1000 \"\$file\" 2>/dev/null || true
+                if command -v setfacl >/dev/null 2>&1; then
+                  setfacl -m u:www-data:rw -m u:1000:rw -m u:\$HOST_UID:rw -m g::rw -m o::r \"\$file\" 2>/dev/null || true
+                fi
+                chown \$HOST_UID:\$HOST_GID \"\$file\" 2>/dev/null || chown 1000:1000 \"\$file\" 2>/dev/null || true
+                chmod 664 \"\$file\" 2>/dev/null || true
               fi
             done
-            echo '✅ Permissions corrigées avec setfacl (ACL pour votre utilisateur et répertoire config/)'
-          else
-            # Permissions pour le répertoire config/ (CRITIQUE pour Git)
-            chmod 777 config/ 2>/dev/null || true
-            chown 1000:1000 config/ 2>/dev/null || true
-            # Permissions pour les fichiers de configuration
-            for file in \$CONFIG_FILES \$CONFIG_DIR_FILES; do
-              if [ -f \"\$file\" ]; then
-                chmod 666 \"\$file\" 2>/dev/null || true
-                chown 1000:1000 \"\$file\" 2>/dev/null || true
-              fi
-            done
-            echo '✅ Permissions corrigées avec chmod (mode 777 pour config/, 666 pour fichiers)'
-          fi
-        "
+            echo '  ✅ Fichiers racine corrigés'
+          "
+          echo "✅ Permissions corrigées via Docker !"
+        else
+          echo "⚠️  Le conteneur PHP n'est pas démarré. Démarrez-le avec 'task start' puis relancez cette commande."
+          exit 1
+        fi
 
   # ============================================================================
   # Tests unitaires
@@ -567,6 +591,26 @@ tasks:
     desc: Vérifie que les outils de qualité sont à jour avec les dernières versions
     cmds:
       - bash scripts/check-tools-versions.sh
+
+  update:tools:
+    desc: Met à jour tous les outils de qualité (PHPStan, Rector, PHP CS Fixer, PHPUnit, etc.)
+    cmds:
+      - |
+        FILES="{{.DOCKER_COMPOSE_FILES}}"
+        echo "🔄 Mise à jour des outils de qualité..."
+        docker compose $FILES exec php composer update \
+          phpstan/phpstan \
+          phpstan/phpstan-symfony \
+          phpstan/phpstan-doctrine \
+          rector/rector \
+          friendsofphp/php-cs-fixer \
+          phpunit/phpunit \
+          --with-all-dependencies
+        echo ""
+        echo "✅ Mise à jour terminée !"
+        echo ""
+        echo "💡 Exécutez 'task check-tools-versions' pour vérifier les versions installées."
+      - task: fix-config-permissions
   run-qa:
     desc: Lance tous les contrôles qualité (finalize-classes, rector, php-cs-fixer, phpstan, doctrine:schema:validate, security-check)
     cmds:
@@ -594,6 +638,10 @@ tasks:
     desc: Installe les dépendances npm
     cmds:
       - |
+        if [ ! -f package.json ]; then
+          echo "⚠️  Aucun package.json trouvé. Le projet n'a pas de thème à installer."
+          exit 0
+        fi
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES -f docker-compose-tools.yml run --rm theme npm install
 
@@ -617,6 +665,17 @@ tasks:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES -f docker-compose-tools.yml run --rm theme npm run dev
+
+  theme-build-optional:
+    desc: Build le thème si package.json existe (tâche interne)
+    internal: true
+    cmds:
+      - |
+        if [ -f package.json ]; then
+          task theme-build
+        else
+          echo "ℹ️  Aucun thème détecté (pas de package.json), passage de l'étape theme-build"
+        fi
 
   theme-build:
     desc: Build le thème pour la production

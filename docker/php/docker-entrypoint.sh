@@ -31,9 +31,6 @@ else
     # Permissions pour le répertoire config/ (pour permettre Git de modifier les fichiers)
     chmod 775 config/ 2>/dev/null || true
     chown 1000:1000 config/ 2>/dev/null || true
-    # Permissions pour le répertoire config/ (pour permettre Git de modifier les fichiers)
-    chmod 775 config/ 2>/dev/null || true
-    chown 1000:1000 config/ 2>/dev/null || true
 fi
 
 # Si le premier argument commence par un tiret, on le traite comme une commande PHP
@@ -53,8 +50,8 @@ if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
 
         if [ "$FILES_COUNT" -eq 0 ] && [ "$DIRS_COUNT" -eq 0 ]; then
             # Répertoire vide, créer directement
-            echo "📦 Création du projet Symfony 7.4..."
-            composer create-project symfony/skeleton:"7.4.*" . --no-interaction || {
+            echo "📦 Création du projet Symfony 8..."
+            composer create-project symfony/skeleton:"8.*" . --no-interaction || {
                 echo "❌ Erreur lors de la création du projet Symfony"
                 exit 1
             }
@@ -63,7 +60,7 @@ if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
             # Répertoire contient des fichiers, créer dans un répertoire temporaire puis déplacer
             echo "📦 Répertoire non vide, création dans un répertoire temporaire..."
             TEMP_DIR="/tmp/symfony-init-$$"
-            composer create-project symfony/skeleton:"7.4.*" "$TEMP_DIR" --no-interaction || {
+            composer create-project symfony/skeleton:"8.*" "$TEMP_DIR" --no-interaction || {
                 echo "❌ Erreur lors de la création du projet Symfony"
                 exit 1
             }
@@ -97,7 +94,7 @@ if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
     if [ -f "composer.json" ] && [ -f "bin/console" ]; then
         echo "⏳ Attente de la base de données PostgreSQL..."
         # Attente que la base de données soit prête
-        until nc -z postgres 5432; do
+        until nc -z database 5432; do
             echo "⌛ PostgreSQL n'est pas encore prêt... nouvelle tentative dans 1 seconde"
             sleep 1
         done
