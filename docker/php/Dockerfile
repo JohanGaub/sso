@@ -15,8 +15,7 @@ RUN mkdir -p /var/www/symfony/var/uploads && \
         libzip-dev \
         freetype-dev \
         libjpeg-turbo-dev \
-        libpng-dev \
-    ; \
+        libpng-dev && \
     apk add --no-cache \
         git \
         bash \
@@ -30,20 +29,17 @@ RUN mkdir -p /var/www/symfony/var/uploads && \
         acl \
         freetype \
         libjpeg-turbo \
-        libpng \
-    ; \
-    docker-php-ext-configure gd --with-freetype --with-jpeg; \
-    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql; \
+        libpng && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) \
         gd \
         zip \
         intl \
         opcache \
         pdo_pgsql \
-        pgsql \
-    ; \
-    printf "\n" | pecl install apcu redis; \
-    docker-php-ext-enable apcu redis; \
+        pgsql && \
+    printf "\n" | pecl install apcu redis && \
+    docker-php-ext-enable apcu redis && \
     apk del .build-deps-base
 
 COPY docker/php/docker-php.ini /usr/local/etc/php/conf.d/php.ini
