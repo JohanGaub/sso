@@ -35,9 +35,14 @@ RUN mkdir -p /var/www/symfony/var/uploads && \
         gd \
         zip \
         intl \
-        opcache \
-        pdo_pgsql \
-        pgsql && \
+        opcache && \
+    docker-php-ext-configure pdo_pgsql && \
+    docker-php-ext-install --no-interaction pdo_pgsql || \
+    (cd /usr/src/php/ext/pdo_pgsql && \
+     docker-php-ext-configure pdo_pgsql && \
+     make -j$(nproc) && \
+     make install && \
+     docker-php-ext-enable pdo_pgsql) && \
     printf "\n" | pecl install apcu redis && \
     docker-php-ext-enable apcu redis && \
     apk del .build-deps-base

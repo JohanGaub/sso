@@ -2,11 +2,11 @@
 
 ## 🎯 Vue d'ensemble
 
-Ce guide vous explique **étape par étape** comment créer votre nouveau projet Symfony 7.4 avec PHP 8.5, dockerisé, en utilisant Task.
+Ce guide vous explique **étape par étape** comment créer votre nouveau projet Symfony 8 avec PHP 8.5, dockerisé, en utilisant Task.
 
 ## 📍 Étape 1 : Quitter le projet actuel
 
-Depuis votre répertoire actuel (`/home/jgaub@niji.fr/Public/Project/site-concurrents`) :
+Depuis votre répertoire actuel (`/home/jgaub@niji.fr/Public/Project/sso`) :
 
 ```bash
 cd ..
@@ -65,7 +65,7 @@ DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host
 
 **Vous n'avez rien à faire manuellement !** 🎉
 
-## 📦 Étape 4 : Créer le projet Symfony 7.4 (100% dockerisé)
+## 📦 Étape 4 : Créer le projet Symfony 8 (100% dockerisé)
 
 **Approche 100% dockerisée (recommandée) :**
 
@@ -74,9 +74,10 @@ DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host
    mkdir mon-nouveau-projet
    cd mon-nouveau-projet
    
-   # Copier les fichiers du boilerplate
-   cp -r /home/jgaub@niji.fr/Public/Project/site-concurrents/boilerplate-symfony-7.4/* .
-   cp -r /home/jgaub@niji.fr/Public/Project/site-concurrents/boilerplate-symfony-7.4/.* . 2>/dev/null || true
+   # Copier les fichiers du boilerplate depuis le projet SSO
+   # Note: Adaptez le chemin selon votre structure de projets
+   cp -r /home/jgaub@niji.fr/Public/Project/sso/* .
+   cp -r /home/jgaub@niji.fr/Public/Project/sso/.* . 2>/dev/null || true
    ```
 
 2. **Configurer les variables d'environnement :**
@@ -96,7 +97,7 @@ DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host
    task console php
    
    # Dans le conteneur, créer le projet Symfony
-   composer create-project symfony/skeleton:"7.4.*" /var/www/symfony --no-interaction
+   composer create-project symfony/skeleton:"8.*" /var/www/symfony --no-interaction
    
    # Sortir du conteneur
    exit
@@ -111,28 +112,30 @@ DOCKER_DEV_HOST_PATH=/home/jgaub@niji.fr/Public/Project/docker-dev-host
 
 **Option A : Avec Composer (recommandé)**
 ```bash
-composer create-project symfony/skeleton:"7.4.*" .
+composer create-project symfony/skeleton:"8.*" .
 ```
 
 **Option B : Avec Symfony CLI**
 ```bash
-symfony new . --version=7.4
+symfony new . --version=8
 ```
 
 **Note :** Le point (`.`) signifie que le projet sera créé dans le répertoire actuel.
 
 ## 📋 Étape 5 : Copier les fichiers du boilerplate
 
-Tous les fichiers nécessaires sont dans le répertoire `boilerplate-symfony-7.4` de votre projet actuel.
+Tous les fichiers nécessaires sont dans le projet SSO actuel.
 
 **Depuis votre nouveau projet, copiez les fichiers :**
 
 ```bash
 # Depuis le répertoire de votre nouveau projet
-# Remplacez le chemin par le chemin réel vers le boilerplate
-cp -r /home/jgaub@niji.fr/Public/Project/site-concurrents/boilerplate-symfony-7.4/* .
-cp -r /home/jgaub@niji.fr/Public/Project/site-concurrents/boilerplate-symfony-7.4/.* . 2>/dev/null || true
+# Remplacez le chemin par le chemin réel vers le projet SSO
+cp -r /home/jgaub@niji.fr/Public/Project/sso/* .
+cp -r /home/jgaub@niji.fr/Public/Project/sso/.* . 2>/dev/null || true
 ```
+
+**Note :** Assurez-vous de ne pas copier le dossier `.git` et les fichiers sensibles comme `.env`. Vous pouvez utiliser `.gitignore` pour exclure ces fichiers.
 
 **Ou manuellement, copiez :**
 - `Taskfile.yml` → à la racine
@@ -311,7 +314,7 @@ task kill
 CLI_ARGS=nginx task console
 
 # Logs d'un conteneur spécifique
-CLI_ARGS=postgres task logs
+CLI_ARGS=database task logs
 
 # Tests avec filtre
 CLI_ARGS=UserTest task run-tests
@@ -364,7 +367,7 @@ task update-permissions
 
 ```bash
 # Vérifier que PostgreSQL est démarré
-task logs postgres
+task logs database
 
 # Vérifier la connexion depuis le conteneur PHP
 task console php
@@ -415,12 +418,12 @@ Si le port 5432 est déjà utilisé :
 
 ## 🎉 Félicitations !
 
-Votre nouveau projet Symfony 7.4 avec PHP 8.5 est maintenant prêt à être utilisé avec Docker et Task !
+Votre nouveau projet Symfony 8 avec PHP 8.5 est maintenant prêt à être utilisé avec Docker et Task !
 
 ## 📖 Ressources
 
 - [Documentation Task](https://taskfile.dev/)
-- [Documentation Symfony 7.4](https://symfony.com/doc/7.4/index.html)
+- [Documentation Symfony 8](https://symfony.com/doc/8.0/index.html)
 - [Documentation Docker Compose](https://docs.docker.com/compose/)
 
 
