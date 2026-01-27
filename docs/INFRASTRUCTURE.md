@@ -191,7 +191,7 @@ Variables d'environnement spécifiques à l'environnement (dev, prod, etc.).
 Définit les dépendances PHP et les scripts Composer.
 
 ##### `docker-compose.yml`
-Définit les services Docker principaux (php, nginx, postgres, redis, mailcatcher).
+Définit les services Docker principaux (php, nginx, database, redis, mailcatcher).
 
 ##### `docker-compose-tools.yml`
 Services Docker pour outils de développement (theme Node.js, security scanner).
@@ -252,7 +252,7 @@ Définit toutes les tâches automatisées du projet (start, stop, quality, etc.)
 
 1. **B** - `var/` contient les fichiers générés dynamiquement (cache, logs, uploads). Ils sont gitignored car ils sont régénérés et spécifiques à chaque environnement.
 
-2. **B** - `docker-compose.yml` définit les services principaux nécessaires au fonctionnement de l'application (php, nginx, postgres, redis, mailcatcher). `docker-compose-tools.yml` définit les services pour les outils de développement (theme Node.js, security scanner) qui ne sont pas toujours nécessaires.
+2. **B** - `docker-compose.yml` définit les services principaux nécessaires au fonctionnement de l'application (php, nginx, database, redis, mailcatcher). `docker-compose-tools.yml` définit les services pour les outils de développement (theme Node.js, security scanner) qui ne sont pas toujours nécessaires.
 
 3. **B** - `vendor/` est généré par Composer à partir de `composer.json` et `composer.lock`. Il peut être recréé avec `composer install`, donc pas besoin de le versionner.
 
@@ -327,7 +327,7 @@ DB_NAME=symfony                # Nom de la base de données
 Ces variables sont utilisées pour construire automatiquement `DATABASE_URL` dans `docker-compose.yml` :
 
 ```yaml
-DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8
+DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}?serverVersion=${DB_SERVER_VERSION}&charset=utf8
 ```
 
 **Pourquoi cette construction ?**
@@ -358,7 +358,7 @@ graph LR
     
     B --> E[Conteneur PHP<br/>APP_ENV, DATABASE_URL]
     B --> F[Conteneur Nginx<br/>Labels Traefik]
-    B --> G[Conteneur Postgres<br/>DB_USER, DB_PASSWORD]
+    B --> G[Conteneur Database<br/>DB_USER, DB_PASSWORD]
     
     C --> H[Application Symfony<br/>Configuration runtime]
     
@@ -382,7 +382,7 @@ Les variables sont injectées dans les conteneurs via `${VARIABLE_NAME}` :
 container_name: ${COMPOSE_PROJECT_NAME}_php
 environment:
     APP_ENV: ${APP_ENV}
-    DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+    DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
 ```
 
 ##### Dans Symfony

@@ -258,28 +258,73 @@ Traefik utilise un certificat auto-signé wildcard `*.docker.localhost` qui est 
 
 ### Installation du certificat CA dans votre navigateur
 
-Si votre navigateur affiche une erreur SSL (cadenas rouge, "Votre connexion n'est pas privée"), vous devez installer le certificat d'autorité de certification (CA) dans votre navigateur.
+Si votre navigateur affiche une erreur SSL (cadenas rouge, "Non sécurisé", "Votre connexion n'est pas privée"), vous devez installer le certificat d'autorité de certification (CA) dans votre navigateur.
 
 **Localisation du certificat CA :**
 ```
-/home/jgaub@niji.fr/Public/Project/docker-dev-host/self-signed-ssl/CA.pem
+/home/jgaub@niji.fr/Public/Project/docker-dev-host/self-signed-ssl/docker-localhost/CA.pem
 ```
 
-**Instructions pour Chrome/Edge :**
+> **Note :** Le chemin exact peut varier selon votre configuration. Si ce fichier n'existe pas, cherchez dans les sous-dossiers `docker-devhost/` ou `docker-localhost/` du répertoire `self-signed-ssl/`.
 
-1. Ouvrir les paramètres du navigateur et chercher "certificat"
-2. Aller dans **Sécurité** → **Gérer les certificats**
-3. Ouvrir l'onglet **"Autorités de certification racines de confiance"**
-4. Cliquer sur **"Importer..."**
-5. Sélectionner le fichier `CA.pem` (⚠️ changer le filtre sur `*` pour voir les fichiers `.pem`)
-6. Cocher **"Faire confiance à ce certificat pour identifier les sites web"**
-7. Valider
-8. **Fermer TOUTES les instances du navigateur** et relancer
+---
+
+#### Instructions pour Chrome/Edge
+
+1. **Ouvrir les paramètres :**
+   - Cliquez sur les trois points (⋮) en haut à droite
+   - Allez dans **Paramètres** (ou tapez `chrome://settings` dans la barre d'adresse)
+
+2. **Rechercher la section certificats :**
+   - Dans la barre de recherche des paramètres, tapez **"certificat"**
+   - Cliquez sur **"Gérer les certificats"** ou **"Certificats"** dans les résultats
+
+3. **Importer le certificat CA :**
+   - Ouvrez l'onglet **"Autorités de certification racines de confiance"** (ou "Authorities" en anglais)
+   - Cliquez sur **"Importer..."** (ou "Import...")
+   - Naviguez vers le fichier `CA.pem` (⚠️ changez le filtre sur `*` ou "Tous les fichiers" pour voir les fichiers `.pem`)
+   - Sélectionnez le fichier et cliquez sur "Ouvrir"
+   - **Cochez** la case **"Faire confiance à ce certificat pour identifier les sites web"** (ou "Trust this certificate for identifying websites")
+   - Cliquez sur **"OK"**
+
+4. **Redémarrer le navigateur :**
+   - **Fermez TOUTES les instances de Chrome/Edge** (vérifiez dans le gestionnaire de tâches qu'aucun processus Chrome/Edge ne tourne)
+   - Relancez le navigateur
 
 **Vérification :**
-Après avoir redémarré le navigateur, vous devriez voir un cadenas vert sur `https://mon-nouveau-projet.docker.localhost`
+Après avoir redémarré, accédez à `https://mon-nouveau-projet.docker.localhost` - vous devriez voir un cadenas vert sans avertissement.
 
-**Note :** Cette opération n'est nécessaire qu'une seule fois par navigateur. Le certificat est valide jusqu'en 2034.
+---
+
+#### Instructions pour Firefox
+
+1. **Ouvrir les paramètres :**
+   - Cliquez sur les trois lignes (☰) en haut à droite
+   - Allez dans **Paramètres** (ou tapez `about:preferences` dans la barre d'adresse)
+
+2. **Rechercher la section certificats :**
+   - Dans la barre de recherche des paramètres, tapez **"certificat"**
+   - Cliquez sur **"Afficher les certificats..."** dans les résultats
+
+3. **Importer le certificat CA :**
+   - Dans la fenêtre "Gestionnaire de certificats", ouvrez l'onglet **"Autorités"** (ou "Authorities" en anglais)
+   - Cliquez sur **"Importer..."** en bas de la fenêtre
+   - Naviguez vers le fichier `CA.pem` (⚠️ changez le filtre sur "Tous les fichiers" pour voir les fichiers `.pem`)
+   - Sélectionnez le fichier et cliquez sur "Ouvrir"
+   - Une boîte de dialogue apparaît : **cochez** la case **"Confirmer cette AC pour identifier des sites web"**
+   - Si vous utilisez aussi `mail-*.docker.localhost`, cochez également **"Confirmer cette AC pour identifier les utilisateurs de courrier"**
+   - Cliquez sur **"OK"**
+
+4. **Redémarrer le navigateur :**
+   - **Fermez TOUTES les instances de Firefox** (vérifiez dans le gestionnaire de tâches qu'aucun processus Firefox ne tourne)
+   - Relancez le navigateur
+
+**Vérification :**
+Après avoir redémarré, accédez à `https://mon-nouveau-projet.docker.localhost` - vous devriez voir un cadenas vert sans avertissement.
+
+---
+
+**Note importante :** Cette opération n'est nécessaire qu'une seule fois par navigateur. Le certificat est valide jusqu'en 2034. Si vous changez de machine ou réinstallez votre navigateur, vous devrez réimporter le certificat.
 
 **Pour plus de détails :**
 Consultez le README dans `/home/jgaub@niji.fr/Public/Project/docker-dev-host/self-signed-ssl/README.MD`

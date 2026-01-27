@@ -87,5 +87,5 @@ fi
 
 echo ""
 echo "💡 La DATABASE_URL sera construite automatiquement par docker-compose.yml à partir de DB_USER, DB_PASSWORD, DB_NAME et DB_SERVER_VERSION"
-echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@postgres:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
+echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@database:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
 

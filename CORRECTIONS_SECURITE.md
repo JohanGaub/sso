@@ -11,7 +11,7 @@
 echo "   DATABASE_URL=\"postgresql://symfony:symfony@postgres:5432/symfony?serverVersion=16&charset=utf8\""
 
 # APRÈS (✅)
-echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@postgres:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
+echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@database:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
 ```
 
 ### 2. ✅ Secrets en dur dans Taskfile.yml.backup (ligne 85)
@@ -27,7 +27,7 @@ echo "   DATABASE_URL=\"postgresql://symfony:symfony@postgres:5432/symfony?serve
 
 # APRÈS (✅)
 echo "DB_PASSWORD=your-db-password-here"
-echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@postgres:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
+echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@database:5432/\${DB_NAME}?serverVersion=\${DB_SERVER_VERSION}&charset=utf8"
 ```
 
 ### 4. ✅ Placeholders dans env.example
