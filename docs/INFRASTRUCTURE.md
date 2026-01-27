@@ -1250,6 +1250,6 @@ graph TB
 
 **🎉 Phase 3 terminée !** Vous maîtrisez maintenant Traefik, le routage, et les certificats SSL.
 
-**Prochaine étape** : [Phase 2 - Docker et Orchestration](#phase-2--docker-et-orchestration) (à venir) ou [Phase 4 - Automatisation et Qualité](#phase-4--automatisation-et-qualité) (à venir)
+**Prochaine étape** : Phase 2 - Docker et Orchestration (à venir) ou Phase 4 - Automatisation et Qualité (à venir)
 
 ---
