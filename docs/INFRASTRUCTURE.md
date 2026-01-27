@@ -7,21 +7,10 @@
 - [Phase 1 : Fondations](#phase-1--fondations)
   - [1. Structure du Projet](#1-structure-du-projet)
   - [2. Configuration de Base (.env)](#2-configuration-de-base-env)
-- [Phase 2 : Docker et Orchestration](#phase-2--docker-et-orchestration)
-  - [3. Docker Compose](#3-docker-compose)
-  - [4. Taskfile.yml](#4-taskfileyml)
 - [Phase 3 : Traefik et Routage](#phase-3--traefik-et-routage)
   - [5. Traefik - Concepts](#5-traefik---concepts)
   - [6. Traefik - Configuration Pratique](#6-traefik---configuration-pratique)
   - [7. Certificats SSL](#7-certificats-ssl)
-- [Phase 4 : Automatisation et Qualité](#phase-4--automatisation-et-qualité)
-  - [8. Scripts Shell](#8-scripts-shell)
-  - [9. Git Hooks](#9-git-hooks)
-- [Phase 5 : Flux Complet et Synthèse](#phase-5--flux-complet-et-synthèse)
-  - [10. Flux de Démarrage Complet](#10-flux-de-démarrage-complet)
-  - [11. Debugging et Troubleshooting](#11-debugging-et-troubleshooting)
-- [Phase 6 : Validation Finale](#phase-6--validation-finale)
-  - [12. Quiz de Synthèse](#12-quiz-de-synthèse)
 
 ---
 
