@@ -33,7 +33,7 @@ echo "📝 Prochaines étapes :"
 echo "   1. Modifiez le fichier .env avec vos valeurs"
 echo "   2. Assurez-vous que le réseau Docker 'traefik-network' existe"
 echo "   3. Lancez 'task start' pour démarrer la stack"
-echo "   4. Consultez INSTRUCTIONS_DETAILLEES.md pour plus d'informations"
+echo "   4. Consultez docs/INSTRUCTIONS_DETAILLEES.md pour plus d'informations"
 echo ""
 
 

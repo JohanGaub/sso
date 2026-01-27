@@ -34,7 +34,7 @@ echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@database:5432/\${DB_NA
 **Problème** : Mot de passe réel dans le fichier d'exemple
 **Solution** : Remplacé par `your-db-password-here` avec commentaire explicatif
 
-### 5. ✅ Placeholders dans INSTRUCTIONS_DETAILLEES.md
+### 5. ✅ Placeholders dans docs/INSTRUCTIONS_DETAILLEES.md
 **Problème** : Mot de passe réel dans la documentation
 **Solution** : Remplacé par `your-db-password-here` avec note explicative
 
@@ -52,14 +52,14 @@ echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@database:5432/\${DB_NA
 - ✅ `Taskfile.yml.backup` - Lignes 77 et 85
 - ✅ `check-env.sh` - Lignes 81 et 91
 - ✅ `env.example` - Ligne 17
-- ✅ `INSTRUCTIONS_DETAILLEES.md` - Ligne 168
+- ✅ `docs/INSTRUCTIONS_DETAILLEES.md` - Ligne 168
 - ✅ `.env` et `.env.dev` - Retirés du suivi Git
 
 ## 📋 Fichiers Créés
 
-- ✅ `SECURITE.md` - Guide de sécurité et bonnes pratiques
+- ✅ `docs/SECURITE.md` - Guide de sécurité et bonnes pratiques
 - ✅ `env.dev.example` - Template pour l'environnement de développement
-- ✅ `CORRECTIONS_SECURITE.md` - Ce document (résumé des corrections)
+- ✅ `docs/CORRECTIONS_SECURITE.md` - Ce document (résumé des corrections)
 
 ## ⚠️ Actions Requises
 
@@ -75,7 +75,7 @@ echo "   Format: postgresql://\${DB_USER}:\${DB_PASSWORD}@database:5432/\${DB_NA
 
 2. **Commiter les changements** :
    ```bash
-   git add Taskfile.yml Taskfile.yml.backup check-env.sh env.example INSTRUCTIONS_DETAILLEES.md SECURITE.md env.dev.example CORRECTIONS_SECURITE.md
+   git add Taskfile.yml Taskfile.yml.backup check-env.sh env.example docs/INSTRUCTIONS_DETAILLEES.md docs/SECURITE.md env.dev.example docs/CORRECTIONS_SECURITE.md
    git commit -m "security: Remove hardcoded secrets and remove .env files from Git tracking"
    ```
 
@@ -95,5 +95,5 @@ Tous les problèmes de sécurité identifiés par SonarQube ont été corrigés 
 
 ## 📚 Documentation
 
-Consultez `SECURITE.md` pour les bonnes pratiques et la checklist de sécurité.
+Consultez `docs/SECURITE.md` pour les bonnes pratiques et la checklist de sécurité.
 

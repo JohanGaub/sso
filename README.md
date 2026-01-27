@@ -101,7 +101,7 @@ Ces réseaux sont créés automatiquement lorsque vous démarrez docker-dev-host
 Les certificats SSL sont gérés automatiquement par `docker-dev-host` via Traefik. Un certificat auto-signé wildcard `*.docker.localhost` est utilisé (valide jusqu'en 2034).
 
 **Si votre navigateur affiche une erreur SSL :**
-Vous devez installer le certificat CA dans votre navigateur. Voir `INSTRUCTIONS_DETAILLEES.md` section "Certificats SSL" pour les instructions détaillées.
+Vous devez installer le certificat CA dans votre navigateur. Voir `docs/INSTRUCTIONS_DETAILLEES.md` section "Certificats SSL" pour les instructions détaillées.
 
 **Fichier du certificat CA :**
 ```
@@ -111,7 +111,9 @@ Vous devez installer le certificat CA dans votre navigateur. Voir `INSTRUCTIONS_
 ## 📚 Documentation
 
 ### Documentation Générale
-- `INSTRUCTIONS_DETAILLEES.md` : Instructions complètes étape par étape pour le projet
+- `docs/INSTRUCTIONS_DETAILLEES.md` : Instructions complètes étape par étape pour le projet
+- `docs/SECURITE.md` : Guide de sécurité et bonnes pratiques
+- `docs/CORRECTIONS_SECURITE.md` : Résumé des corrections de sécurité appliquées
 
 ### Documentation SSO OAuth2/OpenID Connect
 - `docs/INDEX_DOCUMENTATION.md` : Index de la documentation SSO
