@@ -167,6 +167,9 @@ task console php
 composer require knpuniversity/oauth2-client-bundle
 ```
 
+> 💡 **Pourquoi ce bundle et pas HWIOAuthBundle ?**  
+> `knpuniversity/oauth2-client-bundle` est plus léger et moderne : il s'appuie sur `league/oauth2-client`, s'intègre bien avec le système de sécurité actuel de Symfony et reste très simple à utiliser pour quelques providers (comme Google), là où HWIOAuthBundle est plus lourd et pensé pour des cas d'usage plus complexes ou historiques.
+
 **Pour un provider spécifique**, installez le provider correspondant :
 
 ```bash
