@@ -10,11 +10,15 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
+        "symfony/asset-mapper": "8.*",
         "symfony/console": "8.*",
         "symfony/dotenv": "8.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.*",
         "symfony/runtime": "8.*",
+        "symfony/twig-bundle": "8.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
         "symfony/security-bundle": "8.*",
         "symfony/yaml": "8.*"
     },
@@ -61,7 +65,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
