@@ -8,6 +8,18 @@ framework:
     #esi: true
     #fragments: true
 
+    # Configuration des trusted proxies pour détecter HTTPS via Traefik
+    # Traefik fait du SSL termination et forward en HTTP vers Nginx
+    # Ces headers permettent à Symfony de détecter correctement HTTPS
+    # Documentation: https://symfony.com/doc/current/deployment/proxies.html
+    trusted_proxies: 'private_ranges'  # Raccourci pour tous les réseaux privés (Docker)
+    trusted_headers:
+        # Headers X-Forwarded-* envoyés par Traefik pour indiquer le protocole réel (HTTPS)
+        - 'x-forwarded-for'
+        - 'x-forwarded-host'
+        - 'x-forwarded-proto'
+        - 'x-forwarded-port'
+
 when@test:
     framework:
         test: true
