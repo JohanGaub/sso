@@ -17,44 +17,108 @@ Ce document fournit des exemples concrets d'intégration pour différents provid
 
 ### Configuration Google Cloud Console
 
-1. **Accéder à** : https://console.cloud.google.com/
-2. **Créer un projet** ou sélectionner un projet existant
-3. **Activer l'API** : "Google+ API" ou "Google Identity"
-4. **Créer des identifiants OAuth 2.0** :
-   - Type : Application Web
-   - URI de redirection autorisés :
-     - `https://votre-domaine.docker.localhost/login/check/google`
-     - `http://localhost:8000/login/check/google`
-5. **Noter** :
-   - Client ID
-   - Client Secret
+- [X] **Accéder à** : https://console.cloud.google.com/
+- [X] **Créer un projet** ou sélectionner un projet existant
+  - Exemple de nom : `sso-project-001`
+- [X] **Activer l'API** : ⚠️ **Non nécessaire pour un SSO simple**
+  - Pour un SSO basique (email, nom, profil), aucune API à activer
+  - L'OAuth2 de base fonctionne sans activation d'API spécifique
+  - Si besoin d'accéder à d'autres services Google (Drive, Gmail, etc.), activer l'API correspondante
+
+### Configuration Traefik pour localtest.me (Développement)
+
+⚠️ **Pour utiliser HTTPS avec Google OAuth2, configurer Traefik pour `localtest.me`**
+
+- [X] **Ajouter la règle Traefik pour `localtest.me`** :
+  - ✅ **Déjà configuré** dans `docker-compose.yml` :
+    ```yaml
+    traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.rule=Host(`${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`${COMPOSE_PROJECT_NAME}.docker.devhost`) || Host(`${COMPOSE_PROJECT_NAME}.localtest.me`)
+    traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.entrypoints=websecure
+    traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.tls=true
+    ```
+  - ⚠️ **Important** : `entrypoints=websecure` force HTTPS (port 443)
+  - ⚠️ **Important** : `tls=true` active le chiffrement SSL/TLS
+  - Redémarrer les conteneurs : `task restart`
+- [ ] **Vérifier l'accès HTTPS** :
+  - Accéder à `https://sso.localtest.me` (le certificat SSL auto-signé fonctionnera)
+  - ⚠️ **Note** : `localtest.me` résout automatiquement vers `127.0.0.1`, donc pas besoin de modifier `/etc/hosts`
+  - ⚠️ **Sécurité** : Le trafic est chiffré entre le navigateur et Traefik (HTTPS)
+
+### Configuration de l'Écran de Consentement OAuth (Obligatoire)
+
+⚠️ **Cette étape est obligatoire avant de créer les identifiants OAuth 2.0**
+
+- [X] **Accéder à l'écran de consentement** :
+  - Dans le menu latéral gauche : **API et services** → **Écran de consentement OAuth**
+- [X] **Choisir le type d'utilisateur** :
+  - Sélectionner **Externe** (pour que n'importe qui avec un compte Gmail puisse se connecter)
+  - Cliquer sur **Créer**
+- [X] **Remplir les informations obligatoires** :
+  - [X] **Nom de l'application** : Le nom de votre projet (ex: "sso-project-001")
+  - [X] **E-mail d'assistance utilisateur** : Votre adresse email
+  - [X] **Coordonnées développeur** : Votre adresse email
+- [X] **Enregistrer et continuer** :
+  - Passer les étapes suivantes (Scopes et Utilisateurs tests)
+  - ⚠️ **Important** : En phase de développement, ajouter votre propre email dans **"Utilisateurs tests"** pour pouvoir tester la connexion
+
+### Création des Identifiants OAuth 2.0
+
+- [ ] **Créer des identifiants OAuth 2.0** :
+  - Dans le menu de gauche : **Identifiants**
+  - Cliquer sur **+ CRÉER DES IDENTIFIANTS** → **ID client OAuth**
+  - [ ] **Type d'application** : Sélectionner **Application Web**
+  - [ ] **Nom** : Nom de votre client (ex: "Client Web 1")
+  - [ ] **Origines JavaScript autorisées** (optionnel pour SSO) :
+    - `https://sso.docker.localhost` (ou votre domaine)
+    - `http://localhost:8000` (si test local)
+  - [ ] **URI de redirection autorisés** (⚠️ **OBLIGATOIRE**) :
+    - ⚠️ **Important** : Google n'accepte **PAS** les domaines `.localhost` (ex: `sso.docker.localhost`)
+    - **Solution recommandée pour le développement** : Utiliser `localtest.me`
+      - `https://sso.localtest.me/login/check/google`
+      - `localtest.me` résout automatiquement vers `127.0.0.1` (gratuit, pas d'installation)
+      - ⚠️ **Note** : Si Google rejette `localtest.me`, utiliser `http://localhost:8000/login/check/google` en fallback
+    - Pour la production : `https://ton-domaine.com/login/check/google` (utiliser un vrai domaine)
+    - ⚠️ **Note** : Avec `knpuniversity/oauth2-client-bundle`, l'URI est généralement `/login/check/google` ou `/connect/google/check` selon votre configuration
+  - Cliquer sur **Créer**
+- [ ] **Noter et sauvegarder immédiatement** :
+  - [ ] **Client ID** (ex: `xxxxx.apps.googleusercontent.com`)
+  - [ ] **Client Secret** (⚠️ **copier immédiatement**, ne sera plus visible après fermeture de la fenêtre)
 
 ### Installation
 
-```bash
-composer require league/oauth2-google
-```
+- [ ] Installer le bundle OAuth2 :
+  ```bash
+  composer require knpuniversity/oauth2-client-bundle
+  ```
+- [ ] Installer le provider Google :
+  ```bash
+  composer require league/oauth2-google
+  ```
 
 ### Configuration `.env`
 
-```env
-###> SSO Google ###
-GOOGLE_CLIENT_ID=votre-client-id-google.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=votre-client-secret-google
-###< SSO Google ###
-```
+- [ ] Ajouter les variables dans `.env` :
+  ```env
+  ###> SSO Google ###
+  GOOGLE_CLIENT_ID=votre-client-id-google.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET=votre-client-secret-google
+  ###< SSO Google ###
+  ```
+- [ ] Ajouter les mêmes variables dans `env.example` (sans les valeurs réelles)
 
 ### Configuration `config/packages/knpu_oauth2_client.yaml`
 
-```yaml
-knpu_oauth2_client:
-    clients:
-        google:
-            type: google
-            client_id: '%env(GOOGLE_CLIENT_ID)%'
-            client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
-            scopes: ['openid', 'profile', 'email']
-```
+- [ ] Créer le fichier `config/packages/knpu_oauth2_client.yaml`
+- [ ] Ajouter la configuration :
+  ```yaml
+  knpu_oauth2_client:
+      clients:
+          google:
+              type: google
+              client_id: '%env(GOOGLE_CLIENT_ID)%'
+              client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+              scopes: ['openid', 'profile', 'email']
+  ```
 
 ### Authenticator (exemple)
 

@@ -63,7 +63,8 @@ services:
         labels:
             - "traefik.enable=true"
             - "traefik.port=80"
-            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.rule=Host(`${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`${COMPOSE_PROJECT_NAME}.docker.devhost`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.rule=Host(`${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`${COMPOSE_PROJECT_NAME}.docker.devhost`) || Host(`${COMPOSE_PROJECT_NAME}.localtest.me`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.entrypoints=websecure"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_nginx.tls=true"
             - "traefik.docker.network=traefik-global-proxy"
 
