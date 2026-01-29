@@ -39,10 +39,42 @@ Ce document fournit des exemples concrets d'intégration pour différents provid
   - ⚠️ **Important** : `entrypoints=websecure` force HTTPS (port 443)
   - ⚠️ **Important** : `tls=true` active le chiffrement SSL/TLS
   - Redémarrer les conteneurs : `task restart`
-- [ ] **Vérifier l'accès HTTPS** :
-  - Accéder à `https://sso.localtest.me` (le certificat SSL auto-signé fonctionnera)
+- [X] **Vérifier l'accès HTTPS** :
+  - Accéder à `https://sso.localtest.me/test` (le certificat SSL auto-signé fonctionnera)
   - ⚠️ **Note** : `localtest.me` résout automatiquement vers `127.0.0.1`, donc pas besoin de modifier `/etc/hosts`
   - ⚠️ **Sécurité** : Le trafic est chiffré entre le navigateur et Traefik (HTTPS)
+  - ✅ **Vérification** : La page `/test` doit afficher "HTTPS Actif" (badge vert)
+
+### Configuration Symfony : Trusted Proxies (Détection HTTPS)
+
+⚠️ **Important** : Traefik fait du SSL termination (déchiffre HTTPS et transmet en HTTP à Nginx).  
+Pour que Symfony détecte correctement HTTPS, il faut configurer les trusted proxies.
+
+- [X] **Configuration Nginx** (`docker/nginx/symfony.template`) :
+  - ✅ **Déjà configuré** : Les headers `X-Forwarded-*` sont transmis à PHP-FPM
+  - Nginx transmet automatiquement les headers de Traefik vers PHP-FPM
+
+- [X] **Configuration Symfony** (`config/packages/framework.yaml`) :
+  - ✅ **Déjà configuré** selon la [documentation officielle Symfony](https://symfony.com/doc/current/deployment/proxies.html) :
+    ```yaml
+    framework:
+        trusted_proxies: 'private_ranges'  # Réseaux privés Docker
+        trusted_headers:
+            - 'x-forwarded-for'
+            - 'x-forwarded-host'
+            - 'x-forwarded-proto'
+            - 'x-forwarded-port'
+    ```
+  - ⚠️ **Important** : Cette configuration permet à Symfony de détecter HTTPS via le header `X-Forwarded-Proto: https` envoyé par Traefik
+
+- [X] **Vérification** :
+  - Accéder à `https://sso.localtest.me/test`
+  - La page de test doit afficher "HTTPS Actif" (badge vert) ✅
+  - La section "Sécurité & Certificat SSL" doit afficher "Certificat SSL validé" ✅
+  - `$request->isSecure()` doit retourner `true` dans Symfony
+  - 💡 **Astuce** : La page `/test` explique en détail le flux de données et la configuration
+
+📚 **Documentation complète** : Voir `docs/INFRASTRUCTURE.md` - Section "Configuration Symfony : Trusted Proxies"
 
 ### Configuration de l'Écran de Consentement OAuth (Obligatoire)
 
@@ -66,23 +98,29 @@ Ce document fournit des exemples concrets d'intégration pour différents provid
 - [ ] **Créer des identifiants OAuth 2.0** :
   - Dans le menu de gauche : **Identifiants**
   - Cliquer sur **+ CRÉER DES IDENTIFIANTS** → **ID client OAuth**
-  - [ ] **Type d'application** : Sélectionner **Application Web**
-  - [ ] **Nom** : Nom de votre client (ex: "Client Web 1")
+  - [X] **Type d'application** : Sélectionner **Application Web**
+  - [X] **Nom** : Nom de votre client (ex: "Client Web 1")
   - [ ] **Origines JavaScript autorisées** (optionnel pour SSO) :
-    - `https://sso.docker.localhost` (ou votre domaine)
-    - `http://localhost:8000` (si test local)
+    - ⚠️ **Format** : Juste le domaine avec le protocole (sans chemin, sans port si port standard)
+    - `https://sso.localtest.me` ✅ **Recommandé pour le développement**
+    - ⚠️ **Important** : Pas de chemin à la fin, juste `https://sso.localtest.me` (pas `/login/check/google`)
+    - `https://sso.docker.localhost` (si vous utilisez ce domaine)
+    - `http://localhost:8000` (fallback si HTTPS non disponible, avec le port)
   - [ ] **URI de redirection autorisés** (⚠️ **OBLIGATOIRE**) :
     - ⚠️ **Important** : Google n'accepte **PAS** les domaines `.localhost` (ex: `sso.docker.localhost`)
-    - **Solution recommandée pour le développement** : Utiliser `localtest.me`
-      - `https://sso.localtest.me/login/check/google`
+    - **Solution recommandée pour le développement** : Utiliser `localtest.me` avec HTTPS
+      - `https://sso.localtest.me/login/check/google` ✅ **Recommandé**
       - `localtest.me` résout automatiquement vers `127.0.0.1` (gratuit, pas d'installation)
-      - ⚠️ **Note** : Si Google rejette `localtest.me`, utiliser `http://localhost:8000/login/check/google` en fallback
-    - Pour la production : `https://ton-domaine.com/login/check/google` (utiliser un vrai domaine)
+      - ⚠️ **Note** : Le certificat SSL auto-signé fonctionne parfaitement pour OAuth2 en développement
+      - ⚠️ **Fallback** : Si Google rejette `localtest.me`, utiliser `http://localhost:8000/login/check/google` (mais HTTPS est préférable)
+    - Pour la production : `https://ton-domaine.com/login/check/google` (utiliser un vrai domaine avec certificat signé)
     - ⚠️ **Note** : Avec `knpuniversity/oauth2-client-bundle`, l'URI est généralement `/login/check/google` ou `/connect/google/check` selon votre configuration
+    - ⚠️ **Sécurité** : HTTPS est requis pour OAuth2, mais un certificat auto-signé fonctionne en développement
   - Cliquer sur **Créer**
-- [ ] **Noter et sauvegarder immédiatement** :
-  - [ ] **Client ID** (ex: `xxxxx.apps.googleusercontent.com`)
-  - [ ] **Client Secret** (⚠️ **copier immédiatement**, ne sera plus visible après fermeture de la fenêtre)
+- [X] **Noter et sauvegarder immédiatement** :
+  - [X] **Client ID** (ex: `xxxxx.apps.googleusercontent.com`)
+  - [X] **Client Secret** (⚠️ **copier immédiatement**, ne sera plus visible après fermeture de la fenêtre)
+    - ⚠️ **Important** : Ajoutez le Client ID et le Client Secret dans votre fichier `.env`
 
 ### Installation
 
