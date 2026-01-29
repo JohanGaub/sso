@@ -16,21 +16,27 @@ mkdir -p var/uploads/inscriptions/temporaires
 
 # Configuration des permissions
 echo "🔒 Configuration des permissions..."
+# Récupérer l'UID/GID de l'utilisateur hôte depuis les variables d'environnement ou utiliser 1000 par défaut
+HOST_UID=${HOST_UID:-1000}
+HOST_GID=${HOST_GID:-1000}
+echo "👤 Configuration des permissions pour UID:${HOST_UID} GID:${HOST_GID}"
+
 # Utiliser chmod sur macOS/Darwin ou setfacl sur Linux
 if command -v setfacl >/dev/null 2>&1; then
     echo "📁 Utilisation de setfacl (Linux)"
-    setfacl -R -m u:www-data:rwX -m u:1000:rwX var public vendor 2>/dev/null || true
-    setfacl -dR -m u:www-data:rwX -m u:1000:rwX var public vendor 2>/dev/null || true
+    setfacl -R -m u:www-data:rwX -m u:${HOST_UID}:rwX var public vendor templates assets 2>/dev/null || true
+    setfacl -dR -m u:www-data:rwX -m u:${HOST_UID}:rwX var public vendor templates assets 2>/dev/null || true
     # Permissions pour le répertoire config/ (pour permettre Git de modifier les fichiers)
-    setfacl -m u:www-data:rwX -m u:1000:rwX config/ 2>/dev/null || true
-    setfacl -dR -m u:www-data:rwX -m u:1000:rwX config/ 2>/dev/null || true
+    setfacl -m u:www-data:rwX -m u:${HOST_UID}:rwX config/ 2>/dev/null || true
+    setfacl -dR -m u:www-data:rwX -m u:${HOST_UID}:rwX config/ 2>/dev/null || true
 else
     echo "📁 Utilisation de chmod (macOS/Docker Desktop)"
-    chmod -R 775 var public vendor 2>/dev/null || true
+    chmod -R 775 var public vendor templates assets 2>/dev/null || true
     chown -R www-data:www-data var public vendor 2>/dev/null || true
+    chown -R ${HOST_UID}:${HOST_GID} templates assets 2>/dev/null || true
     # Permissions pour le répertoire config/ (pour permettre Git de modifier les fichiers)
     chmod 775 config/ 2>/dev/null || true
-    chown 1000:1000 config/ 2>/dev/null || true
+    chown ${HOST_UID}:${HOST_GID} config/ 2>/dev/null || true
 fi
 
 # Si le premier argument commence par un tiret, on le traite comme une commande PHP
@@ -118,18 +124,19 @@ if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
     echo "🔒 Réapplication des permissions finales..."
     if command -v setfacl >/dev/null 2>&1; then
         echo "📁 Réapplication setfacl (Linux)"
-        setfacl -R -m u:www-data:rwX -m u:1000:rwX var 2>/dev/null || true
-        setfacl -dR -m u:www-data:rwX -m u:1000:rwX var 2>/dev/null || true
+        setfacl -R -m u:www-data:rwX -m u:${HOST_UID}:rwX var templates assets 2>/dev/null || true
+        setfacl -dR -m u:www-data:rwX -m u:${HOST_UID}:rwX var templates assets 2>/dev/null || true
         # Réappliquer les permissions pour le répertoire config/
-        setfacl -m u:www-data:rwX -m u:1000:rwX config/ 2>/dev/null || true
-        setfacl -dR -m u:www-data:rwX -m u:1000:rwX config/ 2>/dev/null || true
+        setfacl -m u:www-data:rwX -m u:${HOST_UID}:rwX config/ 2>/dev/null || true
+        setfacl -dR -m u:www-data:rwX -m u:${HOST_UID}:rwX config/ 2>/dev/null || true
     else
         echo "📁 Réapplication chmod (macOS/Docker Desktop)"
-        chmod -R 775 var 2>/dev/null || true
+        chmod -R 775 var templates assets 2>/dev/null || true
         chown -R www-data:www-data var 2>/dev/null || true
+        chown -R ${HOST_UID}:${HOST_GID} templates assets 2>/dev/null || true
         # Réappliquer les permissions pour le répertoire config/
         chmod 775 config/ 2>/dev/null || true
-        chown 1000:1000 config/ 2>/dev/null || true
+        chown ${HOST_UID}:${HOST_GID} config/ 2>/dev/null || true
     fi
 fi
 

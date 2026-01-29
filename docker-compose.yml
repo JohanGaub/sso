@@ -34,6 +34,9 @@ services:
             SYMFONY_CONTAINER_XML_PATH: ${SYMFONY_CONTAINER_XML_PATH}
             HMR_SERVER_URL: https://theme-${COMPOSE_PROJECT_NAME}.docker.localhost
             DEFAULT_URI: http://${COMPOSE_PROJECT_NAME}.docker.localhost
+            # Permissions : UID/GID de l'utilisateur hôte pour que les fichiers créés soient accessibles depuis l'IDE
+            HOST_UID: ${HOST_UID:-1000}
+            HOST_GID: ${HOST_GID:-1000}
         networks:
             - back
         depends_on:
