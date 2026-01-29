@@ -994,7 +994,112 @@ graph TB
 
 ---
 
-## 7. Certificats SSL
+## 7. Configuration Symfony : Trusted Proxies (Détection HTTPS)
+
+### 🎯 Objectif
+
+Comprendre pourquoi Symfony ne détecte pas HTTPS par défaut derrière Traefik et comment configurer les trusted proxies pour corriger cela.
+
+### 📚 Explication
+
+#### Le Problème : SSL Termination
+
+**Traefik fait du SSL termination** :
+1. Reçoit la requête HTTPS du navigateur (port 443)
+2. Déchiffre SSL/TLS
+3. Transmet la requête en **HTTP** à Nginx (réseau Docker privé)
+4. Rechiffre la réponse avant de l'envoyer au navigateur
+
+**Conséquence** : Symfony voit une connexion **HTTP** entre Nginx et PHP-FPM, donc `$request->isSecure()` retourne `false` même si l'utilisateur accède en HTTPS.
+
+#### La Solution : Headers X-Forwarded-*
+
+Traefik ajoute automatiquement des headers HTTP pour indiquer le protocole original :
+- `X-Forwarded-Proto: https` → Indique que la requête originale était en HTTPS
+- `X-Forwarded-For` → IP du client original
+- `X-Forwarded-Host` → Host original
+- `X-Forwarded-Port` → Port original
+
+**Configuration nécessaire** :
+1. **Nginx** doit transmettre ces headers à PHP-FPM
+2. **Symfony** doit faire confiance à ces headers (trusted proxies)
+
+#### Configuration Nginx
+
+Dans `docker/nginx/symfony.template`, les headers `X-Forwarded-*` sont transmis à PHP-FPM :
+
+```nginx
+location ~ ^/index\.php(/|$) {
+    # ... autres configurations ...
+    
+    # Passer les headers X-Forwarded-* de Traefik à PHP-FPM
+    fastcgi_param HTTP_X_FORWARDED_PROTO $http_x_forwarded_proto;
+    fastcgi_param HTTP_X_FORWARDED_FOR $http_x_forwarded_for;
+    fastcgi_param HTTP_X_FORWARDED_HOST $http_x_forwarded_host;
+    fastcgi_param HTTP_X_FORWARDED_PORT $http_x_forwarded_port;
+}
+```
+
+#### Configuration Symfony
+
+Dans `config/packages/framework.yaml`, configurer les trusted proxies selon la [documentation officielle Symfony](https://symfony.com/doc/current/deployment/proxies.html) :
+
+```yaml
+framework:
+    # Faire confiance à tous les réseaux privés (Docker)
+    trusted_proxies: 'private_ranges'
+    
+    # Headers à prendre en compte pour détecter HTTPS
+    trusted_headers:
+        - 'x-forwarded-for'
+        - 'x-forwarded-host'
+        - 'x-forwarded-proto'
+        - 'x-forwarded-port'
+```
+
+**Explication** :
+- `trusted_proxies: 'private_ranges'` → Raccourci Symfony pour tous les réseaux privés (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)
+- `trusted_headers` → Liste des headers à prendre en compte pour détecter le protocole réel
+
+#### Flux Complet avec Headers
+
+```mermaid
+sequenceDiagram
+    participant U as Navigateur
+    participant T as Traefik
+    participant N as Nginx
+    participant P as PHP-FPM
+    participant S as Symfony
+
+    U->>T: 1. GET https://sso.localtest.me/test
+    Note over T: 2. SSL Termination<br/>Déchiffre HTTPS
+    Note over T: 3. Ajoute headers<br/>X-Forwarded-Proto: https
+    T->>N: 4. Forward HTTP + headers X-Forwarded-*
+    N->>P: 5. FastCGI + fastcgi_param HTTP_X_FORWARDED_PROTO
+    P->>S: 6. Exécute index.php<br/>$_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https'
+    Note over S: 7. Trusted proxies configurés<br/>Détecte HTTPS via X-Forwarded-Proto
+    S->>P: 8. Réponse HTML
+    P->>N: 9. Réponse HTML
+    N->>T: 10. Réponse HTML
+    Note over T: 11. Rechiffre en HTTPS
+    T->>U: 12. Réponse HTTPS
+```
+
+#### Vérification
+
+Pour vérifier que la configuration fonctionne :
+1. Accéder à `https://sso.localtest.me/test`
+2. La page doit afficher **"HTTPS Actif"** (badge vert)
+3. `$request->isSecure()` doit retourner `true`
+4. `$request->getScheme()` doit retourner `'https'`
+
+#### Documentation Officielle
+
+- [Symfony - How to Configure Symfony to Work behind a Load Balancer or a Reverse Proxy](https://symfony.com/doc/current/deployment/proxies.html)
+
+---
+
+## 8. Certificats SSL
 
 ### 🎯 Objectif
 Comprendre comment Traefik gère automatiquement les certificats SSL, comment ils sont créés, et comment les installer sur d'autres machines.
