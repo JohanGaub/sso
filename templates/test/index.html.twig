@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Traefik & Symfony - Test de Configuration</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: #10b981;
+            color: white;
+        }
+        .status.info {
+            background: #3b82f6;
+            color: white;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        .section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .section li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        .section li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        .flow {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+        .flow-step {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .flow-step:before {
+            content: "→";
+            margin-right: 10px;
+            color: #10b981;
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .info-box strong {
+            color: #1e40af;
+        }
+        .cert-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .badge.https {
+            background: #10b981;
+            color: white;
+        }
+        .badge.http {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Traefik & Symfony</h1>
+            <p>Configuration opérationnelle</p>
+        </div>
+        <div class="content">
+            <div class="status success">
+                ✅ Tout fonctionne correctement !
+            </div>
+
+            <div class="section">
+                <h2>📍 Où sommes-nous ?</h2>
+                <ul>
+                    <li><strong>Application :</strong> Symfony 8 SSO Project</li>
+                    <li><strong>Environnement :</strong> Développement local</li>
+                    <li><strong>URL actuelle :</strong> <code>{{ uri }}</code></li>
+                    <li><strong>Protocole :</strong> <span class="badge {{ badgeClass }}">{{ badgeText }}</span></li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>🔒 Sécurité & Certificat SSL</h2>
+                <div class="cert-status">
+                    <span class="badge {{ certBadgeClass }}">
+                        {{ certBadgeText }}
+                    </span>
+                </div>
+                {% if isHttps %}
+                <div class="info-box">
+                    <strong>✅ Certificat SSL validé</strong><br>
+                    Le certificat auto-signé a été accepté par votre navigateur. 
+                    En développement, c'est normal d'avoir un certificat auto-signé. 
+                    En production, vous utiliserez un certificat signé par une autorité de certification (Let's Encrypt, etc.).
+                </div>
+                {% else %}
+                <div class="info-box">
+                    <strong>⚠️ Attention</strong><br>
+                    Vous êtes en HTTP. Pour OAuth2, HTTPS est requis. 
+                    Vérifiez que vous accédez bien via <code>https://</code>.
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="section">
+                <h2>🔄 Flux de Données (Comment ça marche ?)</h2>
+                <div class="flow">
+                    <div class="flow-step">1. <strong>Navigateur</strong> → Requête HTTPS vers <code>{{ host }}</code> (port 443)</div>
+                    <div class="flow-step">2. <strong>Traefik</strong> → Reçoit la requête HTTPS, analyse l'en-tête <code>Host: {{ host }}</code></div>
+                    <div class="flow-step">3. <strong>Traefik</strong> → Trouve la règle de routage et déchiffre SSL/TLS (SSL termination)</div>
+                    <div class="flow-step">4. <strong>Traefik</strong> → Ajoute les headers <code>X-Forwarded-Proto: https</code>, <code>X-Forwarded-For</code>, etc.</div>
+                    <div class="flow-step">5. <strong>Traefik</strong> → Forward en HTTP vers Nginx (réseau Docker privé <code>traefik-global-proxy</code>)</div>
+                    <div class="flow-step">6. <strong>Nginx</strong> → Reçoit la requête HTTP sur le port 80 interne</div>
+                    <div class="flow-step">7. <strong>Nginx</strong> → Transmet les headers <code>X-Forwarded-*</code> à PHP-FPM via FastCGI (port 9000)</div>
+                    <div class="flow-step">8. <strong>PHP-FPM</strong> → Exécute <code>public/index.php</code> (front controller Symfony)</div>
+                    <div class="flow-step">9. <strong>Symfony</strong> → Détecte HTTPS via les headers <code>X-Forwarded-Proto</code> (trusted proxies configurés)</div>
+                    <div class="flow-step">10. <strong>Symfony</strong> → Route la requête vers ce contrôleur (<code>/test</code>)</div>
+                    <div class="flow-step">11. <strong>Symfony</strong> → Génère cette réponse HTML</div>
+                    <div class="flow-step">12. <strong>PHP-FPM</strong> → Retourne la réponse à Nginx</div>
+                    <div class="flow-step">13. <strong>Nginx</strong> → Retourne la réponse à Traefik</div>
+                    <div class="flow-step">14. <strong>Traefik</strong> → Rechiffre la réponse en HTTPS et l'envoie au navigateur</div>
+                    <div class="flow-step">15. <strong>Navigateur</strong> → Affiche cette page ! 🎉</div>
+                </div>
+                <div class="info-box" style="margin-top: 20px;">
+                    <strong>💡 Point clé : Détection HTTPS</strong><br>
+                    Traefik fait du <strong>SSL termination</strong> : il déchiffre HTTPS et transmet en HTTP à Nginx. 
+                    Pour que Symfony détecte correctement HTTPS, il faut configurer les <strong>trusted proxies</strong> 
+                    dans <code>config/packages/framework.yaml</code> pour qu'il fasse confiance aux headers 
+                    <code>X-Forwarded-Proto</code> envoyés par Traefik.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🛠️ Architecture Technique</h2>
+                <ul>
+                    <li><strong>Traefik :</strong> Reverse proxy avec gestion automatique des certificats SSL. Fait du SSL termination et ajoute les headers <code>X-Forwarded-*</code></li>
+                    <li><strong>Nginx :</strong> Serveur web qui transmet les requêtes PHP et les headers <code>X-Forwarded-*</code> à PHP-FPM</li>
+                    <li><strong>PHP-FPM :</strong> Processus PHP qui exécute le code Symfony (port 9000)</li>
+                    <li><strong>Symfony 8 :</strong> Framework PHP qui détecte HTTPS via les trusted proxies et gère le routage</li>
+                    <li><strong>Réseaux Docker :</strong> Communication sécurisée entre conteneurs (traefik-global-proxy, back)</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>⚙️ Configuration des Trusted Proxies</h2>
+                <p>Pour que Symfony détecte correctement HTTPS derrière Traefik, la configuration suivante est nécessaire :</p>
+                <div class="flow" style="background: #f8f9fa; color: #333; margin-top: 15px;">
+                    <div class="flow-step"><strong>1. Configuration Symfony</strong> (<code>config/packages/framework.yaml</code>) :</div>
+                    <div style="padding-left: 40px; margin: 10px 0;">
+                        <code style="color: #667eea;">trusted_proxies: 'private_ranges'</code><br>
+                        <code style="color: #667eea;">trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']</code>
+                    </div>
+                    <div class="flow-step"><strong>2. Configuration Nginx</strong> (<code>docker/nginx/symfony.template</code>) :</div>
+                    <div style="padding-left: 40px; margin: 10px 0;">
+                        Transmet les headers <code>X-Forwarded-*</code> de Traefik à PHP-FPM via <code>fastcgi_param</code>
+                    </div>
+                    <div class="flow-step"><strong>3. Traefik</strong> :</div>
+                    <div style="padding-left: 40px; margin: 10px 0;">
+                        Ajoute automatiquement <code>X-Forwarded-Proto: https</code> lors du SSL termination
+                    </div>
+                </div>
+                <div class="info-box" style="margin-top: 15px;">
+                    <strong>📚 Documentation :</strong> 
+                    <a href="https://symfony.com/doc/current/deployment/proxies.html" target="_blank" style="color: #1e40af;">
+                        Symfony - How to Configure Symfony to Work behind a Load Balancer or a Reverse Proxy
+                    </a>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>✅ Vérifications Réussies</h2>
+                <ul>
+                    <li>Traefik route correctement les requêtes</li>
+                    <li>HTTPS fonctionne (certificat SSL actif)</li>
+                    <li>Nginx transmet les requêtes à PHP-FPM</li>
+                    <li>Symfony répond correctement</li>
+                    <li>Le contrôleur fonctionne</li>
+                    <li>La communication entre conteneurs est opérationnelle</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>🚀 Prochaines Étapes</h2>
+                <ul>
+                    <li>Configuration Google OAuth2 pour le SSO</li>
+                    <li>Implémentation de l'authentification unique</li>
+                    <li>Gestion des utilisateurs (Just-in-Time provisioning)</li>
+                    <li>Mapping des rôles depuis l'IdP</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
