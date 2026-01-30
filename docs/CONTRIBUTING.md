@@ -58,6 +58,7 @@ Le scope indique la partie du projet concernée :
 - **Doit** être au présent ("add" pas "added")
 - **Ne doit pas** se terminer par un point
 - **Recommandation** : maximum 72 caractères
+- **Préférer** des messages courts et concis dans le corps du commit également
 
 ### Exemples valides
 
@@ -71,13 +72,12 @@ feat(quality): add PHPStan level max configuration
 fix(phpstan): exclude auto-generated reference.php
 docs(api): update API documentation
 
-# Avec corps (pour plus de détails)
+# Avec corps (pour plus de détails) - Préférer des messages concis
 feat(quality): add PHPStan level max configuration
 
-- Configure PHPStan at maximum level (9)
+- Configure PHPStan at maximum level (10)
 - Add Symfony and Doctrine extensions
 - Exclude auto-generated reference.php file
-- Add dockerized task commands for quality checks
 ```
 
 ### Exemples invalides ❌
@@ -244,7 +244,7 @@ git reset --soft HEAD~1
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [PHPStan Documentation](https://phpstan.org/)
 - [Rector Documentation](https://getrector.com/)
-- [Documentation Qualité du Code](./docs/QUALITE_CODE.md)
+- [Documentation Qualité du Code](./QUALITE_CODE.md)
 
 ---
 

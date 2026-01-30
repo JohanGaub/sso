@@ -20,7 +20,7 @@ docker compose exec php composer install
 
 ## 🔍 PHPStan - Analyse Statique
 
-PHPStan analyse votre code sans l'exécuter et détecte les erreurs potentielles au **niveau maximum** (niveau 9).
+PHPStan analyse votre code sans l'exécuter et détecte les erreurs potentielles au **niveau maximum** (niveau 10).
 
 ### Configuration
 

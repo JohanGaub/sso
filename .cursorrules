@@ -1,0 +1,4 @@
+# Project Rules for SSO Project
+
+## Commit Messages
+- Après chaque modification de fichiers, propose systématiquement un message de commit au format Conventional Commits selon docs/CONTRIBUTING.md (type(scope): description avec corps optionnel) pour TOUS les fichiers en staging (git status), pas seulement la dernière modification. Ne pas créer le commit, seulement proposer le message.
