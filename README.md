@@ -79,7 +79,7 @@ Commandes principales :
 
 ## 🤝 Contribution
 
-Avant de contribuer, veuillez lire le [Guide de Contribution](./CONTRIBUTING.md) qui contient :
+Avant de contribuer, veuillez lire le [Guide de Contribution](./docs/CONTRIBUTING.md) qui contient :
 - Les conventions de commit (Conventional Commits)
 - Les règles de qualité du code
 - Le workflow de développement

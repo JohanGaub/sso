@@ -10,6 +10,7 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
+        "symfony/asset": "8.*",
         "symfony/asset-mapper": "8.*",
         "symfony/console": "8.*",
         "symfony/dotenv": "8.*",

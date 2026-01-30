@@ -40,7 +40,7 @@ if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
     echo "   docs: update CONTRIBUTING.md with commit conventions"
     echo "   chore(docker): update docker-compose configuration"
     echo ""
-    echo "🔗 Documentation complète : CONTRIBUTING.md"
+    echo "🔗 Documentation complète : docs/CONTRIBUTING.md"
     echo ""
     exit 1
 fi
