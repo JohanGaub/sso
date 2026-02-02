@@ -2,17 +2,18 @@
 
 ## 📋 Table des Matières
 
-1. [Vue d'Ensemble](#vue-densemble)
-2. [Concepts Clés](#concepts-clés)
-3. [Installation et Configuration Initiale](#installation-et-configuration-initiale)
-4. [Génération de SBOM](#génération-de-sbom)
-5. [Intégration dans le Workflow](#intégration-dans-le-workflow)
-6. [Plan d'Intégration Détaillé](#plan-dintégration-détaillé)
-7. [Utilisation Quotidienne](#utilisation-quotidienne)
-8. [Dépannage](#dépannage)
+1. [Vue d'Ensemble](#-vue-densemble)
+2. [Concepts Clés](#-concepts-clés)
+3. [Installation et Configuration Initiale](#-installation-et-configuration-initiale)
+4. [Génération de SBOM](#-génération-de-sbom)
+5. [Intégration dans le Workflow](#-intégration-dans-le-workflow)
+6. [Plan d'Intégration Détaillé](#-plan-dintégration-détaillé)
+7. [Utilisation Quotidienne](#-utilisation-quotidienne)
+8. [Dépannage](#-dépannage)
 
 ---
 
+<a id="vue-densemble"></a>
 ## 🎯 Vue d'Ensemble
 
 ### Qu'est-ce que Dependency-Track ?
@@ -42,6 +43,7 @@
 
 ---
 
+<a id="concepts-clés"></a>
 ## 📚 Concepts Clés
 
 ### SBOM (Software Bill of Materials)
@@ -87,6 +89,7 @@ Dependency-Track interroge plusieurs sources :
 
 ---
 
+<a id="installation-et-configuration-initiale"></a>
 ## 🚀 Installation et Configuration Initiale
 
 ### Étape 1 : Configuration dans docker-compose.yml
@@ -293,6 +296,7 @@ Dependency-Track crée automatiquement un compte administrateur lors du premier 
 
 ---
 
+<a id="génération-de-sbom"></a>
 ## 📦 Génération de SBOM
 
 ### Qu'est-ce qu'un SBOM CycloneDX ?
@@ -451,6 +455,7 @@ generate-sbom:
 
 ---
 
+<a id="intégration-dans-le-workflow"></a>
 ## 🔄 Intégration dans le Workflow
 
 ### Workflow Recommandé
@@ -523,6 +528,7 @@ generate-sbom:
 
 ---
 
+<a id="plan-dintégration-détaillé"></a>
 ## 📋 Plan d'Intégration Détaillé
 
 ### Phase 1 : Installation et Configuration (30 minutes)
@@ -880,6 +886,7 @@ echo "✅ SBOM uploadé avec succès !"
 
 ---
 
+<a id="utilisation-quotidienne"></a>
 ## 📅 Utilisation Quotidienne
 
 ### Workflow Quotidien Recommandé
@@ -934,6 +941,7 @@ echo "✅ SBOM uploadé avec succès !"
 
 ---
 
+<a id="dépannage"></a>
 ## 🐛 Dépannage
 
 ### Problème 1 : SBOM non généré
