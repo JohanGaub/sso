@@ -8,10 +8,10 @@ vars:
     sh: |
       FILES="-f docker-compose.yml"
       OS=$(uname -s)
-      if [ -f "docker-compose-${OS}.yml" ]; then
+      if [[ -f "docker-compose-${OS}.yml" ]]; then
         FILES="$FILES -f docker-compose-${OS}.yml"
       fi
-      if [ -f "docker-compose-local.yml" ]; then
+      if [[ -f "docker-compose-local.yml" ]]; then
         FILES="$FILES -f docker-compose-local.yml"
       fi
       echo $FILES
@@ -30,7 +30,7 @@ tasks:
     desc: Vérifie et ajoute les variables Docker manquantes dans .env
     cmds:
       - |
-        if [ ! -f .env ]; then
+        if [[ ! -f .env ]]; then
           echo "❌ Le fichier .env n'existe pas"
           exit 1
         fi
@@ -44,7 +44,7 @@ tasks:
           echo "⚠️  DOCKER_DEV_HOST_PATH manquant"
           MISSING=1
         fi
-        if [ $MISSING -eq 0 ]; then
+        if [[ $MISSING -eq 0 ]]; then
           echo "✅ Toutes les variables Docker essentielles sont présentes"
         else
           echo ""
@@ -74,29 +74,29 @@ tasks:
       - |
         echo "🔍 Vérification de docker-dev-host..."
         # Charger la variable depuis .env si elle existe
-        if [ -f .env ]; then
+        if [[ -f .env ]]; then
           export $(grep -v '^#' .env | grep DOCKER_DEV_HOST_PATH | xargs) 2>/dev/null || true
         fi
         DOCKER_DEV_HOST_PATH="${DOCKER_DEV_HOST_PATH:-/home/jgaub@niji.fr/Public/Project/docker-dev-host}"
 
         # Vérifier si traefik est en cours d'exécution
         TRAEFIK_RUNNING=$(docker ps -q -f name=^traefik$)
-        if [ -z "$TRAEFIK_RUNNING" ]; then
+        if [[ -z "$TRAEFIK_RUNNING" ]]; then
           # Vérifier si le conteneur existe mais est arrêté
           TRAEFIK_EXISTS=$(docker ps -aq -f name=^traefik$)
-          if [ -n "$TRAEFIK_EXISTS" ]; then
+          if [[ -n "$TRAEFIK_EXISTS" ]]; then
             echo "⚠️  Le conteneur traefik existe mais n'est pas démarré. Démarrage..."
             docker start traefik || true
             # Attendre un peu que traefik démarre
             sleep 2
           else
             echo "⚠️  docker-dev-host n'est pas démarré. Démarrage en cours..."
-            if [ ! -d "$DOCKER_DEV_HOST_PATH" ]; then
+            if [[ ! -d "$DOCKER_DEV_HOST_PATH" ]]; then
               echo "❌ Erreur : docker-dev-host introuvable dans $DOCKER_DEV_HOST_PATH"
               echo "   Veuillez définir la variable DOCKER_DEV_HOST_PATH dans votre .env"
               exit 1
             fi
-            if [ ! -f "$DOCKER_DEV_HOST_PATH/Makefile" ]; then
+            if [[ ! -f "$DOCKER_DEV_HOST_PATH/Makefile" ]]; then
               echo "❌ Erreur : Makefile introuvable dans $DOCKER_DEV_HOST_PATH"
               echo "   Vérifiez que le chemin DOCKER_DEV_HOST_PATH est correct"
               exit 1
@@ -126,7 +126,7 @@ tasks:
         # Attendre que les conteneurs soient prêts
         sleep 2
         # Récupérer COMPOSE_PROJECT_NAME depuis .env ou utiliser le nom du dossier
-        if [ -f .env ]; then
+        if [[ -f .env ]]; then
           PROJECT_NAME=$(grep "^COMPOSE_PROJECT_NAME=" .env | cut -d'=' -f2 | tr -d '"' | tr -d "'" || basename "$(pwd)")
         else
           PROJECT_NAME=$(basename "$(pwd)")
@@ -298,7 +298,7 @@ tasks:
         set -e
         echo "$OUTPUT"
         # Si l'erreur est due à l'absence de migrations, on considère que c'est OK
-        if [ $EXIT_CODE -ne 0 ]; then
+        if [[ $EXIT_CODE -ne 0 ]]; then
           if echo "$OUTPUT" | grep -qiE "(no registered migrations|couldn't be reached.*no registered)"; then
             echo "ℹ️  Aucune migration à exécuter (c'est normal pour un nouveau projet)"
             exit 0
@@ -416,7 +416,7 @@ tasks:
             # Corriger les fichiers de configuration racine
             echo '📄 Correction des fichiers de configuration racine...'
             for file in .gitignore composer.json composer.lock symfony.lock .env.example Taskfile.yml .php-cs-fixer.php phpmd.xml phpstan.neon phpunit.xml.dist rector.php; do
-              if [ -f \"\$file\" ]; then
+              if [[ -f \"\$file\" ]]; then
                 if command -v setfacl >/dev/null 2>&1; then
                   setfacl -m u:www-data:rw -m u:1000:rw -m u:\$HOST_UID:rw -m g::rw -m o::r \"\$file\" 2>/dev/null || true
                 fi
@@ -452,7 +452,7 @@ tasks:
     cmds:
       - |
         FILES="{{.DOCKER_COMPOSE_FILES}}"
-        if [ -n "${CLI_ARGS}" ]; then
+        if [[ -n "${CLI_ARGS}" ]]; then
           docker compose $FILES exec -T -e APP_ENV=test -e XDEBUG_MODE=off php bin/phpunit --filter ${CLI_ARGS}
         else
           docker compose $FILES exec -T -e APP_ENV=test -e XDEBUG_MODE=off php bin/phpunit
@@ -638,7 +638,7 @@ tasks:
     desc: Installe les dépendances npm
     cmds:
       - |
-        if [ ! -f package.json ]; then
+        if [[ ! -f package.json ]]; then
           echo "⚠️  Aucun package.json trouvé. Le projet n'a pas de thème à installer."
           exit 0
         fi
@@ -671,7 +671,7 @@ tasks:
     internal: true
     cmds:
       - |
-        if [ -f package.json ]; then
+        if [[ -f package.json ]]; then
           task theme-build
         else
           echo "ℹ️  Aucun thème détecté (pas de package.json), passage de l'étape theme-build"

@@ -6,7 +6,7 @@ set -e
 ENV_FILE=".env"
 ENV_EXAMPLE="env.example"
 
-if [ ! -f "$ENV_FILE" ]; then
+if [[ ! -f "$ENV_FILE" ]]; then
     echo "❌ Le fichier .env n'existe pas"
     exit 1
 fi
@@ -34,7 +34,7 @@ for var in "${REQUIRED_VARS[@]}"; do
     fi
 done
 
-if [ ${#MISSING_VARS[@]} -eq 0 ]; then
+if [[ ${#MISSING_VARS[@]} -eq 0 ]]; then
     echo "✅ Toutes les variables Docker sont présentes dans .env"
     exit 0
 fi
@@ -45,7 +45,7 @@ for var in "${MISSING_VARS[@]}"; do
 done
 
 # Lire les valeurs depuis env.example si disponible
-if [ -f "$ENV_EXAMPLE" ]; then
+if [[ -f "$ENV_EXAMPLE" ]]; then
     echo ""
     echo "📋 Ajout des variables manquantes depuis env.example..."
 

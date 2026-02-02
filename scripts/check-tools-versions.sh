@@ -18,7 +18,7 @@ echo -e "${BOLD}${UNDERLINE}═════════════════�
 echo ""
 
 # Vérifier que composer.json existe
-if [ ! -f "$COMPOSER_JSON" ]; then
+if [[ ! -f "$COMPOSER_JSON" ]]; then
     echo -e "${RED}Erreur : $COMPOSER_JSON introuvable${NC}" >&2
     exit 1
 fi
@@ -42,7 +42,7 @@ get_latest_version() {
         grep "versions" | \
         awk -F: '{print $2}')
     
-    if [ -z "$versions" ]; then
+    if [[ -z "$versions" ]]; then
         return
     fi
     
@@ -66,7 +66,7 @@ version_lt() {
     v2=$(echo "$v2" | sed 's/^[vV^~]//' | sed 's/-dev$//' | sed 's/-.*$//')
     
     # Comparaison avec sort -V
-    if [ "$(printf '%s\n' "$v1" "$v2" | sort -V | head -1)" != "$v1" ]; then
+    if [[ "$(printf '%s\n' "$v1" "$v2" | sort -V | head -1)" != "$v1" ]]; then
         return 1
     fi
     return 0
@@ -92,17 +92,17 @@ for package in "${!PACKAGES[@]}"; do
     
     # Récupérer la contrainte depuis composer.json
     constraint=$(get_constraint "$package")
-    if [ -z "$constraint" ]; then
+    if [[ -z "$constraint" ]]; then
         continue
     fi
     
     # Récupérer la version installée
     installed=$(docker compose $FILES exec -T php composer show "$package" 2>/dev/null | grep -E "^\s+versions\s+:" | awk -F: '{print $2}' | awk '{print $1}' | head -1)
-    if [ -z "$installed" ] || [ "$installed" = "*" ]; then
+    if [[ -z "$installed" ]] || [[ "$installed" = "*" ]]; then
         # Essayer une autre méthode
         installed=$(docker compose $FILES exec -T php composer show "$package" 2>/dev/null | grep -E "versions" | awk '{print $NF}' | grep -v "^\*$" | head -1)
     fi
-    if [ -z "$installed" ] || [ "$installed" = "*" ]; then
+    if [[ -z "$installed" ]] || [[ "$installed" = "*" ]]; then
         installed="non installé"
     fi
     
@@ -112,7 +112,7 @@ for package in "${!PACKAGES[@]}"; do
         needs_update=false
     else
         latest=$(get_latest_version "$package")
-        if [ -z "$latest" ]; then
+        if [[ -z "$latest" ]]; then
             latest="indisponible"
             needs_update=false
         else
@@ -121,7 +121,7 @@ for package in "${!PACKAGES[@]}"; do
             latest_clean=$(echo "$latest" | sed 's/^[vV]//' | sed 's/-.*$//' | xargs)
             
             # Comparer strictement (ne mettre à jour que si installed < latest)
-            if [ -n "$installed_clean" ] && [ -n "$latest_clean" ] && [ "$installed_clean" != "$latest_clean" ]; then
+            if [[ -n "$installed_clean" ]] && [[ -n "$latest_clean" ]] && [[ "$installed_clean" != "$latest_clean" ]]; then
                 if version_lt "$installed_clean" "$latest_clean"; then
                     needs_update=true
                     HAS_UPDATES=true
@@ -136,7 +136,7 @@ for package in "${!PACKAGES[@]}"; do
     fi
     
     # Afficher les informations
-    if [ "$needs_update" = true ]; then
+    if [[ "$needs_update" = true ]]; then
         echo -e "${BOLD}${name}:${NC}     ${GREEN}${installed}${NC} → ${YELLOW}${latest}${NC} disponible (contrainte: ${constraint})"
     else
         if [[ "$constraint" == *"dev"* ]] || [[ "$constraint" == *"x-dev"* ]]; then
@@ -150,7 +150,7 @@ done
 echo ""
 
 # Afficher les recommandations de mise à jour
-if [ "$HAS_UPDATES" = true ]; then
+if [[ "$HAS_UPDATES" = true ]]; then
     echo -e "${BOLD}${RED}${UNDERLINE}⚠️  ATTENTION : DES MISES À JOUR SONT DISPONIBLES !${NC}"
     echo ""
     echo -e "${YELLOW}Packages pouvant être mis à jour :${NC}"

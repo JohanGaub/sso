@@ -49,7 +49,7 @@ fi
 FIRST_LINE=$(echo "$COMMIT_MSG" | head -n1)
 DESCRIPTION_LENGTH=$(echo "$FIRST_LINE" | sed -E 's/^[^:]+: //' | wc -c)
 
-if [ "$DESCRIPTION_LENGTH" -gt 73 ]; then
+if [[ "$DESCRIPTION_LENGTH" -gt 73 ]]; then
     echo ""
     echo "⚠️  Attention : La description est trop longue (${DESCRIPTION_LENGTH} caractères)"
     echo "   Recommandation : maximum 72 caractères pour la première ligne"

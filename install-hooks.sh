@@ -8,7 +8,7 @@ set -e
 echo "🔧 Installation des hooks Git..."
 
 # Vérifier que nous sommes dans un repository Git
-if [ ! -d .git ]; then
+if [[ ! -d .git ]]; then
     echo "❌ Erreur : Ce n'est pas un repository Git"
     exit 1
 fi
@@ -17,7 +17,7 @@ fi
 mkdir -p .git/hooks
 
 # Copier les hooks
-if [ -f hooks/pre-commit ]; then
+if [[ -f hooks/pre-commit ]]; then
     cp hooks/pre-commit .git/hooks/pre-commit
     chmod +x .git/hooks/pre-commit
     echo "✅ Hook pre-commit installé"
@@ -25,7 +25,7 @@ else
     echo "⚠️  hooks/pre-commit introuvable"
 fi
 
-if [ -f hooks/commit-msg ]; then
+if [[ -f hooks/commit-msg ]]; then
     cp hooks/commit-msg .git/hooks/commit-msg
     chmod +x .git/hooks/commit-msg
     echo "✅ Hook commit-msg installé"

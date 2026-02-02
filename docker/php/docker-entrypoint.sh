@@ -34,21 +34,21 @@ else
 fi
 
 # Si le premier argument commence par un tiret, on le traite comme une commande PHP
-if [ "${1#-}" != "$1" ]; then
+if [[ "${1#-}" != "$1" ]]; then
     set -- php "$@"
 fi
 
 # Installation des dépendances et configuration initiale
 if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
     # Création automatique du projet Symfony si nécessaire
-    if [ ! -f "composer.json" ]; then
+    if [[ ! -f "composer.json" ]]; then
         echo "📦 Projet Symfony introuvable. Création automatique..."
 
         # Vérifier si le répertoire est vide (sauf fichiers Docker)
         FILES_COUNT=$(find . -maxdepth 1 -type f ! -name ".*" ! -name "docker-compose*.yml" ! -name "Taskfile.yml" ! -name "*.md" ! -name "*.sh" ! -name "env.example" | wc -l)
         DIRS_COUNT=$(find . -maxdepth 1 -type d ! -name "." ! -name "docker" ! -name "var" ! -name "public" | wc -l)
 
-        if [ "$FILES_COUNT" -eq 0 ] && [ "$DIRS_COUNT" -eq 0 ]; then
+        if [[ "$FILES_COUNT" -eq 0 ]] && [[ "$DIRS_COUNT" -eq 0 ]]; then
             # Répertoire vide, créer directement
             echo "📦 Création du projet Symfony 8..."
             composer create-project symfony/skeleton:"8.*" . --no-interaction || {
@@ -77,10 +77,10 @@ if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
     fi
 
     # Installation des dépendances avec Composer
-    if [ -f "composer.json" ]; then
+    if [[ -f "composer.json" ]]; then
         echo "🔄 Installation des dépendances avec Composer..."
         # Installation des dépendances avec Composer selon l'environnement
-        if [ "$APP_ENV" = "dev" ]; then
+        if [[ "$APP_ENV" = "dev" ]]; then
             echo "🛠️  Mode développement : installation de toutes les dépendances"
             composer install --no-interaction --optimize-autoloader
         else
@@ -91,7 +91,7 @@ if [[ "$1" = "php-fpm" ]] || [[ "$1" = "php" ]]; then
     fi
 
     # Vérifier si le projet Symfony existe avant de continuer
-    if [ -f "composer.json" ] && [ -f "bin/console" ]; then
+    if [[ -f "composer.json" ]] && [[ -f "bin/console" ]]; then
         echo "⏳ Attente de la base de données PostgreSQL..."
         # Attente que la base de données soit prête
         until nc -z database 5432; do
