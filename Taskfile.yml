@@ -141,6 +141,12 @@ tasks:
         echo "📧 MailCatcher : https://mail-${PROJECT_NAME}.docker.localhost"
         echo "🗄️  Adminer : https://adminer-${PROJECT_NAME}.docker.localhost"
         echo ""
+        echo "🔒 Dependency-Track :"
+        echo "   Interface : https://dependency-track-${PROJECT_NAME}.docker.localhost"
+        echo "   API : https://dependency-track-api-${PROJECT_NAME}.docker.localhost"
+        echo ""
+        echo "📊 SonarCloud : https://sonarcloud.io (si configuré)"
+        echo ""
 
   start:
     desc: Démarre la stack de développement (build + force-recreate)

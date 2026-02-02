@@ -12,6 +12,7 @@ volumes:
     sf_var_cache:
     sf_var_ci:
     database_data:
+    dependency_track_data:
 
 services:
     php:
@@ -131,3 +132,72 @@ services:
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.entrypoints=websecure"
             - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_adminer.tls=true"
             - "traefik.docker.network=traefik-global-proxy"
+
+    dependency-track-api:
+        container_name: ${COMPOSE_PROJECT_NAME}_dependency-track-api
+        image: dependencytrack/apiserver:latest
+        restart: 'always'
+        environment:
+            ALPINE_DATABASE_MODE: external
+            ALPINE_DATABASE_URL: jdbc:postgresql://dependency-track-database:5432/dtrack
+            ALPINE_DATABASE_DRIVER: org.postgresql.Driver
+            ALPINE_DATABASE_USERNAME: ${DEPENDENCY_TRACK_DB_USER:-dtrack}
+            ALPINE_DATABASE_PASSWORD: ${DEPENDENCY_TRACK_DB_PASSWORD:-dtrack}
+            ALPINE_DATABASE_POOL_ENABLED: "true"
+            ALPINE_DATABASE_POOL_MAX_SIZE: 20
+            ALPINE_DATABASE_POOL_MIN_IDLE: 10
+            ALPINE_LOG_LEVEL: INFO
+        depends_on:
+            dependency-track-database:
+                condition: service_healthy
+        networks:
+            - back
+            - traefik-global-proxy
+        labels:
+            - "traefik.enable=true"
+            - "traefik.port=8080"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track-api.rule=Host(`dependency-track-api-${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`dependency-track-api-${COMPOSE_PROJECT_NAME}.docker.devhost`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track-api.entrypoints=websecure"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track-api.tls=true"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track-api.service=${COMPOSE_PROJECT_NAME}_dependency-track-api"
+            - "traefik.http.services.${COMPOSE_PROJECT_NAME}_dependency-track-api.loadbalancer.server.port=8080"
+            - "traefik.docker.network=traefik-global-proxy"
+
+    dependency-track-frontend:
+        container_name: ${COMPOSE_PROJECT_NAME}_dependency-track-frontend
+        image: dependencytrack/frontend:latest
+        restart: 'always'
+        environment:
+            API_BASE_URL: https://dependency-track-api-${COMPOSE_PROJECT_NAME}.docker.localhost
+        depends_on:
+            - dependency-track-api
+        networks:
+            - back
+            - traefik-global-proxy
+        labels:
+            - "traefik.enable=true"
+            - "traefik.port=8080"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track.rule=Host(`dependency-track-${COMPOSE_PROJECT_NAME}.docker.localhost`) || Host(`dependency-track-${COMPOSE_PROJECT_NAME}.docker.devhost`)"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track.entrypoints=websecure"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track.tls=true"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}_dependency-track.service=${COMPOSE_PROJECT_NAME}_dependency-track-frontend"
+            - "traefik.http.services.${COMPOSE_PROJECT_NAME}_dependency-track-frontend.loadbalancer.server.port=8080"
+            - "traefik.docker.network=traefik-global-proxy"
+
+    dependency-track-database:
+        container_name: ${COMPOSE_PROJECT_NAME}_dependency-track-database
+        image: postgres:${DB_SERVER_VERSION:-16}-alpine
+        restart: 'always'
+        environment:
+            POSTGRES_DB: ${DEPENDENCY_TRACK_DB_NAME:-dtrack}
+            POSTGRES_USER: ${DEPENDENCY_TRACK_DB_USER:-dtrack}
+            POSTGRES_PASSWORD: ${DEPENDENCY_TRACK_DB_PASSWORD:-dtrack}
+        healthcheck:
+            test: ["CMD", "pg_isready", "-d", "${DEPENDENCY_TRACK_DB_NAME:-dtrack}", "-U", "${DEPENDENCY_TRACK_DB_USER:-dtrack}"]
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+        volumes:
+            - dependency_track_data:/var/lib/postgresql/data:rw
+        networks:
+            - back

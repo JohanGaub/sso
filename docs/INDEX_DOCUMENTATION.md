@@ -106,6 +106,29 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 
 ---
 
+### 4️⃣ 🔒 Dependency-Track - Analyse de Sécurité
+**Fichier** : `DEPENDENCY_TRACK.md`  
+**Temps de lecture** : 45-60 minutes  
+**Temps d'implémentation** : 6-8 heures (intégration complète)
+
+**Contenu** :
+- 📚 Concepts clés (SBOM, CycloneDX, vulnérabilités)
+- 🚀 Installation et configuration initiale
+- 📦 Génération de SBOM (CycloneDX)
+- 🔄 Intégration dans le workflow (CI/CD, automatisation)
+- 📋 Plan d'intégration détaillé (5 phases)
+- 📅 Utilisation quotidienne et monitoring
+- 🐛 Dépannage et résolution de problèmes
+
+**Quand l'utiliser** :
+- 🎯 Mettre en place l'analyse continue de sécurité
+- 📊 Surveiller les vulnérabilités des dépendances
+- ✅ Vérifier la conformité des licences
+- 🔔 Configurer des alertes automatiques
+- 📈 Suivre les métriques de sécurité
+
+---
+
 
 ## 🗺️ Parcours Détaillés par Objectif
 
@@ -158,6 +181,7 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 | `GUIDE_DEMARRAGE_RAPIDE_SSO.md` | 5 min | 2h | Débutant | Test rapide |
 | `GUIDE_SSO_GENERIQUE.md` | 30-45 min | 4-6h | Intermédiaire | Implémentation complète |
 | `EXEMPLES_PROVIDERS.md` | 20-30 min | Variable | Intermédiaire | Configuration provider |
+| `DEPENDENCY_TRACK.md` | 45-60 min | 6-8h | Intermédiaire | Analyse de sécurité continue |
 
 ---
 
@@ -237,7 +261,8 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 - **Première fois ?** → Commencez par `GUIDE_DEMARRAGE_RAPIDE_SSO.md`
 - **Besoin de détails ?** → Consultez `GUIDE_SSO_GENERIQUE.md`
 - **Choisir un provider ?** → Lisez `EXEMPLES_PROVIDERS.md`
-- **Problème technique ?** → Section "Dépannage" dans `GUIDE_SSO_GENERIQUE.md`
+- **Analyse de sécurité ?** → Consultez `DEPENDENCY_TRACK.md`
+- **Problème technique ?** → Section "Dépannage" dans `GUIDE_SSO_GENERIQUE.md` ou `DEPENDENCY_TRACK.md`
 - **Référence rapide ?** → `GUIDE_DEMARRAGE_RAPIDE_SSO.md`
 
 ---
