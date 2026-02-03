@@ -64,8 +64,8 @@ Guide rapide pour intégrer SSO OAuth2/OpenID Connect dans Symfony.
               lazy: true
               provider: app_user_provider
               custom_authenticators:
-                  - App\Security\GoogleAuthenticator
-              entry_point: App\Security\GoogleAuthenticator
+                  - App\Security\SSOAuthenticator
+              entry_point: App\Security\SSOAuthenticator
       
       access_control:
           - { path: ^/login, roles: PUBLIC_ACCESS }
