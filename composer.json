@@ -15,6 +15,7 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.*",
         "symfony/runtime": "8.*",
+        "symfony/security-bundle": "8.*",
         "symfony/yaml": "8.*"
     },
     "require-dev": {
