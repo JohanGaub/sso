@@ -21,8 +21,8 @@
         "symfony/runtime": "8.*",
         "symfony/twig-bundle": "8.*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
-        "symfony/security-bundle": "8.*",
+        "twig/twig": "^2.12|^3.0",
+        "symfony/security-bundle": "^8.0.4",
         "symfony/yaml": "8.*"
     },
     "require-dev": {
