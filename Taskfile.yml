@@ -148,47 +148,6 @@ tasks:
         echo "📊 SonarCloud : https://sonarcloud.io (si configuré)"
         echo ""
 
-  stop-conflicting-containers:
-    desc: Arrête les containers qui utilisent les mêmes ports que ce projet (tâche interne)
-    internal: true
-    cmds:
-      - |
-        # Récupérer COMPOSE_PROJECT_NAME depuis .env ou utiliser le nom du dossier
-        if [ -f .env ]; then
-          PROJECT_NAME=$(grep "^COMPOSE_PROJECT_NAME=" .env | cut -d'=' -f2 | tr -d '"' | tr -d "'" || basename "$(pwd)")
-        else
-          PROJECT_NAME=$(basename "$(pwd)")
-        fi
-        
-        echo "🔍 Recherche des containers conflictuels..."
-        
-        # Ports utilisés par ce projet (extraits de docker-compose.yml)
-        CONFLICTING_PORTS="5432 1080 1025"
-        STOPPED_COUNT=0
-        
-        # Pour chaque port conflictuel
-        for PORT in $CONFLICTING_PORTS; do
-          # Trouver les containers qui utilisent ce port
-          CONTAINERS=$(docker ps --format "{{.ID}}\t{{.Names}}\t{{.Ports}}" | grep -E ":$PORT->|0\.0\.0\.0:$PORT:|:::$PORT:" | awk '{print $2}' || true)
-          
-          if [ -n "$CONTAINERS" ]; then
-            for CONTAINER in $CONTAINERS; do
-              # Ignorer les containers de ce projet
-              if ! echo "$CONTAINER" | grep -q "^${PROJECT_NAME}_"; then
-                echo "⚠️  Arrêt du container $CONTAINER (utilise le port $PORT)"
-                docker stop "$CONTAINER" >/dev/null 2>&1 || true
-                STOPPED_COUNT=$((STOPPED_COUNT + 1))
-              fi
-            done
-          fi
-        done
-        
-        if [ $STOPPED_COUNT -eq 0 ]; then
-          echo "✅ Aucun container conflictuel détecté"
-        else
-          echo "✅ $STOPPED_COUNT container(s) conflictuel(s) arrêté(s)"
-        fi
-
   start:
     desc: Démarre la stack de développement (build + force-recreate)
     deps: [ensure-docker-dev-host]
@@ -197,13 +156,6 @@ tasks:
         FILES="{{.DOCKER_COMPOSE_FILES}}"
         docker compose $FILES up -d --force-recreate --build --remove-orphans
       - task: show-urls
-
-  start-hard:
-    desc: Démarre la stack en arrêtant d'abord les containers conflictuels (évite les collisions de ports)
-    deps: [ensure-docker-dev-host]
-    cmds:
-      - task: stop-conflicting-containers
-      - task: start
 
   launch:
     desc: Démarre la stack de développement (simple)
