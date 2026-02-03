@@ -51,7 +51,29 @@ Guide rapide pour intégrer SSO OAuth2/OpenID Connect dans Symfony.
               redirect_route: connect_google_check
   ```
 
-- [X] **Vérifier** : `task cc`
+- [ ] **Dans `config/packages/security.yaml`, configurer le firewall** :
+  ```yaml
+  security:
+      providers:
+          # Vous devrez créer un UserProvider (étape 2.3)
+          app_user_provider:
+              id: App\Security\SSOUserProvider
+      
+      firewalls:
+          main:
+              lazy: true
+              provider: app_user_provider
+              custom_authenticators:
+                  - App\Security\GoogleAuthenticator
+              entry_point: App\Security\GoogleAuthenticator
+      
+      access_control:
+          - { path: ^/login, roles: PUBLIC_ACCESS }
+          - { path: ^/connect, roles: PUBLIC_ACCESS }
+  ```
+  > 💡 Référence : [Documentation Symfony Security](https://symfony.com/doc/current/security.html)
+
+- [ ] **Vérifier** : `task cc`
 
 #### 2.3 Suite de la Configuration
 
