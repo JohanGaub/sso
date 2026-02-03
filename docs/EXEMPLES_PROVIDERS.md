@@ -117,10 +117,20 @@ Pour que Symfony détecte correctement HTTPS, il faut configurer les trusted pro
     - ⚠️ **Note** : Avec `knpuniversity/oauth2-client-bundle`, l'URI est généralement `/login/check/google` ou `/connect/google/check` selon votre configuration
     - ⚠️ **Sécurité** : HTTPS est requis pour OAuth2, mais un certificat auto-signé fonctionne en développement
   - Cliquer sur **Créer**
-- [X] **Noter et sauvegarder immédiatement** :
-  - [X] **Client ID** (ex: `xxxxx.apps.googleusercontent.com`)
-  - [X] **Client Secret** (⚠️ **copier immédiatement**, ne sera plus visible après fermeture de la fenêtre)
-    - ⚠️ **Important** : Ajoutez le Client ID et le Client Secret dans votre fichier `.env`
+
+- [ ] **Copier immédiatement le Client ID et le Client Secret** :
+  - ⚠️ **Le Client Secret ne sera plus visible après fermeture de la fenêtre**
+  - **Client ID** : Copiez la valeur (ex: `123456789-abc.apps.googleusercontent.com`)
+  - **Client Secret** : Cliquez sur "Afficher" et copiez la valeur
+
+- [ ] **Ajouter ces valeurs dans votre fichier `.env`** :
+  ```env
+  ###> SSO Google ###
+  GOOGLE_CLIENT_ID=123456789-abc.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET=GOCSPX-votre-secret-ici
+  ###< SSO Google ###
+  ```
+  > 💡 Remplacez les valeurs par celles que vous venez de copier depuis Google Cloud Console
 
 ### Installation
 
@@ -142,14 +152,14 @@ Pour que Symfony détecte correctement HTTPS, il faut configurer les trusted pro
 
 ### Configuration `.env`
 
-- [ ] Ajouter les variables dans `.env` :
+- [ ] **Vérifier que les variables sont déjà dans `.env`** (vous les avez ajoutées lors de la création des identifiants OAuth ci-dessus)
+- [ ] **Ajouter les mêmes variables dans `env.example`** (sans les valeurs réelles) :
   ```env
   ###> SSO Google ###
-  GOOGLE_CLIENT_ID=votre-client-id-google.apps.googleusercontent.com
-  GOOGLE_CLIENT_SECRET=votre-client-secret-google
+  GOOGLE_CLIENT_ID=
+  GOOGLE_CLIENT_SECRET=
   ###< SSO Google ###
   ```
-- [ ] Ajouter les mêmes variables dans `env.example` (sans les valeurs réelles)
 
 ### Configuration `config/packages/knpu_oauth2_client.yaml`
 
