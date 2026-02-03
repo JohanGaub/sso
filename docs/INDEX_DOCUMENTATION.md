@@ -8,46 +8,41 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 
 ## 📍 Ordre de Lecture Recommandé
 
-> **💡 Nouveau sur le projet ?** Suivez cet ordre pour une compréhension progressive.
+> **💡 Nouveau sur le projet ?** Commencez par `GUIDE_DEMARRAGE_RAPIDE_SSO.md` - c'est votre point d'entrée unique.
 
-### 🚀 Pour un Test Rapide (2 heures)
-```
-1️⃣ GUIDE_DEMARRAGE_RAPIDE_SSO.md
-   └─> Checklist et étapes essentielles
-```
+### 🚀 Point d'Entrée Unique : Test Rapide (2 heures)
 
-### 📚 Pour une Compréhension Complète (1 journée)
-```
-1️⃣ GUIDE_SSO_GENERIQUE.md
-   └─> Comprendre les concepts et l'architecture
-   
-2️⃣ EXEMPLES_PROVIDERS.md
-   └─> Choisir et configurer votre provider
-   
-3️⃣ GUIDE_DEMARRAGE_RAPIDE_SSO.md
-   └─> Référence rapide si besoin
-```
+**➡️ Commencez ICI : `GUIDE_DEMARRAGE_RAPIDE_SSO.md`**
 
-### 🏗️ Pour Préparer une Migration Complète (1 semaine)
-```
-1️⃣ GUIDE_SSO_GENERIQUE.md
-   └─> Phase 0 : Comprendre les concepts OAuth2/OIDC
-   
-2️⃣ EXEMPLES_PROVIDERS.md
-   └─> Choisir le provider adapté à vos besoins
-   
-3️⃣ GUIDE_DEMARRAGE_RAPIDE_SSO.md
-   └─> Créer le PoC (Preuve de Concept)
-   
-4️⃣ GUIDE_SSO_GENERIQUE.md
-   └─> Préparer le déploiement en production
-```
+Ce guide vous permet de tester rapidement le SSO. Une fois le test réussi, vous avez deux options :
+- ✅ **Test terminé** : Vous avez validé que ça fonctionne
+- 🚀 **Solution complète** : Basculer vers `PHASE_1_MVP.md` (ne plus revenir en arrière)
+
+### 🏗️ Implémentation Complète (1 semaine)
+
+**➡️ Si vous voulez tout implémenter : `PHASE_1_MVP.md`**
+
+⚠️ **Important** : Une fois que vous basculez vers PHASE_1_MVP.md, **suivez-le jusqu'au bout** - ne revenez pas vers le guide de démarrage rapide.
+
+Ce document couvre :
+- Installation et configuration complète
+- Modèle de données (entité User)
+- Authentification OAuth2 complète
+- Compte Juste-à-Temps (JIT)
+- Gestion des Rôles/Autorisations
+- Tests et validation
+
+### 📚 Documentation de Référence
+
+Pour approfondir vos connaissances :
+- `GUIDE_SSO_GENERIQUE.md` : Concepts OAuth2/OIDC et architecture
+- `EXEMPLES_PROVIDERS.md` : Guides détaillés par provider (Google, GitHub, etc.)
 
 ---
 
 ## 📖 Documents Disponibles
 
-### 1️⃣ 🚀 Guide de Démarrage Rapide
+### 1️⃣ 🚀 Guide de Démarrage Rapide (Point d'Entrée Unique)
 **Fichier** : `GUIDE_DEMARRAGE_RAPIDE_SSO.md`  
 **Temps de lecture** : 5 minutes  
 **Temps d'implémentation** : ~2 heures
@@ -56,11 +51,12 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 - ✅ Checklist rapide pour démarrer
 - ✅ Configuration minimale
 - ✅ Test rapide de connexion
+- ✅ Transition claire vers l'implémentation complète
 
 **Quand l'utiliser** :
-- 🎯 Premier test rapide
-- 🔄 Référence rapide pendant le développement
-- ⚡ Besoin d'un rappel des étapes essentielles
+- 🎯 **Point d'entrée unique** : Commencez toujours par ce document
+- 🧪 Test rapide du SSO (2h)
+- ➡️ Si vous voulez la solution complète, basculez vers `PHASE_1_MVP.md` à la fin
 
 ---
 
@@ -106,7 +102,27 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 
 ---
 
-### 4️⃣ 🔒 Dependency-Track - Analyse de Sécurité
+### 4️⃣ 🚀 Phase 1 - MVP : Implémentation Complète
+**Fichier** : `PHASE_1_MVP.md`  
+**Temps de lecture** : 15-20 minutes  
+**Temps d'implémentation** : ~1 semaine
+
+**Contenu** :
+- ✅ Installation et configuration complète
+- ✅ Modèle de données (entité User avec champs SSO)
+- ✅ Authentification OAuth2 complète
+- ✅ Compte Juste-à-Temps (création automatique)
+- ✅ Gestion des Rôles/Autorisations
+- ✅ Tests et validation complète
+
+**Quand l'utiliser** :
+- 🎯 **Après le test rapide** : Vous avez testé avec `GUIDE_DEMARRAGE_RAPIDE_SSO.md` et ça fonctionne
+- 🚀 **Vous voulez implémenter toutes les fonctionnalités** (pas juste tester)
+- ⚠️ **Important** : Une fois que vous commencez ce document, **suivez-le jusqu'au bout** - ne revenez pas vers le guide de démarrage rapide
+
+---
+
+### 5️⃣ 🔒 Dependency-Track - Analyse de Sécurité
 **Fichier** : `DEPENDENCY_TRACK.md`  
 **Temps de lecture** : 45-60 minutes  
 **Temps d'implémentation** : 6-8 heures (intégration complète)
@@ -135,42 +151,54 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 ### 🎯 Parcours 1 : Test Rapide (2 heures)
 **Objectif** : Tester rapidement un SSO sur votre projet
 
+**➡️ Point d'entrée unique : `GUIDE_DEMARRAGE_RAPIDE_SSO.md`**
+
 **Étapes** :
 1. ✅ Lire `GUIDE_DEMARRAGE_RAPIDE_SSO.md` (5 min)
 2. ✅ Choisir un provider simple (Google ou GitHub) dans `EXEMPLES_PROVIDERS.md` (10 min)
 3. ✅ Suivre la checklist étape par étape (1h30)
 4. ✅ Tester la connexion (15 min)
-5. ✅ Consulter le dépannage si nécessaire
 
 **Résultat attendu** : Connexion SSO fonctionnelle
 
----
-
-### 📚 Parcours 2 : Compréhension Complète (1 journée)
-**Objectif** : Maîtriser l'intégration SSO OAuth2/OIDC
-
-**Étapes** :
-1. 📖 Lire `GUIDE_SSO_GENERIQUE.md` - Concepts (1h)
-2. 🔍 Consulter `EXEMPLES_PROVIDERS.md` - Choisir un provider (30 min)
-3. 📋 Suivre `GUIDE_SSO_GENERIQUE.md` - Implémentation (4-6h)
-4. ✅ Tester et valider (1h)
-5. 📝 Documenter les retours et ajustements
-
-**Résultat attendu** : Solution complète et documentée
+**Ensuite** :
+- ✅ **Test terminé** : Vous avez validé que ça fonctionne
+- 🚀 **Solution complète** : Basculer vers `PHASE_1_MVP.md` (ne plus revenir en arrière)
 
 ---
 
-### 🏗️ Parcours 3 : Préparation Migration Complète (1 semaine)
-**Objectif** : Préparer la migration d'un parc d'applications
+### 🏗️ Parcours 2 : Implémentation Complète (1 semaine)
+**Objectif** : Implémenter toutes les fonctionnalités SSO (Authentification, JIT, Rôles)
+
+**➡️ Après le test rapide : `PHASE_1_MVP.md`**
+
+⚠️ **Important** : Une fois que vous commencez ce document, **suivez-le jusqu'au bout** - ne revenez pas vers le guide de démarrage rapide.
 
 **Étapes** :
-1. 📊 Lire `GUIDE_SSO_GENERIQUE.md` - Concepts OAuth2/OIDC (1 jour)
-2. 🔍 Consulter `EXEMPLES_PROVIDERS.md` - Choisir le provider adapté (1 jour)
-3. 🔧 Créer le PoC avec `GUIDE_DEMARRAGE_RAPIDE_SSO.md` (1-2 jours)
-4. ✅ Valider avec utilisateurs pilotes (1 jour)
-5. 📋 Préparer le déploiement selon `GUIDE_SSO_GENERIQUE.md` (1-2 jours)
+1. ✅ Avoir testé avec `GUIDE_DEMARRAGE_RAPIDE_SSO.md` (déjà fait)
+2. 📋 Suivre `PHASE_1_MVP.md` étape par étape (1 semaine)
+   - Installation et configuration complète
+   - Modèle de données
+   - Authentification OAuth2
+   - Compte Juste-à-Temps
+   - Gestion des Rôles
+   - Tests
 
-**Résultat attendu** : Plan de migration validé et prêt à l'exécution
+**Résultat attendu** : Solution SSO complète et fonctionnelle
+
+---
+
+### 📚 Parcours 3 : Compréhension Approfondie (référence)
+**Objectif** : Comprendre en profondeur OAuth2/OIDC
+
+**Documents de référence** :
+- `GUIDE_SSO_GENERIQUE.md` : Concepts et architecture
+- `EXEMPLES_PROVIDERS.md` : Guides détaillés par provider
+
+**Quand les consulter** :
+- 📖 Pour comprendre les concepts en profondeur
+- 🔍 Pour résoudre des problèmes spécifiques
+- 💡 Pour comparer les providers
 
 ---
 
@@ -258,12 +286,12 @@ Cette documentation vous accompagne dans l'intégration d'un système SSO (Singl
 
 ## 💡 Conseils de Navigation
 
-- **Première fois ?** → Commencez par `GUIDE_DEMARRAGE_RAPIDE_SSO.md`
-- **Besoin de détails ?** → Consultez `GUIDE_SSO_GENERIQUE.md`
+- **Première fois ?** → **Commencez toujours par `GUIDE_DEMARRAGE_RAPIDE_SSO.md`** (point d'entrée unique)
+- **Test réussi, vous voulez tout implémenter ?** → **Basculer vers `PHASE_1_MVP.md`** (ne plus revenir en arrière)
+- **Besoin de comprendre les concepts ?** → Consultez `GUIDE_SSO_GENERIQUE.md`
 - **Choisir un provider ?** → Lisez `EXEMPLES_PROVIDERS.md`
 - **Analyse de sécurité ?** → Consultez `DEPENDENCY_TRACK.md`
 - **Problème technique ?** → Section "Dépannage" dans `GUIDE_SSO_GENERIQUE.md` ou `DEPENDENCY_TRACK.md`
-- **Référence rapide ?** → `GUIDE_DEMARRAGE_RAPIDE_SSO.md`
 
 ---
 

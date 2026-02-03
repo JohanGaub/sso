@@ -1,7 +1,25 @@
-# 🚀 Phase 1 - MVP : Plan d'Implémentation
+# 🚀 Phase 1 - MVP : Plan d'Implémentation Complète
 
 > **Objectif** : Implémenter les fonctionnalités core du SSO (Authentification Unique, Compte Juste-à-Temps, Gestion des Rôles).  
 > Cochez chaque étape au fur et à mesure de l'avancement.
+
+---
+
+## ⚠️ Point d'Entrée Important
+
+> **💡 Vous êtes ici pour implémenter la solution complète.**  
+> Si vous voulez juste **tester rapidement** le SSO (2h), utilisez plutôt `GUIDE_DEMARRAGE_RAPIDE_SSO.md`.  
+> **Une fois que vous commencez ce document, suivez-le jusqu'au bout** - ne revenez pas en arrière vers le guide de démarrage rapide.
+
+**Ce document couvre :**
+- ✅ Installation et configuration complète
+- ✅ Modèle de données (entité User)
+- ✅ Authentification OAuth2 complète
+- ✅ Compte Juste-à-Temps (JIT)
+- ✅ Gestion des Rôles/Autorisations
+- ✅ Tests et validation
+
+**Temps estimé :** 1 semaine
 
 ---
 
@@ -133,24 +151,56 @@ Ces scopes sont **optionnels** selon les fonctionnalités souhaitées :
 
 ## 📦 1. Installation et Configuration de Base
 
-### 1.1 Installation des dépendances
+### 1.1 Installation du Bundle OAuth2
 - [X] Installer `knpuniversity/oauth2-client-bundle` (bundle OAuth2 pour Symfony)
-- [X] Installer `league/oauth2-google` (provider Google OAuth2)
+  ```bash
+  composer require knpuniversity/oauth2-client-bundle
+  ```
+  > 💡 Le bundle crée automatiquement `config/packages/knpu_oauth2_client.yaml` avec un template
 - [X] Installer `symfony/security-bundle` (déjà présent, vérifier)
 - [X] Installer `doctrine/orm-pack` (déjà présent, vérifier)
 
-### 1.2 Configuration Security
+### 1.2 Configuration OAuth2 Client
+⚠️ **Important** : Cette étape doit être faite **AVANT** d'installer le provider spécifique (`league/oauth2-google`), sinon vous aurez des erreurs lors de l'installation.
+
+- [ ] Configurer `config/packages/knpu_oauth2_client.yaml` :
+  - 📚 Consulter la [documentation officielle](https://github.com/knpuniversity/oauth2-client-bundle?tab=readme-ov-file#configuring-a-client)
+  - ⚠️ Ne pas utiliser d'options invalides (`graph_api_version`, `scopes` dans la config pour Google)
+  - ✅ Configuration minimale pour Google :
+    ```yaml
+    knpu_oauth2_client:
+        clients:
+            google:
+                type: google
+                client_id: '%env(GOOGLE_CLIENT_ID)%'
+                client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+                redirect_route: connect_google_check
+    ```
+- [ ] Configurer les variables d'environnement dans `.env` :
+  ```env
+  ###> SSO Google ###
+  GOOGLE_CLIENT_ID=votre-client-id-google.apps.googleusercontent.com
+  GOOGLE_CLIENT_SECRET=votre-client-secret-google
+  ###< SSO Google ###
+  ```
+- [ ] Ajouter les mêmes variables dans `env.example` (sans les valeurs réelles)
+- [ ] Vérifier la configuration : `task cc` (doit fonctionner sans erreur)
+
+### 1.3 Installation du Provider Spécifique
+⚠️ **Important** : Cette étape doit être faite **APRÈS** la configuration de `knpu_oauth2_client.yaml` (étape 1.2).
+
+- [X] Installer `league/oauth2-google` (provider Google OAuth2)
+  ```bash
+  composer require league/oauth2-google
+  ```
+  > 💡 Si vous avez une erreur, vérifiez que `knpu_oauth2_client.yaml` est correctement configuré (étape 1.2)
+
+### 1.4 Configuration Security
 - [ ] Configurer `config/packages/security.yaml` avec le firewall SSO
 - [ ] Ajouter l'authenticator OAuth2 dans le firewall `main`
 - [ ] Configurer le provider d'utilisateurs (User Provider)
 - [ ] Définir les routes publiques (`/login`, `/login/check/google`) et protégées
 - [ ] Configurer `access_control` pour les routes nécessitant une authentification
-
-### 1.3 Configuration OAuth2 Client
-- [ ] Créer `config/packages/knpu_oauth2_client.yaml`
-- [ ] Configurer le client Google avec les scopes sélectionnés
-- [ ] Configurer les variables d'environnement (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
-- [ ] Ajouter les variables dans `.env` et `env.example`
 
 ---
 
@@ -270,7 +320,8 @@ Ces scopes sont **optionnels** selon les fonctionnalités souhaitées :
 
 ## 🔗 Ordre d'Implémentation Recommandé
 
-1. **Installation** (1.1, 1.2, 1.3)
+1. **Installation et Configuration de Base** (1.1 → 1.2 → 1.3 → 1.4)
+   - ⚠️ **Ordre important** : Bundle → Config YAML → Provider → Security
 2. **Modèle de Données** (2.1, 2.2)
 3. **Authentification OAuth2** (3.1, 3.2, 3.3)
 4. **Compte Juste-à-Temps** (4.1, 4.2)

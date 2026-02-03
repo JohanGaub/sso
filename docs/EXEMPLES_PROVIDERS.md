@@ -124,11 +124,18 @@ Pour que Symfony détecte correctement HTTPS, il faut configurer les trusted pro
 
 ### Installation
 
-- [ ] Installer le bundle OAuth2 :
+#### Étape 1 : Installer le Bundle OAuth2
+
+- [ ] **Installer le bundle principal** :
   ```bash
+  task console php
   composer require knpuniversity/oauth2-client-bundle
   ```
-- [ ] Installer le provider Google :
+  > 💡 Le bundle va créer automatiquement le fichier `config/packages/knpu_oauth2_client.yaml` avec un template
+
+#### Étape 2 : Installer le Provider Google
+
+- [ ] **Installer le provider Google** :
   ```bash
   composer require league/oauth2-google
   ```
@@ -146,8 +153,21 @@ Pour que Symfony détecte correctement HTTPS, il faut configurer les trusted pro
 
 ### Configuration `config/packages/knpu_oauth2_client.yaml`
 
-- [ ] Créer le fichier `config/packages/knpu_oauth2_client.yaml`
-- [ ] Ajouter la configuration :
+⚠️ **Important** : Le fichier `config/packages/knpu_oauth2_client.yaml` est créé automatiquement lors de l'installation du bundle. Vous devez le configurer selon la [documentation officielle du bundle](https://github.com/knpuniversity/oauth2-client-bundle?tab=readme-ov-file#configuring-a-client).
+
+**Étapes :**
+
+1. **Consulter la documentation officielle** :
+   - 📚 **Lien direct** : https://github.com/knpuniversity/oauth2-client-bundle?tab=readme-ov-file#configuring-a-client
+   - Cette documentation liste toutes les options disponibles pour Google
+
+2. **Configurer le fichier** :
+   - ⚠️ **Ne pas utiliser** d'options qui n'existent pas pour Google :
+     - ❌ `graph_api_version` : Option spécifique à Facebook/Microsoft
+     - ❌ `scopes` : Les scopes sont configurés dans l'authenticator, pas ici
+   - ✅ **Options valides pour Google** : `type`, `client_id`, `client_secret`, `redirect_route`, `redirect_params`, `use_state`, `access_type`, `hosted_domain`, `user_fields`, `use_oidc_mode`
+
+3. **Configuration minimale recommandée** :
   ```yaml
   knpu_oauth2_client:
       clients:
@@ -155,7 +175,13 @@ Pour que Symfony détecte correctement HTTPS, il faut configurer les trusted pro
               type: google
               client_id: '%env(GOOGLE_CLIENT_ID)%'
               client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
-              scopes: ['openid', 'profile', 'email']
+              redirect_route: connect_google_check
+              # Les scopes (openid, profile, email) sont configurés dans l'authenticator
+  ```
+
+4. **Vérifier la configuration** :
+  ```bash
+  task cc  # Vider le cache pour vérifier qu'il n'y a pas d'erreur
   ```
 
 ### Authenticator (exemple)

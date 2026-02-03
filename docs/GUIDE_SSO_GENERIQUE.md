@@ -204,7 +204,33 @@ SSO_SCOPES=openid profile email
 
 #### 2.2.2 Fichier `config/packages/knpu_oauth2_client.yaml`
 
-Créez ou modifiez ce fichier selon votre provider :
+⚠️ **Important** : Après l'installation du bundle (`composer require knpuniversity/oauth2-client-bundle`), le fichier `config/packages/knpu_oauth2_client.yaml` est créé automatiquement avec un template. Vous devez le configurer selon la [documentation officielle du bundle](https://github.com/knpuniversity/oauth2-client-bundle?tab=readme-ov-file#configuring-a-client).
+
+**Étapes de configuration :**
+
+1. **Consulter la documentation officielle** :
+   - 📚 **Lien direct** : https://github.com/knpuniversity/oauth2-client-bundle?tab=readme-ov-file#configuring-a-client
+   - Cette documentation liste toutes les options disponibles pour chaque type de provider
+
+2. **Configurer selon votre provider** :
+   - ⚠️ **Attention** : Ne pas utiliser d'options qui n'existent pas pour votre provider
+   - ⚠️ **Erreurs courantes** :
+     - `graph_api_version` : Option spécifique à Facebook/Microsoft, **ne pas utiliser pour Google**
+     - `scopes` : Les scopes sont configurés dans l'authenticator, **pas dans ce fichier** pour les providers spécifiques
+   - ✅ **Options communes** : `type`, `client_id`, `client_secret`, `redirect_route`
+
+**Exemple pour Google (voir EXEMPLES_PROVIDERS.md pour plus de détails) :**
+
+```yaml
+knpu_oauth2_client:
+    clients:
+        google:
+            type: google
+            client_id: '%env(GOOGLE_CLIENT_ID)%'
+            client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+            redirect_route: connect_google_check
+            # Les scopes sont configurés dans l'authenticator, pas ici
+```
 
 **Exemple générique (OAuth2 standard) :**
 
@@ -213,28 +239,16 @@ knpu_oauth2_client:
     clients:
         sso:
             type: generic
+            provider_class: Your\Provider\Class
             client_id: '%env(SSO_CLIENT_ID)%'
             client_secret: '%env(SSO_CLIENT_SECRET)%'
-            authorization_url: '%env(SSO_AUTHORIZATION_URL)%'
-            token_url: '%env(SSO_TOKEN_URL)%'
-            user_info_url: '%env(SSO_USERINFO_URL)%'
-            scopes: ['openid', 'profile', 'email']
-            # Optionnel : configuration supplémentaire
-            # options:
-            #     use_state: true
+            redirect_route: connect_sso_check
+            # Pour un provider générique, vous pouvez spécifier les URLs
+            # authorization_url: '%env(SSO_AUTHORIZATION_URL)%'
+            # token_url: '%env(SSO_TOKEN_URL)%'
 ```
 
-**Exemple avec un provider spécifique (voir EXEMPLES_PROVIDERS.md) :**
-
-```yaml
-knpu_oauth2_client:
-    clients:
-        sso:
-            type: google  # ou github, microsoft, etc.
-            client_id: '%env(SSO_CLIENT_ID)%'
-            client_secret: '%env(SSO_CLIENT_SECRET)%'
-            scopes: ['openid', 'profile', 'email']
-```
+> 💡 **Référence complète** : Consultez `EXEMPLES_PROVIDERS.md` pour des exemples détaillés par provider (Google, GitHub, Microsoft, etc.)
 
 #### 2.2.3 Configuration de la Sécurité (`config/packages/security.yaml`)
 
