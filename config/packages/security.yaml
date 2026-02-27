@@ -7,6 +7,8 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         users_in_memory: { memory: null }
+        app_user_provider:
+            id: App\Security\SSOUserProvider
 
     firewalls:
         dev:
@@ -16,7 +18,10 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            # provider: users_in_memory
+            provider: app_user_provider
+            custom_authenticators:
+                - App\Security\SSOAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -29,6 +34,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/connect, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

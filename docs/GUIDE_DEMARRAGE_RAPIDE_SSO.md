@@ -51,7 +51,7 @@ Guide rapide pour intégrer SSO OAuth2/OpenID Connect dans Symfony.
               redirect_route: connect_google_check
   ```
 
-- [ ] **Dans `config/packages/security.yaml`, configurer le firewall** :
+- [X] **Dans `config/packages/security.yaml`, configurer le firewall** :
   ```yaml
   security:
       providers:
