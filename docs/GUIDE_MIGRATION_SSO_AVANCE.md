@@ -61,16 +61,18 @@ Répondez aux trois questions ci-dessous, puis reportez-vous au **tableau** pour
 
 ## 3. OIDC – Gestion managée (modification des attributs)
 
-Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent être ajustés. **Ordre des actions** : 1) Le **responsable d’application** (ou l’équipe de raccordement applicatif) indique à l’**administrateur SSO cible** quels claims l’application attend (ex. id, email, nom). 2) L’administrateur SSO cible actualise la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire). 3) Le responsable d’application adapte le code pour lire et utiliser ces claims.
+Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent être ajustés.
 
 ### 3.1 OIDC – Gestion managée – Autonome
 
-**Étapes clés**
+**Séquence des actions à réaliser**
 
-1. Identifier les nouveaux claims requis (ex. `custom_role`, `department`).
-2. Vérifier avec l’**administrateur SSO cible** que les attributs sources nécessaires (groupes, rôles, service, etc.) sont bien exposés dans les claims envoyés à l’application, avec les noms attendus (ex. `custom_role`, `department`).
-3. Adapter la consommation des claims dans l’application (lecture, validation).
-4. Tester la réception des claims (logs, assertions, affichage conditionnel).
+| Étape | Acteur | Action | Durée | Séquence réalisée |
+|-------|--------|--------|-------|-------------------|
+| 1 | Responsable d’application | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
+| 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
+| 3 | Responsable d’application | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 **Exemples de code**
 
@@ -78,10 +80,11 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 ```php
 // Dans votre contrôleur ou service
 $user = $this->getUser();
-$customRole = $user->getAttribute('custom_role');
-$department = $user->getAttribute('department');
+$email = $user->getAttribute('email');
+$nom = $user->getAttribute('nom');
+$role = $user->getAttribute('role');
 // Validation optionnelle
-if (!in_array($customRole, ['admin', 'user'], true)) {
+if (!in_array($role, ['admin', 'user'], true)) {
     throw new AccessDeniedException('Rôle non autorisé');
 }
 ```
@@ -90,38 +93,36 @@ if (!in_array($customRole, ['admin', 'user'], true)) {
 ```php
 // Après authentification OIDC, dans un helper ou le contrôleur
 $claims = $this->session->userdata('oidc_claims');
-$custom_role = $claims['custom_role'] ?? null;
-$department = $claims['department'] ?? null;
+$email = $claims['email'] ?? null;
+$nom = $claims['nom'] ?? null;
+$role = $claims['role'] ?? null;
 ```
 
 **Python (ex. Flask / Django)**  
 ```python
 # Flask : après récupération du token / userinfo
 user_info = request.session.get('oidc_userinfo', {})
-custom_role = user_info.get('custom_role')
-department = user_info.get('department')
+email = user_info.get('email')
+nom = user_info.get('nom')
+role = user_info.get('role')
 ```
 
 **TypeScript (Node / front)**  
 ```typescript
 // Côté backend après validation du JWT
-const payload = decodedToken as { custom_role?: string; department?: string };
-const customRole = payload.custom_role;
-const department = payload.department;
+const payload = decodedToken as { email?: string; nom?: string; role?: string };
+const email = payload.email;
+const nom = payload.nom;
+const role = payload.role;
 ```
 
 **Pièges courants**
 
 - Oublier de mettre à jour le **schéma de validation** des claims (liste des claims autorisés, types).
-- Confusion entre claims **standard** (e.g. `email`, `sub`) et **personnalisés** (`custom_role`) : bien documenter la source (IdP) et le nom exact du claim.
-- Cacher ou ignorer les erreurs de parsing des claims : logger les payloads en dev pour déboguer.
-
-**Checklist de validation**
-
-- [ ] Nouveaux claims configurés côté IdP et présents dans le token / userinfo.
-- [ ] Application lit et valide les claims (nom exact, type).
-- [ ] Règles d’accès (rôles, départements) utilisent bien ces claims.
-- [ ] Test de bout en bout avec un compte de test (au moins un rôle / département).
+- Confusion entre claims **standard** (ex. `id`, `email`, `nom`) et **personnalisés** (ex. `role`) : bien documenter la source (IdP) et le nom exact du claim.
+- Ne pas ignorer les erreurs quand l’application lit les claims :
+  - **en développement/préproduction** : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
+  - **en production** : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu’un claim attendu est manquant ou invalide.
 
 ---
 
@@ -182,7 +183,7 @@ Vous devez **reconfigurer le flux OIDC** (endpoints, redirect_uri, scopes, clien
 //             url_resource_owner_details: '%env(OIDC_ISSUER)%/protocol/openid-connect/userinfo'
 
 $user = $this->getUser();
-$customRole = $user->getAttribute('custom_role');
+$role = $user->getAttribute('role');
 ```
 
 **TypeScript (Node, express + openid-client)**  
@@ -260,11 +261,14 @@ Le flux SAML est géré en interne ; seuls les **attributs SAML** doivent être 
 
 ```xml
 <saml:AttributeStatement>
-  <saml:Attribute Name="urn:oid:1.2.3.4.5" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
-    <saml:AttributeValue xsi:type="xs:string">custom_role</saml:AttributeValue>
+  <saml:Attribute Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+    <saml:AttributeValue xsi:type="xs:string">martin@entreprise.fr</saml:AttributeValue>
   </saml:Attribute>
-  <saml:Attribute Name="department" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-    <saml:AttributeValue xsi:type="xs:string">IT</saml:AttributeValue>
+  <saml:Attribute Name="nom" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+    <saml:AttributeValue xsi:type="xs:string">Martin</saml:AttributeValue>
+  </saml:Attribute>
+  <saml:Attribute Name="role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+    <saml:AttributeValue xsi:type="xs:string">admin</saml:AttributeValue>
   </saml:Attribute>
 </saml:AttributeStatement>
 ```
@@ -277,16 +281,18 @@ Le flux SAML est géré en interne ; seuls les **attributs SAML** doivent être 
 ```php
 // Après traitement de la réponse SAML (ex. OneLogin, simplesamlphp, etc.)
 $attributes = $samlResponse->getAttributes();
-$customRole = $attributes['urn:oid:1.2.3.4.5'][0] ?? $attributes['custom_role'][0] ?? null;
-$department = $attributes['department'][0] ?? null;
+$email = $attributes['email'][0] ?? null;
+$nom = $attributes['nom'][0] ?? null;
+$role = $attributes['role'][0] ?? null;
 ```
 
 **TypeScript (Node, e.g. saml2-js / passport-saml)**  
 ```typescript
 // Après validation de la réponse SAML
 const attributes = (profile as any).attributes;
-const customRole = attributes['urn:oid:1.2.3.4.5']?.[0] ?? attributes['custom_role']?.[0];
-const department = attributes['department']?.[0];
+const email = attributes['email']?.[0];
+const nom = attributes['nom']?.[0];
+const role = attributes['role']?.[0];
 ```
 
 **Pièges courants**
@@ -299,7 +305,7 @@ const department = attributes['department']?.[0];
 
 - [ ] Attributs configurés côté IdP et présents dans l’Assertion.
 - [ ] SP reçoit et parse correctement les attributs (vérification via outil ou logs).
-- [ ] Application utilise ces attributs pour l’autorisation (rôles, départements).
+- [ ] Application utilise ces attributs pour l’autorisation (id, email, nom, role).
 - [ ] Test avec un utilisateur de test et vérification des valeurs.
 
 ---
@@ -351,7 +357,7 @@ Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, bindi
 $auth = new OneLogin\Saml2\Auth($settings);
 $auth->processResponse();
 $attributes = $auth->getAttributes();
-$customRole = $attributes['custom_role'][0] ?? null;
+$role = $attributes['role'][0] ?? null;
 ```
 
 **TypeScript (Node, passport-saml)**  
@@ -361,7 +367,7 @@ $customRole = $attributes['custom_role'][0] ?? null;
 (req: Request, res: Response) => {
   const profile = (req as any).user;
   const attributes = profile.attributes;
-  const customRole = attributes?.custom_role?.[0];
+  const role = attributes?.role?.[0];
 }
 ```
 
@@ -400,7 +406,7 @@ $customRole = $attributes['custom_role'][0] ?? null;
 |-------|------------|
 | **OIDC** | OpenID Connect – couche d’identité sur OAuth 2.0 (id_token, userinfo, scopes `openid`). |
 | **SAML v2** | Security Assertion Markup Language 2.0 – protocole d’échange d’assertions d’identité (XML). |
-| **Claims** | Informations sur l’utilisateur fournies par le SSO, sous forme **clé–valeur** (ex. `nom : Martin`, `email : martin@entreprise.fr`, `custom_role : admin`). L’application les lit dans le token pour identifier l’utilisateur et gérer les droits. |
+| **Claims** | Informations sur l’utilisateur fournies par le SSO, sous forme **clé–valeur** (ex. `id`, `email`, `nom`, `role` : `nom : Martin`, `email : martin@entreprise.fr`, `role : admin`). L’application les lit dans le token pour identifier l’utilisateur et gérer les droits. |
 | **Attributs SAML** | Éléments dans l’Assertion SAML décrivant l’utilisateur (rôles, groupes, etc.). |
 | **IdP** | Identity Provider – fournisseur d’identité (authentification). |
 | **SP** | Service Provider – application qui consomme l’authentification (SAML). |

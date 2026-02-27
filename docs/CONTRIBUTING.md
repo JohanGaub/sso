@@ -54,6 +54,7 @@ Le scope indique la partie du projet concernée :
 
 ### Description
 
+- **Doit** être rédigé en anglais (description et corps)
 - **Doit** commencer par une minuscule
 - **Doit** être au présent ("add" pas "added")
 - **Ne doit pas** se terminer par un point
