@@ -15,18 +15,9 @@ Documentation unique pour migrer des applications (PHP, Python, TypeScript, OIDC
 
 ### À qui s’adresse ce guide ?
 
-- **Développeurs** :
-  - Suivre les étapes techniques et les exemples de code (`Symfony`, `CodeIgniter`, `Python`, `TypeScript`).
-  - Implémenter les changements sur les attributs ou les flux d’authentification selon la section ciblée.
-- **Responsable technique** :
-  - En fonction de l’appétence et de la maturité de chaque équipe applicative, **définir le niveau d’autonomie** (autonome / accompagné / délégation).
-  - **Sélectionner le bon parcours** à partir de l’arbre de décision (protocole, gestion managée/privée, autonomie).
-  - **Valider la conformité** de la migration (sécurité, cohérence des attributs/claims, respect des bonnes pratiques).
-
-#### Rôles clés
-
-- **Administrateur SSO cible** : admin du SSO cible (ex. Entra ID), responsable de la configuration de l’IdP (applications, attributs/claims, métadonnées IdP).
-- **Équipe de raccordement applicatif** : équipe chargée d’intégrer le SSO cible dans les applications, en accompagnant chaque responsable d’application selon le niveau d’autonomie choisi (autonome, accompagné, délégué) : lecture des claims, adaptation de la configuration et du code, ou intégration complète à la place de l’équipe applicative.
+- **Équipe applicative** : en charge de l’application ; réalise les étapes côté application en fonction de leur niveau d'autonomie (autonome / accompagné / délégué).
+- **Administrateur SSO cible** : configure l’IdP (applications, claims, métadonnées).
+- **Équipe de raccordement applicatif** : accompagne l’équipe applicative (parcours accompagné ou délégué).
 
 ### Comment utiliser ce document ?
 
@@ -69,9 +60,9 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Responsable d’application | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
+| 1 | Équipe applicative | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Responsable d’application | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| 3 | Équipe applicative | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 **Exemples de code**
@@ -128,15 +119,15 @@ const role = payload.role;
 
 ### 3.2 OIDC – Gestion managée – Accompagné / Délégué
 
-Mêmes étapes que la section 3.1. **En accompagné** : l’équipe de raccordement applicatif réalise les étapes « Responsable d’application » avec le responsable. **En délégué** : l’équipe les réalise à sa place. Compléments : [FAQ](#faq), contacts équipe SSO / identité (fournir liste des claims requis, environnement et périmètre en cas de délégation).
+Mêmes étapes que la section 3.1 (tableau ci-dessous).
 
 **Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Responsable d’application | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Responsable d’application | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 ---
@@ -151,10 +142,10 @@ Vous devez **reconfigurer le flux OIDC** (endpoints, redirect_uri, scopes, clien
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Responsable d’application | Documenter le flux actuel (Authorization Code, PKCE recommandé). | À estimer | [ ] |
+| 1 | Équipe applicative | Documenter le flux actuel (Authorization Code, PKCE recommandé) et transmettre à l'administrateur SSO cible les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Créer ou mettre à jour le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
-| 3 | Responsable d’application | Mettre à jour la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
-| 4 | Responsable d’application | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
+| 3 | Équipe applicative | Mettre à jour la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 4 | Équipe applicative | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
 
 **Schéma de flux (rappel)**
@@ -226,16 +217,16 @@ oauth.register(
 
 ### 4.2 OIDC – Gestion privée – Accompagné / Délégué
 
-Mêmes étapes que la section 4.1. **En accompagné** : l’équipe de raccordement applicatif réalise les étapes « Responsable d’application » avec le responsable. **En délégué** : l’équipe les réalise à sa place. Compléments : assistance technique (revue config, débogage), exemples avancés (reverse proxy, refresh token, déconnexion centralisée), contacts équipe SSO / identité.
+Mêmes étapes que la section 4.1 (tableau ci-dessous).
 
 **Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Responsable d’application | Documenter le flux actuel (Authorization Code, PKCE recommandé). | À estimer | [ ] |
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (Authorization Code, PKCE recommandé) et transmettre à l'administrateur SSO cible les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Créer ou mettre à jour le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
-| 3 | Responsable d’application | Mettre à jour la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
-| 4 | Responsable d’application | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | Mettre à jour la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 4 | Équipe applicative ou Équipe de raccordement applicatif | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
 
 ---
@@ -250,9 +241,9 @@ Le flux SAML est géré en interne ; seuls les **attributs SAML** doivent être 
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Responsable d’application | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l’administrateur SSO cible. | À estimer | [ ] |
+| 1 | Équipe applicative | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l’administrateur SSO cible. | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Configurer l’IdP pour envoyer ces attributs dans l’Assertion SAML (noms et format attendus). | À estimer | [ ] |
-| 3 | Responsable d’application | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l’application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
+| 3 | Équipe applicative | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l’application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 **Exemple de structure d’attributs dans une Assertion SAML (à titre indicatif)**
@@ -303,7 +294,16 @@ const role = attributes['role']?.[0];
 
 ### 5.2 SAML v2 – Gestion managée – Accompagné / Délégué
 
-Suivre les **étapes de la section 5.1**, plus : [FAQ](#faq), contacts équipe SSO / identité (mapping attributs IdP, validation Assertion, délégation).
+Mêmes étapes que la section 5.1 (tableau ci-dessous).
+
+**Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
+
+| Étape | Acteur | Action | Durée | Étape réalisée |
+|-------|--------|--------|-------|------------------|
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'administrateur SSO cible. | À estimer | [ ] |
+| 2 | Administrateur SSO cible | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 ---
 
@@ -317,10 +317,10 @@ Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, bindi
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Responsable d’application | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
-| 2 | Responsable d’application | Générer ou mettre à jour les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
+| 1 | Équipe applicative | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
+| 2 | Équipe applicative | Générer ou mettre à jour les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
 | 3 | Administrateur SSO cible | Enregistrer les métadonnées SP chez l’IdP et fournir les métadonnées IdP. | À estimer | [ ] |
-| 4 | Responsable d’application | Configurer l’application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
+| 4 | Équipe applicative | Configurer l’application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
 
 **Schéma de flux (SP-initiated, simplifié)**
@@ -366,7 +366,17 @@ $role = $attributes['role'][0] ?? null;
 
 ### 6.2 SAML v2 – Gestion privée – Accompagné / Délégué
 
-Suivre les **étapes de la section 6.1**, plus : assistance technique (revue métadonnées, débogage erreurs IdP/SP), exemples avancés (SLO, IdP-initiated, multiples IdPs), contacts équipe SSO / identité pour accompagnement ou délégation.
+Mêmes étapes que la section 6.1 (tableau ci-dessous).
+
+**Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
+
+| Étape | Acteur | Action | Durée | Étape réalisée |
+|-------|--------|--------|-------|------------------|
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
+| 2 | Équipe applicative ou Équipe de raccordement applicatif | Générer ou mettre à jour les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
+| 3 | Administrateur SSO cible | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | À estimer | [ ] |
+| 4 | Équipe applicative ou Équipe de raccordement applicatif | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
 
 ---
 
@@ -376,16 +386,24 @@ Suivre les **étapes de la section 6.1**, plus : assistance technique (revue mé
 
 | Terme | Définition |
 |-------|------------|
-| **OIDC** | OpenID Connect – couche d’identité sur OAuth 2.0 (id_token, userinfo, scopes `openid`). |
-| **SAML v2** | Security Assertion Markup Language 2.0 – protocole d’échange d’assertions d’identité (XML). |
-| **Claims** | Informations sur l’utilisateur fournies par le SSO, sous forme **clé–valeur** (ex. `id`, `email`, `nom`, `role` : `nom : Martin`, `email : martin@entreprise.fr`, `role : admin`). L’application les lit dans le token pour identifier l’utilisateur et gérer les droits. |
+| **ACS** | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
+| **Assertion (SAML)** | Message XML envoyé par l’IdP au SP contenant l’identité et les attributs de l’utilisateur. |
 | **Attributs SAML** | Éléments dans l’Assertion SAML décrivant l’utilisateur (rôles, groupes, etc.). |
-| **IdP** | Identity Provider – fournisseur d’identité (authentification). |
-| **SP** | Service Provider – application qui consomme l’authentification (SAML). |
+| **Binding (SAML)** | Mode de transport des messages SAML : HTTP-POST ou HTTP-Redirect. |
+| **Claims** | Informations sur l’utilisateur fournies par le SSO, sous forme **clé–valeur** (ex. `id`, `email`, `nom`, `role`). L’application les lit dans le token pour identifier l’utilisateur et gérer les droits. |
+| **EntityID** | Identifiant unique du SP ou de l’IdP dans les métadonnées SAML. |
 | **Gestion managée** | Seuls les attributs/claims sont modifiés ; le flux est géré en interne. |
 | **Gestion privée** | Modification du flux d’authentification (client, métadonnées, endpoints) et des attributs. |
-| **ACS** | Assertion Consumer Service – endpoint SP qui reçoit la Response SAML. |
+| **IdP** | Identity Provider – fournisseur d’identité (authentification). |
+| **IdP-initiated / SP-initiated** | **SP-initiated** : l’application (SP) envoie une AuthnRequest vers l’IdP. **IdP-initiated** : l’IdP envoie la Response SAML sans requête préalable. |
 | **JWT** | JSON Web Token – format courant pour id_token et access_token en OIDC. |
+| **OIDC** | OpenID Connect – couche d’identité sur OAuth 2.0 (id_token, userinfo, scopes `openid`). |
+| **PKCE** | Proof Key for Code Exchange – mécanisme de sécurisation du flux Authorization Code (OIDC), recommandé pour les clients publics. |
+| **redirect_uri** | URL vers laquelle l’IdP redirige l’utilisateur après authentification (OIDC) ; doit être exactement enregistrée pour le client. |
+| **SAML v2** | Security Assertion Markup Language 2.0 – protocole d’échange d’assertions d’identité (XML). |
+| **SLO** | Single Logout – déconnexion unique (SAML) ; endpoint et flux permettant de fermer la session côté IdP et SP. |
+| **SP** | Service Provider – application qui consomme l’authentification (SAML). |
+| **userinfo** | Endpoint OIDC renvoyant les claims utilisateur ; utilisé en complément ou à la place des claims présents dans le id_token. |
 
 ### FAQ
 
