@@ -62,12 +62,12 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 |-------|--------|--------|-------|------------------|
 | 1 | Équipe applicative | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Équipe applicative | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| 3 | Équipe applicative | Adapter et tester la consommation des claims dans l’application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 **Pièges courants**
 
-- Oublier de mettre à jour le **schéma de validation** des claims (liste des claims autorisés, types).
+- Oublier de actualiser le **schéma de validation** des claims (liste des claims autorisés, types).
 - Confusion entre claims **standard** (ex. `id`, `email`, `nom`) et **personnalisés** (ex. `role`) : bien documenter la source (IdP) et le nom exact du claim.
 - Ne pas ignorer les erreurs quand l’application lit les claims :
   - **en développement/préproduction** : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
@@ -85,7 +85,7 @@ Mêmes étapes que la section 3.1 (tableau ci-dessous).
 |-------|--------|--------|-------|------------------|
 | 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | Adapter et tester la consommation des claims dans l’application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
 ---
@@ -101,8 +101,8 @@ Vous devez **reconfigurer le flux OIDC** (endpoints, redirect_uri, scopes, clien
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
 | 1 | Équipe applicative | Documenter le flux actuel (Authorization Code, PKCE recommandé) et transmettre à l'administrateur SSO cible les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
-| 2 | Administrateur SSO cible | Créer ou mettre à jour le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
-| 3 | Équipe applicative | Mettre à jour la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 2 | Administrateur SSO cible | Créer ou actualiser le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
+| 3 | Équipe applicative | Actualiser la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
 | 4 | Équipe applicative | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
 
@@ -134,8 +134,8 @@ Mêmes étapes que la section 4.1 (tableau ci-dessous).
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
 | 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (Authorization Code, PKCE recommandé) et transmettre à l'administrateur SSO cible les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
-| 2 | Administrateur SSO cible | Créer ou mettre à jour le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Mettre à jour la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 2 | Administrateur SSO cible | Créer ou actualiser le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | Actualiser la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
 | 4 | Équipe applicative ou Équipe de raccordement applicatif | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
 
@@ -192,7 +192,7 @@ Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, bindi
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
 | 1 | Équipe applicative | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
-| 2 | Équipe applicative | Générer ou mettre à jour les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
+| 2 | Équipe applicative | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
 | 3 | Administrateur SSO cible | Enregistrer les métadonnées SP chez l’IdP et fournir les métadonnées IdP. | À estimer | [ ] |
 | 4 | Équipe applicative | Configurer l’application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
@@ -224,7 +224,7 @@ Mêmes étapes que la section 6.1 (tableau ci-dessous).
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
 | 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
-| 2 | Équipe applicative ou Équipe de raccordement applicatif | Générer ou mettre à jour les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
+| 2 | Équipe applicative ou Équipe de raccordement applicatif | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
 | 3 | Administrateur SSO cible | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | À estimer | [ ] |
 | 4 | Équipe applicative ou Équipe de raccordement applicatif | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |

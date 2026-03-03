@@ -1,0 +1,47 @@
+# Guide de migration – OIDC / Gestion managée
+
+Extrait de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
+Ce document couvre les parcours **OIDC – Gestion managée** (sections 3.1 et 3.2 du guide complet).
+
+Les exemples de code détaillés sont disponibles dans `GUIDE_MIGRATION_SSO_CIBLE_EXEMPLES_CODE.md` (section 3.1).
+
+---
+
+## 3. OIDC – Gestion managée (modification des attributs)
+
+Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent être ajustés.
+
+### 3.1 OIDC – Gestion managée – Autonome
+
+**Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
+
+| Étape | Acteur | Action | Durée | Étape réalisée |
+|-------|--------|--------|-------|------------------|
+| 1 | Équipe applicative | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
+| 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
+| 3 | Équipe applicative | Adapter et tester la consommation des claims dans l’application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+
+**Pièges courants**
+
+- Oublier de actualiser le **schéma de validation** des claims (liste des claims autorisés, types).
+- Confusion entre claims **standard** (ex. `id`, `email`, `nom`) et **personnalisés** (ex. `role`) : bien documenter la source (IdP) et le nom exact du claim.
+- Ne pas ignorer les erreurs quand l’application lit les claims :
+  - **en développement/préproduction** : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
+  - **en production** : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu’un claim attendu est manquant ou invalide.
+
+---
+
+### 3.2 OIDC – Gestion managée – Accompagné / Délégué
+
+Mêmes étapes que la section 3.1 (tableau ci-dessous).
+
+**Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
+
+| Étape | Acteur | Action | Durée | Étape réalisée |
+|-------|--------|--------|-------|------------------|
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
+| 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | Adapter et tester la consommation des claims dans l’application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+
