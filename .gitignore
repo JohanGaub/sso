@@ -27,6 +27,11 @@ docker-compose.local.yml
 *~
 ###< ide ###
 
+###> phpactor ###
+# Configuration locale Phpactor (non versionnée)
+.phpactor.json
+###< phpactor ###
+
 ###> os ###
 # Fichiers système
 .DS_Store
