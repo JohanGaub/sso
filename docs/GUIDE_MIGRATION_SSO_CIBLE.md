@@ -52,7 +52,7 @@ Répondez aux trois questions ci-dessous, puis reportez-vous au **tableau** pour
 
 ## 3. OIDC – Gestion managée (modification des attributs)
 
-Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent être ajustés.
+Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent être ajustés. L’authentification est déjà déléguée au SSO cible ; l’application valide les tokens et consomme les claims.
 
 ### 3.1 OIDC – Gestion managée – Autonome
 
@@ -100,11 +100,12 @@ Vous devez **reconfigurer le flux OIDC** (endpoints, redirect_uri, scopes, clien
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative | Documenter le flux actuel (Authorization Code, PKCE recommandé) et transmettre à l'administrateur SSO cible les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
+| 1 | Équipe applicative | Documenter le flux actuel (flux par code : redirection vers l’IdP, puis échange du code contre les tokens ; préciser si PKCE est utilisé — recommandé pour sécuriser) et transmettre à l’administrateur SSO cible les éléments nécessaires à l’enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Créer ou actualiser le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
-| 3 | Équipe applicative | Actualiser la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
-| 4 | Équipe applicative | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
-| **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
+| 3 | Équipe applicative | **Débrancher** l’authentification locale : s’assurer que l’application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, `exp`) ; désactiver l’ancienne page de connexion (login / mot de passe) ; documenter que l’accès se fait uniquement via le SSO cible. | À estimer | [ ] |
+| 4 | Équipe applicative | Actualiser la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 5 | Équipe applicative | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 5) | À estimer | [ ] |
 
 **Schéma de flux (rappel)**
 
@@ -133,11 +134,12 @@ Mêmes étapes que la section 4.1 (tableau ci-dessous).
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (Authorization Code, PKCE recommandé) et transmettre à l'administrateur SSO cible les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (flux par code : redirection vers l’IdP, puis échange du code contre les tokens ; préciser si PKCE est utilisé — recommandé pour sécuriser) et transmettre à l’administrateur SSO cible les éléments nécessaires à l’enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
 | 2 | Administrateur SSO cible | Créer ou actualiser le client auprès de l’IdP (Client ID, Secret, Redirect URIs, scopes `openid`, `profile`, `email` + personnalisés). | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Actualiser la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
-| 4 | Équipe applicative ou Équipe de raccordement applicatif | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
-| **Total** | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif | **Débrancher** l’authentification locale : s’assurer que l’application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, `exp`) ; désactiver l’ancienne page de connexion (login / mot de passe) ; documenter que l’accès se fait uniquement via le SSO cible. | À estimer | [ ] |
+| 4 | Équipe applicative ou Équipe de raccordement applicatif | Actualiser la configuration de l’application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 5 | Équipe applicative ou Équipe de raccordement applicatif | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
+| **Total** | — | Durée totale (somme des étapes 1 à 5) | À estimer | [ ] |
 
 ---
 
