@@ -65,48 +65,6 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 | 3 | Équipe applicative | Adapter et tester la consommation des claims dans l’application : mettre à jour le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
-**Exemples de code**
-
-**Symfony (PHP)**  
-```php
-// Dans votre contrôleur ou service
-$user = $this->getUser();
-$email = $user->getAttribute('email');
-$nom = $user->getAttribute('nom');
-$role = $user->getAttribute('role');
-// Validation optionnelle
-if (!in_array($role, ['admin', 'user'], true)) {
-    throw new AccessDeniedException('Rôle non autorisé');
-}
-```
-
-**CodeIgniter (PHP)**  
-```php
-// Après authentification OIDC, dans un helper ou le contrôleur
-$claims = $this->session->userdata('oidc_claims');
-$email = $claims['email'] ?? null;
-$nom = $claims['nom'] ?? null;
-$role = $claims['role'] ?? null;
-```
-
-**Python (ex. Flask / Django)**  
-```python
-# Flask : après récupération du token / userinfo
-user_info = request.session.get('oidc_userinfo', {})
-email = user_info.get('email')
-nom = user_info.get('nom')
-role = user_info.get('role')
-```
-
-**TypeScript (Node / front)**  
-```typescript
-// Côté backend après validation du JWT
-const payload = decodedToken as { email?: string; nom?: string; role?: string };
-const email = payload.email;
-const nom = payload.nom;
-const role = payload.role;
-```
-
 **Pièges courants**
 
 - Oublier de mettre à jour le **schéma de validation** des claims (liste des claims autorisés, types).
@@ -159,54 +117,6 @@ Vous devez **reconfigurer le flux OIDC** (endpoints, redirect_uri, scopes, clien
 [App] --> Création de session / utilisateur local
 ```
 
-**Exemples de code**
-
-**Symfony (PHP)** – configuration et récupération des attributs après connexion OIDC  
-```php
-// config/packages/knpu_oauth2_client.yaml (exemple)
-// knpu_oauth2_client:
-//     clients:
-//         keycloak:
-//             type: generic
-//             client_id: '%env(OIDC_CLIENT_ID)%'
-//             client_secret: '%env(OIDC_CLIENT_SECRET)%'
-//             redirect_route: connect_keycloak_check
-//             url_authorize: '%env(OIDC_ISSUER)%/protocol/openid-connect/auth'
-//             url_access_token: '%env(OIDC_ISSUER)%/protocol/openid-connect/token'
-//             url_resource_owner_details: '%env(OIDC_ISSUER)%/protocol/openid-connect/userinfo'
-
-$user = $this->getUser();
-$role = $user->getAttribute('role');
-```
-
-**TypeScript (Node, express + openid-client)**  
-```typescript
-import { Issuer, Strategy } from 'openid-client';
-
-const issuer = await Issuer.discover(process.env.OIDC_ISSUER!);
-const client = new issuer.Client({
-  client_id: process.env.OIDC_CLIENT_ID!,
-  client_secret: process.env.OIDC_CLIENT_SECRET!,
-  redirect_uris: [process.env.OIDC_REDIRECT_URI!],
-});
-// Utiliser client.authorizationUrl(), client.callbackParams(), client.callback()
-// Puis lire les claims depuis id_token ou userinfo
-```
-
-**Python (Flask + authlib)**  
-```python
-from authlib.integrations.flask_client import OAuth
-
-oauth = OAuth(app)
-oauth.register(
-    name='oidc',
-    server_metadata_url=os.environ['OIDC_ISSUER'].rstrip('/') + '/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid profile email'},
-)
-# Dans la route callback : token = oauth.oidc.authorize_access_token()
-# userinfo = token.get('userinfo') ou décoder id_token
-```
-
 **Pièges courants**
 
 - **Redirect URI** : doit être exactement identique (protocole, domaine, port, chemin) entre IdP et application.
@@ -246,43 +156,7 @@ Le flux SAML est géré en interne ; seuls les **attributs SAML** doivent être 
 | 3 | Équipe applicative | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l’application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
-**Exemple de structure d’attributs dans une Assertion SAML (à titre indicatif)**
-
-```xml
-<saml:AttributeStatement>
-  <saml:Attribute Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-    <saml:AttributeValue xsi:type="xs:string">martin@entreprise.fr</saml:AttributeValue>
-  </saml:Attribute>
-  <saml:Attribute Name="nom" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-    <saml:AttributeValue xsi:type="xs:string">Martin</saml:AttributeValue>
-  </saml:Attribute>
-  <saml:Attribute Name="role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
-    <saml:AttributeValue xsi:type="xs:string">admin</saml:AttributeValue>
-  </saml:Attribute>
-</saml:AttributeStatement>
-```
-
 **Validation** : Utiliser un outil en ligne de décodage/validation SAML (ou un validateur local) pour vérifier la présence et le format des attributs dans l’Assertion reçue.
-
-**Exemples de code (lecture des attributs côté SP)**
-
-**PHP (bibliothèque SAML générique)**  
-```php
-// Après traitement de la réponse SAML (ex. OneLogin, simplesamlphp, etc.)
-$attributes = $samlResponse->getAttributes();
-$email = $attributes['email'][0] ?? null;
-$nom = $attributes['nom'][0] ?? null;
-$role = $attributes['role'][0] ?? null;
-```
-
-**TypeScript (Node, e.g. saml2-js / passport-saml)**  
-```typescript
-// Après validation de la réponse SAML
-const attributes = (profile as any).attributes;
-const email = attributes['email']?.[0];
-const nom = attributes['nom']?.[0];
-const role = attributes['role']?.[0];
-```
 
 **Pièges courants**
 
@@ -331,29 +205,6 @@ Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, bindi
 [IdP] --> Envoi Response SAML (POST vers ACS)
 [SP] --> Vérification signature, lecture NameID + attributs
 [SP] --> Création de session
-```
-
-**Exemples de code**
-
-**PHP (Symfony avec one login php-saml)**  
-```php
-// Configuration SP : IdP entity ID, SSO URL, x509 cert, etc.
-// Après réception du POST ACS :
-$auth = new OneLogin\Saml2\Auth($settings);
-$auth->processResponse();
-$attributes = $auth->getAttributes();
-$role = $attributes['role'][0] ?? null;
-```
-
-**TypeScript (Node, passport-saml)**  
-```typescript
-// Strategy config : entryPoint, cert, callbackUrl, etc.
-// Dans la callback après validation :
-(req: Request, res: Response) => {
-  const profile = (req as any).user;
-  const attributes = profile.attributes;
-  const role = attributes?.role?.[0];
-}
 ```
 
 **Pièges courants**
