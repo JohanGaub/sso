@@ -1,17 +1,18 @@
-# Exemples de code
+h1. Exemples de code
 
-Ce document regroupe **tous les exemples de code** extraits de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
-Chaque section indique **où réinsérer** les exemples dans le guide d’origine.
+Ce document regroupe *tous les exemples de code* extraits de {{GUIDE_MIGRATION_SSO_CIBLE.md}}.
+Chaque section indique *où réinsérer* les exemples dans le guide d'origine.
 
----
+----
 
-## 3.1 OIDC – Gestion managée – Autonome – Exemples de code
+h2. 3.1 OIDC – Gestion managée – Autonome – Exemples de code
 
-**Point d’insertion dans `GUIDE_MIGRATION_SSO_CIBLE.md`** :  
-Après le tableau de suivi de la section **3.1**, juste avant le bloc « Pièges courants ».
+*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
+Après le tableau de suivi de la section *3.1*, juste avant le bloc « Pièges courants ».
 
-**Symfony (PHP)**  
-```php
+*Symfony (PHP)*
+
+{code:php}
 // Dans votre contrôleur ou service
 $user = $this->getUser();
 $email = $user->getAttribute('email');
@@ -21,44 +22,48 @@ $role = $user->getAttribute('role');
 if (!in_array($role, ['admin', 'user'], true)) {
     throw new AccessDeniedException('Rôle non autorisé');
 }
-```
+{code}
 
-**CodeIgniter (PHP)**  
-```php
+*CodeIgniter (PHP)*
+
+{code:php}
 // Après authentification OIDC, dans un helper ou le contrôleur
 $claims = $this->session->userdata('oidc_claims');
 $email = $claims['email'] ?? null;
 $nom = $claims['nom'] ?? null;
 $role = $claims['role'] ?? null;
-```
+{code}
 
-**Python (ex. Flask / Django)**  
-```python
+*Python (ex. Flask / Django)*
+
+{code:python}
 # Flask : après récupération du token / userinfo
 user_info = request.session.get('oidc_userinfo', {})
 email = user_info.get('email')
 nom = user_info.get('nom')
 role = user_info.get('role')
-```
+{code}
 
-**TypeScript (Node / front)**  
-```typescript
+*TypeScript (Node / front)*
+
+{code:javascript}
 // Côté backend après validation du JWT
 const payload = decodedToken as { email?: string; nom?: string; role?: string };
 const email = payload.email;
 const nom = payload.nom;
 const role = payload.role;
-```
+{code}
 
----
+----
 
-## 4.1 OIDC – Gestion privée – Autonome – Exemples de code
+h2. 4.1 OIDC – Gestion privée – Autonome – Exemples de code
 
-**Point d’insertion dans `GUIDE_MIGRATION_SSO_CIBLE.md`** :  
-Dans la section **4.1**, après le bloc « Schéma de flux (rappel) », avant « Pièges courants ».
+*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
+Dans la section *4.1*, après le bloc « Schéma de flux (rappel) », avant « Pièges courants ».
 
-**Symfony (PHP)** – configuration et récupération des attributs après connexion OIDC  
-```php
+*Symfony (PHP)* – configuration et récupération des attributs après connexion OIDC
+
+{code:php}
 // config/packages/knpu_oauth2_client.yaml (exemple)
 // knpu_oauth2_client:
 //     clients:
@@ -73,10 +78,11 @@ Dans la section **4.1**, après le bloc « Schéma de flux (rappel) », avant «
 
 $user = $this->getUser();
 $role = $user->getAttribute('role');
-```
+{code}
 
-**TypeScript (Node, express + openid-client)**  
-```typescript
+*TypeScript (Node, express + openid-client)*
+
+{code:javascript}
 import { Issuer, Strategy } from 'openid-client';
 
 const issuer = await Issuer.discover(process.env.OIDC_ISSUER!);
@@ -87,10 +93,11 @@ const client = new issuer.Client({
 });
 // Utiliser client.authorizationUrl(), client.callbackParams(), client.callback()
 // Puis lire les claims depuis id_token ou userinfo
-```
+{code}
 
-**Python (Flask + authlib)**  
-```python
+*Python (Flask + authlib)*
+
+{code:python}
 from authlib.integrations.flask_client import OAuth
 
 oauth = OAuth(app)
@@ -101,17 +108,18 @@ oauth.register(
 )
 # Dans la route callback : token = oauth.oidc.authorize_access_token()
 # userinfo = token.get('userinfo') ou décoder id_token
-```
+{code}
 
----
+----
 
-## 5.1 SAML v2 – Gestion managée – Autonome – Exemples de code
+h2. 5.1 SAML v2 – Gestion managée – Autonome – Exemples de code
 
-**Point d’insertion dans `GUIDE_MIGRATION_SSO_CIBLE.md`** :  
-Dans la section **5.1**, après le bloc « Exemple de structure d’attributs dans une Assertion SAML (à titre indicatif) », avant « Pièges courants ».
+*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
+Dans la section *5.1*, après le bloc « Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif) », avant « Pièges courants ».
 
-**Exemple de structure d’attributs dans une Assertion SAML (à titre indicatif)**  
-```xml
+*Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif)*
+
+{code:xml}
 <saml:AttributeStatement>
   <saml:Attribute Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
     <saml:AttributeValue xsi:type="xs:string">martin@entreprise.fr</saml:AttributeValue>
@@ -123,45 +131,49 @@ Dans la section **5.1**, après le bloc « Exemple de structure d’attributs da
     <saml:AttributeValue xsi:type="xs:string">admin</saml:AttributeValue>
   </saml:Attribute>
 </saml:AttributeStatement>
-```
+{code}
 
-**PHP (bibliothèque SAML générique)** – lecture des attributs côté SP  
-```php
+*PHP (bibliothèque SAML générique)* – lecture des attributs côté SP
+
+{code:php}
 // Après traitement de la réponse SAML (ex. OneLogin, simplesamlphp, etc.)
 $attributes = $samlResponse->getAttributes();
 $email = $attributes['email'][0] ?? null;
 $nom = $attributes['nom'][0] ?? null;
 $role = $attributes['role'][0] ?? null;
-```
+{code}
 
-**TypeScript (Node, e.g. saml2-js / passport-saml)** – lecture des attributs côté SP  
-```typescript
+*TypeScript (Node, e.g. saml2-js / passport-saml)* – lecture des attributs côté SP
+
+{code:javascript}
 // Après validation de la réponse SAML
 const attributes = (profile as any).attributes;
 const email = attributes['email']?.[0];
 const nom = attributes['nom']?.[0];
 const role = attributes['role']?.[0];
-```
+{code}
 
----
+----
 
-## 6.1 SAML v2 – Gestion privée – Autonome – Exemples de code
+h2. 6.1 SAML v2 – Gestion privée – Autonome – Exemples de code
 
-**Point d’insertion dans `GUIDE_MIGRATION_SSO_CIBLE.md`** :  
-Dans la section **6.1**, après le bloc « Schéma de flux (SP-initiated, simplifié) », avant « Pièges courants ».
+*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
+Dans la section *6.1*, après le bloc « Schéma de flux (SP-initiated, simplifié) », avant « Pièges courants ».
 
-**PHP (Symfony avec onelogin/php-saml)**  
-```php
+*PHP (Symfony avec onelogin/php-saml)*
+
+{code:php}
 // Configuration SP : IdP entity ID, SSO URL, x509 cert, etc.
 // Après réception du POST ACS :
 $auth = new OneLogin\Saml2\Auth($settings);
 $auth->processResponse();
 $attributes = $auth->getAttributes();
 $role = $attributes['role'][0] ?? null;
-```
+{code}
 
-**TypeScript (Node, passport-saml)**  
-```typescript
+*TypeScript (Node, passport-saml)*
+
+{code:javascript}
 // Strategy config : entryPoint, cert, callbackUrl, etc.
 // Dans la callback après validation :
 (req: Request, res: Response) => {
@@ -169,5 +181,4 @@ $role = $attributes['role'][0] ?? null;
   const attributes = profile.attributes;
   const role = attributes?.role?.[0];
 }
-```
-
+{code}
