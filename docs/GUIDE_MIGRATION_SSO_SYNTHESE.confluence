@@ -50,10 +50,10 @@ h2. 3. Choisir votre guide détaillé
 À partir de votre contexte (protocole + mode de gestion), consultez le guide correspondant :
 
 || Protocole || Mode || Guide détaillé ||
-| OIDC | Gestion managée (attributs/claims uniquement) | Guide migration OIDC - Gestion managée |
-| OIDC | Gestion privée (flux + attributs) | Guide migration OIDC - Gestion privée |
-| SAML v2 | Gestion managée (attributs uniquement) | Guide migration SAML - Gestion managée |
-| SAML v2 | Gestion privée (flux + attributs) | Guide migration SAML - Gestion privée |
+| OIDC | Gestion managée (attributs/claims uniquement) | 1. Guide migration OIDC - Gestion managée |
+| OIDC | Gestion privée (flux + attributs) | 2. Guide migration OIDC - Gestion privée |
+| SAML v2 | Gestion managée (attributs uniquement) | 3. Guide migration SAML - Gestion managée |
+| SAML v2 | Gestion privée (flux + attributs) | 4. Guide migration SAML - Gestion privée |
 
 Exemples de code par cas : Exemples de code.
 

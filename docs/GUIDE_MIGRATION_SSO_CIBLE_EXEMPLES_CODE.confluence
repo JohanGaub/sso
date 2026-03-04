@@ -1,14 +1,20 @@
 h1. Exemples de code
 
-Ce document regroupe *tous les exemples de code* extraits de {{GUIDE_MIGRATION_SSO_CIBLE.md}}.
-Chaque section indique *où réinsérer* les exemples dans le guide d'origine.
+Ce document regroupe les exemples de code par cas. Chaque bloc correspond à l'un des quatre guides détaillés ; repérez le vôtre ci-dessous puis ouvrez la section associée.
+
+|| Guide concerné || Section dans ce document ||
+| 1. Guide migration OIDC - Gestion managée | 1.1 OIDC – Gestion managée (ci-dessous) |
+| 2. Guide migration OIDC - Gestion privée | 2.1 OIDC – Gestion privée |
+| 3. Guide migration SAML - Gestion managée | 3.1 SAML – Gestion managée |
+| 4. Guide migration SAML - Gestion privée | 4.1 SAML – Gestion privée |
 
 ----
 
-h2. 3.1 OIDC – Gestion managée – Autonome – Exemples de code
+h2. 1.1 OIDC – Gestion managée – Autonome
 
-*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
-Après le tableau de suivi de la section *3.1*, juste avant le bloc « Pièges courants ».
+Guide concerné : 1. Guide migration OIDC - Gestion managée
+
+Point d'insertion dans le guide : après le tableau de suivi de la section 1.1, juste avant le bloc « Pièges courants ».
 
 *Symfony (PHP)*
 
@@ -24,7 +30,7 @@ if (!in_array($role, ['admin', 'user'], true)) {
 }
 {code}
 
-*CodeIgniter (PHP)*
+CodeIgniter (PHP)
 
 {code:php}
 // Après authentification OIDC, dans un helper ou le contrôleur
@@ -34,7 +40,7 @@ $nom = $claims['nom'] ?? null;
 $role = $claims['role'] ?? null;
 {code}
 
-*Python (ex. Flask / Django)*
+Python (ex. Flask / Django)
 
 {code:python}
 # Flask : après récupération du token / userinfo
@@ -44,7 +50,7 @@ nom = user_info.get('nom')
 role = user_info.get('role')
 {code}
 
-*TypeScript (Node / front)*
+TypeScript (Node / front)
 
 {code:javascript}
 // Côté backend après validation du JWT
@@ -56,12 +62,13 @@ const role = payload.role;
 
 ----
 
-h2. 4.1 OIDC – Gestion privée – Autonome – Exemples de code
+h2. 2.1 OIDC – Gestion privée – Autonome
 
-*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
-Dans la section *4.1*, après le bloc « Schéma de flux (rappel) », avant « Pièges courants ».
+Guide concerné : 2. Guide migration OIDC - Gestion privée
 
-*Symfony (PHP)* – configuration et récupération des attributs après connexion OIDC
+Point d'insertion dans le guide : section 2.1, après le bloc « Schéma de flux (rappel) », avant « Pièges courants ».
+
+Symfony (PHP) – configuration et récupération des attributs après connexion OIDC
 
 {code:php}
 // config/packages/knpu_oauth2_client.yaml (exemple)
@@ -80,7 +87,7 @@ $user = $this->getUser();
 $role = $user->getAttribute('role');
 {code}
 
-*TypeScript (Node, express + openid-client)*
+TypeScript (Node, express + openid-client)
 
 {code:javascript}
 import { Issuer, Strategy } from 'openid-client';
@@ -95,7 +102,7 @@ const client = new issuer.Client({
 // Puis lire les claims depuis id_token ou userinfo
 {code}
 
-*Python (Flask + authlib)*
+Python (Flask + authlib)
 
 {code:python}
 from authlib.integrations.flask_client import OAuth
@@ -112,12 +119,13 @@ oauth.register(
 
 ----
 
-h2. 5.1 SAML v2 – Gestion managée – Autonome – Exemples de code
+h2. 3.1 SAML – Gestion managée – Autonome
 
-*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
-Dans la section *5.1*, après le bloc « Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif) », avant « Pièges courants ».
+Guide concerné : 3. Guide migration SAML - Gestion managée
 
-*Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif)*
+Point d'insertion dans le guide : section 3.1, après le bloc « Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif) », avant « Pièges courants ».
+
+Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif)
 
 {code:xml}
 <saml:AttributeStatement>
@@ -133,7 +141,7 @@ Dans la section *5.1*, après le bloc « Exemple de structure d'attributs dans u
 </saml:AttributeStatement>
 {code}
 
-*PHP (bibliothèque SAML générique)* – lecture des attributs côté SP
+PHP (bibliothèque SAML générique) – lecture des attributs côté SP
 
 {code:php}
 // Après traitement de la réponse SAML (ex. OneLogin, simplesamlphp, etc.)
@@ -143,7 +151,7 @@ $nom = $attributes['nom'][0] ?? null;
 $role = $attributes['role'][0] ?? null;
 {code}
 
-*TypeScript (Node, e.g. saml2-js / passport-saml)* – lecture des attributs côté SP
+TypeScript (Node, e.g. saml2-js / passport-saml) – lecture des attributs côté SP
 
 {code:javascript}
 // Après validation de la réponse SAML
@@ -155,12 +163,13 @@ const role = attributes['role']?.[0];
 
 ----
 
-h2. 6.1 SAML v2 – Gestion privée – Autonome – Exemples de code
+h2. 4.1 SAML – Gestion privée – Autonome
 
-*Point d'insertion dans {{GUIDE_MIGRATION_SSO_CIBLE.md}}* :
-Dans la section *6.1*, après le bloc « Schéma de flux (SP-initiated, simplifié) », avant « Pièges courants ».
+Guide concerné : 4. Guide migration SAML - Gestion privée
 
-*PHP (Symfony avec onelogin/php-saml)*
+Point d'insertion dans le guide : section 4.1, après le bloc « Schéma de flux (SP-initiated, simplifié) », avant « Pièges courants ».
+
+PHP (Symfony avec onelogin/php-saml)
 
 {code:php}
 // Configuration SP : IdP entity ID, SSO URL, x509 cert, etc.
@@ -171,7 +180,7 @@ $attributes = $auth->getAttributes();
 $role = $attributes['role'][0] ?? null;
 {code}
 
-*TypeScript (Node, passport-saml)*
+TypeScript (Node, passport-saml)
 
 {code:javascript}
 // Strategy config : entryPoint, cert, callbackUrl, etc.
