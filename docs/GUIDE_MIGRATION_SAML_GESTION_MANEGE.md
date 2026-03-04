@@ -17,8 +17,8 @@ Le flux SAML est géré en interne ; seuls les **attributs SAML** doivent être 
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l’administrateur SSO cible. | À estimer | [ ] |
-| 2 | Administrateur SSO cible | Configurer l’IdP pour envoyer ces attributs dans l’Assertion SAML (noms et format attendus). | À estimer | [ ] |
+| 1 | Équipe applicative | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l’équipe IAM. | À estimer | [ ] |
+| 2 | Équipe IAM | Configurer l’IdP pour envoyer ces attributs dans l’Assertion SAML (noms et format attendus). | À estimer | [ ] |
 | 3 | Équipe applicative | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l’application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
@@ -40,8 +40,8 @@ Mêmes étapes que la section 5.1 (tableau ci-dessous).
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'administrateur SSO cible. | À estimer | [ ] |
-| 2 | Administrateur SSO cible | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | À estimer | [ ] |
+| 2 | Équipe IAM | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
 | 3 | Équipe applicative ou Équipe de raccordement applicatif | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 

@@ -5,11 +5,11 @@ Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les 
 
 ### À qui s’adresse ce document ?
 
-Équipe applicative ; administrateur SSO cible ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l’équipe applicative). La synthèse permet de se repérer (prérequis, étapes communes) et de choisir le bon guide détaillé.
+Équipe applicative ; équipe IAM ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l’équipe applicative). La synthèse permet de se repérer (prérequis, étapes communes) et de choisir le bon guide détaillé.
 
 ### Comment utiliser ce document ?
 
-1. Vérifier les **prérequis** (contexte, accès Préprod auprès de l’admin SSO cible).
+1. Vérifier les **prérequis** (contexte, accès Préprod auprès de l’équipe IAM).
 2. Parcourir les **étapes communes** pour situer où vous en êtes.
 3. Choisir le **guide détaillé** correspondant à votre cas (tableau de routage en fin de page) et suivre les étapes décrites dedans.
 
@@ -21,7 +21,11 @@ Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les 
   - Protocole : **OIDC** ou **SAML v2**.
   - Mode : **gestion managée** (attributs/claims uniquement) ou **gestion privée** (flux d’auth + attributs).
   - Niveau d’autonomie : **autonome**, **accompagné**, **délégué**.
-- **Environnement de départ** : on commence toujours par le raccordement sur **Préprod**. L’**administrateur SSO cible** met à disposition cet environnement ; l’équipe applicative doit s’assurer auprès de lui qu’un compte / une application en préprod est disponible avant de démarrer. Une fois les tests validés en préprod, on passe en production.
+- **Environnement de départ** : on commence toujours par le raccordement sur **Préprod**. L’**équipe IAM** met à disposition cet environnement ; l’équipe applicative doit s’assurer auprès d’elle qu’un compte / une application en préprod est disponible avant de démarrer. Une fois les tests validés en préprod, on passe en production.
+
+### Prérequis administratifs
+
+Avant de commencer les étapes techniques : **demande** (formulaire + matrice des rôles) envoyée à l’équipe IAM, et **validation** (accord et accès préprod). Le **passage en prod** fait l’objet d’une demande dédiée (dossier : PV de test, fiche renseignement, métadonnées prod) puis récupération des métadonnées IdP prod pour intégration dans l’application. Le détail du process (qui envoie quoi, PV, etc.) est géré en dehors de ce guide technique.
 
 ---
 

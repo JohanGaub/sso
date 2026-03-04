@@ -17,8 +17,8 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
-| 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
+| 1 | Équipe applicative | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’équipe IAM la liste des claims attendus. | À estimer | [ ] |
+| 2 | Équipe IAM | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
 | 3 | Équipe applicative | Adapter et tester la consommation des claims dans l’application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
@@ -40,8 +40,8 @@ Mêmes étapes que la section 3.1 (tableau ci-dessous).
 
 | Étape | Acteur | Action | Durée | Étape réalisée |
 |-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’administrateur SSO cible la liste des claims attendus. | À estimer | [ ] |
-| 2 | Administrateur SSO cible | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
+| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les nouveaux claims requis (ex. `id`, `email`, `nom`, `role`) et transmettre à l’équipe IAM la liste des claims attendus. | À estimer | [ ] |
+| 2 | Équipe IAM | Actualiser la configuration de l’IdP pour que les tokens contiennent ces claims (l’IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
 | 3 | Équipe applicative ou Équipe de raccordement applicatif | Adapter et tester la consommation des claims dans l’application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l’appli). | À estimer | [ ] |
 | **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
 
