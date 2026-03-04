@@ -1,4 +1,4 @@
-# Exemples de code – Guide de migration SSO actuel → SSO cible
+# Exemples de code
 
 Ce document regroupe **tous les exemples de code** extraits de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
 Chaque section indique **où réinsérer** les exemples dans le guide d’origine.

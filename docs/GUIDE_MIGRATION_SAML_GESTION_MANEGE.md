@@ -1,9 +1,9 @@
-# Guide de migration – SAML v2 / Gestion managée
+# Guide migration SAML - Gestion managée
 
 Extrait de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
 Ce document couvre les parcours **SAML v2 – Gestion managée** (sections 5.1 et 5.2 du guide complet).
 
-Les exemples de code détaillés sont disponibles dans `GUIDE_MIGRATION_SSO_CIBLE_EXEMPLES_CODE.md` (section 5.1).
+Les exemples de code détaillés sont disponibles dans Exemples de code (section 5.1).
 
 ---
 

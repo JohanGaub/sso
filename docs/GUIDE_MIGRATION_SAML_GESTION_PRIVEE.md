@@ -1,9 +1,9 @@
-# Guide de migration – SAML v2 / Gestion privée
+# Guide migration SAML - Gestion privée
 
 Extrait de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
 Ce document couvre les parcours **SAML v2 – Gestion privée** (sections 6.1 et 6.2 du guide complet).
 
-Les exemples de code détaillés sont disponibles dans `GUIDE_MIGRATION_SSO_CIBLE_EXEMPLES_CODE.md` (section 6.1).
+Les exemples de code détaillés sont disponibles dans Exemples de code (section 6.1).
 
 ---
 

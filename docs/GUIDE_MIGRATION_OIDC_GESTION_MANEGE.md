@@ -1,9 +1,9 @@
-# Guide de migration – OIDC / Gestion managée
+# Guide migration OIDC - Gestion managée
 
 Extrait de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
 Ce document couvre les parcours **OIDC – Gestion managée** (sections 3.1 et 3.2 du guide complet).
 
-Les exemples de code détaillés sont disponibles dans `GUIDE_MIGRATION_SSO_CIBLE_EXEMPLES_CODE.md` (section 3.1).
+Les exemples de code détaillés sont disponibles dans Exemples de code (section 3.1).
 
 ---
 

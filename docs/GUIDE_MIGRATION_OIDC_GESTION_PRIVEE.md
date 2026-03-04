@@ -1,9 +1,9 @@
-# Guide de migration – OIDC / Gestion privée
+# Guide migration OIDC - Gestion privée
 
 Extrait de `GUIDE_MIGRATION_SSO_CIBLE.md`.  
 Ce document couvre les parcours **OIDC – Gestion privée** (sections 4.1 et 4.2 du guide complet).
 
-Les exemples de code détaillés sont disponibles dans `GUIDE_MIGRATION_SSO_CIBLE_EXEMPLES_CODE.md` (section 4.1).
+Les exemples de code détaillés sont disponibles dans Exemples de code (section 4.1).
 
 ---
 
