@@ -56,3 +56,17 @@ Avant de commencer les étapes techniques : **demande** (formulaire + matrice de
 
 **Exemples de code par cas** : `GUIDE_MIGRATION_SSO_CIBLE_EXEMPLES_CODE.md`.
 
+---
+
+## 4. Glossaire (termes clés)
+
+| Terme | Définition |
+|-------|------------|
+| **OIDC** | OpenID Connect – couche d’identité au‑dessus d’OAuth 2.0 (id_token, userinfo, scopes `openid`). |
+| **SAML v2** | Security Assertion Markup Language 2.0 – protocole d’échange d’assertions d’identité (XML). |
+| **IAM** | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
+| **IdP** | Identity Provider – fournisseur d’identité (service SSO). |
+| **SP** | Service Provider – application qui consomme l’authentification fournie par l’IdP. |
+| **ACS** | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
+| **SLO** | Single Logout – déconnexion unique : fermeture de session côté IdP et SP. |
+
