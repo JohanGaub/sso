@@ -21,9 +21,10 @@ Documentation unique pour migrer des applications (PHP, Python, TypeScript, OIDC
 
 ### Comment utiliser ce document ?
 
-1. **Répondre à 3 questions** dans l’[arbre de décision](#2-arbre-de-décision-visuel) : protocole (OIDC / SAML v2), mode de gestion (managée / privée), niveau d’autonomie (autonome / accompagné / délégué).
-2. **Aller à la section correspondant à vos réponses** (ex. 3.1, 5.2) et suivre les étapes du tableau (cocher au fur et à mesure). Vous trouverez en plus des exemples de code et les pièges courants à éviter.
-3. **Consulter les annexes** pour le glossaire, la FAQ et les ressources externes.
+1. **Vérifier les prérequis administratifs** : une demande (création/actualisation d’application, accès préprod, passage en prod) doit être traitée par l’équipe IAM ; le détail du process (qui envoie quoi, PV de test, fiche de renseignement, métadonnées prod, etc.) est décrit dans le **guide de raccordement** de l’équipe IAM.
+2. **Répondre à 3 questions** dans l’[arbre de décision](#2-arbre-de-décision-visuel) : protocole (OIDC / SAML v2), mode de gestion (managée / privée), niveau d’autonomie (autonome / accompagné / délégué).
+3. **Aller à la section correspondant à vos réponses** (ex. 3.1, 5.2) et suivre les étapes du tableau (cocher au fur et à mesure). Vous trouverez en plus des exemples de code et les pièges courants à éviter.
+4. **Consulter les annexes** pour le glossaire, la FAQ et les ressources externes.
 
 ---
 
@@ -274,7 +275,7 @@ Mêmes étapes que la section 6.1 (tableau ci-dessous).
   Vérifier la configuration des attributs côté IdP (release policy), le nom des attributs dans l’Assertion (logs ou outil de décodage), et le mapping côté SP (noms d’attributs).
 
 - **Autonome vs accompagné vs délégué ?**  
-  **Autonome** : vous suivez ce guide et les exemples seuls. **Accompagné** : vous faites la mise en œuvre avec revue et aide de l’équipe SSO. **Délégué** : vous fournissez les exigences (claims/attributs, environnement) et l’équipe SSO réalise la configuration ou une partie.
+  **Autonome** : l’équipe applicative suit ce guide et les exemples seule. **Accompagné** : l’équipe applicative fait la mise en œuvre avec revue et aide de l’**équipe de raccordement applicatif** (et, si besoin, de l’**équipe IAM**). **Délégué** : l’équipe applicative fournit les exigences (claims/attributs, environnement) et l’équipe de raccordement applicatif réalise la configuration ou une partie, en lien avec l’équipe IAM.
 
 ### Ressources externes
 

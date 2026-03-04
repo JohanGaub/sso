@@ -10,34 +10,33 @@ Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les 
 ### Comment utiliser ce document ?
 
 1. Vérifier les **prérequis** (contexte, accès Préprod auprès de l’équipe IAM).
-2. Parcourir les **étapes communes** pour situer où vous en êtes.
-3. Choisir le **guide détaillé** correspondant à votre cas (tableau de routage en fin de page) et suivre les étapes décrites dedans.
+2. Parcourir les **étapes** pour situer où vous en êtes.
+3. Choisir le **guide détaillé** correspondant à votre cas (tableau de routage, section 3) et suivre les étapes décrites dedans.
 
 ---
 
-## 1. Pré‑requis communs
+## 1. Pré‑requis
 
+- **Prérequis administratifs** : avant de commencer les étapes techniques, une **demande** (formulaire + matrice des rôles) doit être envoyée à l’équipe IAM et **validée** (accord et accès préprod). Le **passage en prod** fait l’objet d’une demande dédiée (dossier : PV de test, fiche renseignement, métadonnées prod) puis récupération des métadonnées IdP prod pour intégration dans l’application. Le détail du process (qui envoie quoi, PV, etc.) est décrit dans le **guide de raccordement** de l’équipe IAM.
 - **Identifier le contexte actuel** :
   - Protocole : **OIDC** ou **SAML v2**.
   - Mode : **gestion managée** (attributs/claims uniquement) ou **gestion privée** (flux d’auth + attributs).
   - Niveau d’autonomie : **autonome**, **accompagné**, **délégué**.
 - **Environnement de départ** : on commence toujours par le raccordement sur **Préprod**. L’**équipe IAM** met à disposition cet environnement ; l’équipe applicative doit s’assurer auprès d’elle qu’un compte / une application en préprod est disponible avant de démarrer. Une fois les tests validés en préprod, on passe en production.
 
-### Prérequis administratifs
-
-Avant de commencer les étapes techniques : **demande** (formulaire + matrice des rôles) envoyée à l’équipe IAM, et **validation** (accord et accès préprod). Le **passage en prod** fait l’objet d’une demande dédiée (dossier : PV de test, fiche renseignement, métadonnées prod) puis récupération des métadonnées IdP prod pour intégration dans l’application. Le détail du process (qui envoie quoi, PV, etc.) est géré en dehors de ce guide technique.
-
 ---
 
-## 2. Étapes communes de la migration (vue métier)
+## 2. Étapes communes de la migration
 
-| Étape | Objectif | Acteurs |
-|-------|----------|--------------------|
-| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode et de l’autonomie) | Équipe applicative + équipe SSO |
-| 2 | **Aligner les identités** : définir les claims/attributs nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + administrateur SSO cible |
-| 3 | Si gestion privée : **valider le flux d’authentification** (OIDC Authorization Code, SAML SP/IdP‑initiated, ACS, SLO, etc.) | Équipe applicative + équipe SSO |
+| Étape | Objectif                                                                                                                            | Acteurs |
+|-------|-------------------------------------------------------------------------------------------------------------------------------------|--------------------|
+| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l’autonomie)                               | Équipe applicative + équipe IAM |
+| 2 | **Aligner les identités** : définir les claims/attributs nécessaires (id, email, nom, rôle, etc.)                                   | Équipe applicative + équipe IAM |
+| 3 | Si gestion privée : **valider le flux d’authentification** (OIDC flux par code, SAML SP/IdP‑initiated, ACS, SLO)                    | Équipe applicative + équipe IAM |
 | 4 | **Actualiser l’application** : configuration (URLs, clients, certificats) + lecture et usage des infos d’authentification côté code | Équipe applicative |
-| 5 | **Tester la migration** : scénarios de connexion / déconnexion / erreurs sur dev puis préprod, avant passage en prod | Équipe applicative + équipe SSO |
+| 5 | **Tester la migration** : scénarios de connexion / déconnexion / erreurs sur dev puis préprod, avant passage en prod                | Équipe applicative + équipe IAM |
+
+Les étapes ci‑dessus donnent une vue d’ensemble du process ; le suivi concret (étapes détaillées, acteurs, pièges) se fait dans le guide choisi (section 3).
 
 > Les détails techniques (tableaux d’étapes, schémas de flux, pièges courants) sont décrits dans les guides par type de raccordement ci‑dessous.
 
