@@ -5,7 +5,7 @@ Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les 
 
 ### À qui s’adresse ce document ?
 
-Équipe applicative ; équipe IAM ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l’équipe applicative). La synthèse permet de se repérer (prérequis, étapes communes) et de choisir le bon guide détaillé.
+Équipe applicative ; équipe IAM ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l’équipe applicative).
 
 ### Comment utiliser ce document ?
 
@@ -17,7 +17,7 @@ Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les 
 
 ## 1. Pré‑requis
 
-- **Prérequis administratifs** : avant de commencer les étapes techniques, une **demande** (formulaire + matrice des rôles) doit être envoyée à l’équipe IAM et **validée** (accord et accès préprod). Le **passage en prod** fait l’objet d’une demande dédiée (dossier : PV de test, fiche renseignement, métadonnées prod) puis récupération des métadonnées IdP prod pour intégration dans l’application. Le détail du process (qui envoie quoi, PV, etc.) est décrit dans le **guide de raccordement** de l’équipe IAM.
+- **Prérequis administratifs** : avant de commencer les étapes techniques, l’équipe applicative effectue une **demande** (formulaire + matrice des rôles) auprès de l’équipe IAM. L’équipe IAM **valide** et donne accès à un environnement préprod. Pour passer en production, même démarche (dossier : PV de test, fiche renseignement, métadonnées prod). L’équipe IAM approuve la demande pour passage en prod. L’équipe applicative récupère les métadonnées IdP prod auprès de l’équipe IAM et les intègre dans l’application. Le détail du process est décrit dans le **guide de raccordement** de l’équipe IAM.
 - **Identifier le contexte actuel** :
   - Protocole : **OIDC** ou **SAML v2**.
   - Mode : **gestion managée** (attributs/claims uniquement) ou **gestion privée** (flux d’auth + attributs).
