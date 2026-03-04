@@ -1,21 +1,39 @@
 h1. 4. Guide migration SAML - Gestion privée
 
-Exemples de code détaillés : Exemples de code (section 4.1).
-
 Vous devez reconfigurer le flux SAML (métadonnées SP/IdP, endpoints, binding, attributs) en plus des attributs.
 
 ----
 
-h2. 4.1 SAML – Gestion privée – Autonome
-
 Suivi des étapes à réaliser (cocher étape lorsque réalisée)
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
-| 2 | Équipe applicative | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
-| 3 | Équipe IAM | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | À estimer | [ ] |
-| 4 | Équipe applicative | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
+|| Étape || Action || Durée || Réalisée ||
+| 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
+| 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
+| 3 | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | À estimer | [ ] |
+| 4 | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
+
+h2. 4.1 SAML – Gestion privée – Autonome
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative |
+| 2 | Équipe applicative |
+| 3 | Équipe IAM |
+| 4 | Équipe applicative |
+
+h2. 4.2 SAML – Gestion privée – Accompagné / Délégué
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative ou Équipe de raccordement applicatif |
+| 2 | Équipe applicative ou Équipe de raccordement applicatif |
+| 3 | Équipe IAM |
+| 4 | Équipe applicative ou Équipe de raccordement applicatif |
+
+----
 
 Schéma de flux (SP-initiated, simplifié)
 
@@ -35,15 +53,27 @@ Pièges courants
 
 ----
 
-h2. 4.2 SAML – Gestion privée – Accompagné / Délégué
+h2. Exemples de code
 
-Mêmes étapes que la section 4.1 (tableau ci-dessous).
+PHP (Symfony avec onelogin/php-saml)
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+{code:php}
+// Configuration SP : IdP entity ID, SSO URL, x509 cert, etc.
+// Après réception du POST ACS :
+$auth = new OneLogin\Saml2\Auth($settings);
+$auth->processResponse();
+$attributes = $auth->getAttributes();
+$role = $attributes['role'][0] ?? null;
+{code}
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
-| 2 | Équipe applicative ou Équipe de raccordement applicatif | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
-| 3 | Équipe IAM | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | À estimer | [ ] |
-| 4 | Équipe applicative ou Équipe de raccordement applicatif | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
+TypeScript (Node, passport-saml)
+
+{code:javascript}
+// Strategy config : entryPoint, cert, callbackUrl, etc.
+// Dans la callback après validation :
+(req: Request, res: Response) => {
+  const profile = (req as any).user;
+  const attributes = profile.attributes;
+  const role = attributes?.role?.[0];
+}
+{code}

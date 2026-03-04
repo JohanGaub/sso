@@ -1,20 +1,36 @@
 h1. 1. Guide migration OIDC - Gestion managée
 
-Exemples de code détaillés : Exemples de code (section 1.1).
-
 Le flux OIDC est géré en interne ; seuls les attributs (claims) doivent être ajustés.
 
 ----
 
-h2. 1.1 OIDC – Gestion managée – Autonome
-
 Suivi des étapes à réaliser (cocher étape lorsque réalisée)
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative | Identifier les nouveaux claims requis (ex. {{id}}, {{email}}, {{nom}}, {{role}}) et transmettre à l'équipe IAM la liste des claims attendus. | À estimer | [ ] |
-| 2 | Équipe IAM | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Équipe applicative | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+|| Étape || Action || Durée || Réalisée ||
+| 1 | Identifier les nouveaux claims requis (ex. {{id}}, {{email}}, {{nom}}, {{role}}) et transmettre à l'équipe IAM la liste des claims attendus. | À estimer | [ ] |
+| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
+| 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+
+h2. 1.1 OIDC – Gestion managée – Autonome
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative |
+| 2 | Équipe IAM |
+| 3 | Équipe applicative |
+
+h2. 1.2 OIDC – Gestion managée – Accompagné / Délégué
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative ou Équipe de raccordement applicatif |
+| 2 | Équipe IAM |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif |
+
+----
 
 Pièges courants
 
@@ -26,14 +42,48 @@ Pièges courants
 
 ----
 
-h2. 1.2 OIDC – Gestion managée – Accompagné / Délégué
+h2. Exemples de code
 
-Mêmes étapes que la section 1.1 (tableau ci-dessous).
+Symfony (PHP)
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+{code:php}
+// Dans votre contrôleur ou service
+$user = $this->getUser();
+$email = $user->getAttribute('email');
+$nom = $user->getAttribute('nom');
+$role = $user->getAttribute('role');
+// Validation optionnelle
+if (!in_array($role, ['admin', 'user'], true)) {
+    throw new AccessDeniedException('Rôle non autorisé');
+}
+{code}
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les nouveaux claims requis (ex. {{id}}, {{email}}, {{nom}}, {{role}}) et transmettre à l'équipe IAM la liste des claims attendus. | À estimer | [ ] |
-| 2 | Équipe IAM | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+CodeIgniter (PHP)
+
+{code:php}
+// Après authentification OIDC, dans un helper ou le contrôleur
+$claims = $this->session->userdata('oidc_claims');
+$email = $claims['email'] ?? null;
+$nom = $claims['nom'] ?? null;
+$role = $claims['role'] ?? null;
+{code}
+
+Python (ex. Flask / Django)
+
+{code:python}
+# Flask : après récupération du token / userinfo
+user_info = request.session.get('oidc_userinfo', {})
+email = user_info.get('email')
+nom = user_info.get('nom')
+role = user_info.get('role')
+{code}
+
+TypeScript (Node / front)
+
+{code:javascript}
+// Côté backend après validation du JWT
+const payload = decodedToken as { email?: string; nom?: string; role?: string };
+const email = payload.email;
+const nom = payload.nom;
+const role = payload.role;
+{code}

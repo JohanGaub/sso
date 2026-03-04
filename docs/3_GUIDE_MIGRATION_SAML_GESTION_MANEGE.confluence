@@ -1,20 +1,36 @@
 h1. 3. Guide migration SAML - Gestion managée
 
-Exemples de code détaillés : Exemples de code (section 3.1).
-
 Le flux SAML est géré en interne ; seuls les attributs SAML doivent être mis à jour (côté IdP et éventuellement SP).
 
 ----
 
-h2. 3.1 SAML – Gestion managée – Autonome
-
 Suivi des étapes à réaliser (cocher étape lorsque réalisée)
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | À estimer | [ ] |
-| 2 | Équipe IAM | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
-| 3 | Équipe applicative | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+|| Étape || Action || Durée || Réalisée ||
+| 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | À estimer | [ ] |
+| 2 | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
+| 3 | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+
+h2. 3.1 SAML – Gestion managée – Autonome
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative |
+| 2 | Équipe IAM |
+| 3 | Équipe applicative |
+
+h2. 3.2 SAML – Gestion managée – Accompagné / Délégué
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative ou Équipe de raccordement applicatif |
+| 2 | Équipe IAM |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif |
+
+----
 
 Validation : Utiliser un outil en ligne de décodage/validation SAML (ou un validateur local) pour vérifier la présence et le format des attributs dans l'Assertion reçue.
 
@@ -26,14 +42,40 @@ Pièges courants
 
 ----
 
-h2. 3.2 SAML – Gestion managée – Accompagné / Délégué
+h2. Exemples de code
 
-Mêmes étapes que la section 3.1 (tableau ci-dessous).
+Exemple de structure d'attributs dans une Assertion SAML (à titre indicatif)
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+{code:xml}
+<saml:AttributeStatement>
+  <saml:Attribute Name="email" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+    <saml:AttributeValue xsi:type="xs:string">martin@entreprise.fr</saml:AttributeValue>
+  </saml:Attribute>
+  <saml:Attribute Name="nom" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+    <saml:AttributeValue xsi:type="xs:string">Martin</saml:AttributeValue>
+  </saml:Attribute>
+  <saml:Attribute Name="role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">
+    <saml:AttributeValue xsi:type="xs:string">admin</saml:AttributeValue>
+  </saml:Attribute>
+</saml:AttributeStatement>
+{code}
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | À estimer | [ ] |
-| 2 | Équipe IAM | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
+PHP (bibliothèque SAML générique) – lecture des attributs côté SP
+
+{code:php}
+// Après traitement de la réponse SAML (ex. OneLogin, simplesamlphp, etc.)
+$attributes = $samlResponse->getAttributes();
+$email = $attributes['email'][0] ?? null;
+$nom = $attributes['nom'][0] ?? null;
+$role = $attributes['role'][0] ?? null;
+{code}
+
+TypeScript (Node, e.g. saml2-js / passport-saml) – lecture des attributs côté SP
+
+{code:javascript}
+// Après validation de la réponse SAML
+const attributes = (profile as any).attributes;
+const email = attributes['email']?.[0];
+const nom = attributes['nom']?.[0];
+const role = attributes['role']?.[0];
+{code}

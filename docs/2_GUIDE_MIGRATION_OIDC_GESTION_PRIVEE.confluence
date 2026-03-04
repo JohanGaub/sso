@@ -1,22 +1,42 @@
 h1. 2. Guide migration OIDC - Gestion privée
 
-Exemples de code détaillés : Exemples de code (section 2.1).
-
 Vous devez reconfigurer le flux OIDC (endpoints, redirect_uri, scopes, client) en plus des attributs.
 
 ----
 
-h2. 2.1 OIDC – Gestion privée – Autonome
-
 Suivi des étapes à réaliser (cocher étape lorsque réalisée)
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative | Documenter le flux actuel (flux par code : redirection vers l'IdP, puis échange du code contre les tokens ; préciser si PKCE est utilisé — recommandé pour sécuriser) et transmettre à l'équipe IAM les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
-| 2 | Équipe IAM | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | À estimer | [ ] |
-| 3 | Équipe applicative | Débrancher l'authentification locale : s'assurer que l'application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, {{exp}}) ; désactiver l'ancienne page de connexion (login / mot de passe) ; documenter que l'accès se fait uniquement via le SSO cible. | À estimer | [ ] |
-| 4 | Équipe applicative | Actualiser la configuration de l'application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
-| 5 | Équipe applicative | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 5) | À estimer | [ ] |
+|| Étape || Action || Durée || Réalisée ||
+| 1 | Documenter le flux actuel (flux par code : redirection vers l'IdP, puis échange du code contre les tokens ; préciser si PKCE est utilisé — recommandé pour sécuriser) et transmettre à l'équipe IAM les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
+| 2 | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | À estimer | [ ] |
+| 3 | Débrancher l'authentification locale : s'assurer que l'application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, {{exp}}) ; désactiver l'ancienne page de connexion (login / mot de passe) ; documenter que l'accès se fait uniquement via le SSO cible. | À estimer | [ ] |
+| 4 | Actualiser la configuration de l'application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
+| 5 | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 5) | À estimer | [ ] |
+
+h2. 2.1 OIDC – Gestion privée – Autonome
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative |
+| 2 | Équipe IAM |
+| 3 | Équipe applicative |
+| 4 | Équipe applicative |
+| 5 | Équipe applicative |
+
+h2. 2.2 OIDC – Gestion privée – Accompagné / Délégué
+
+Qui fait quoi :
+
+|| Étape || Acteur ||
+| 1 | Équipe applicative ou Équipe de raccordement applicatif |
+| 2 | Équipe IAM |
+| 3 | Équipe applicative ou Équipe de raccordement applicatif |
+| 4 | Équipe applicative ou Équipe de raccordement applicatif |
+| 5 | Équipe applicative ou Équipe de raccordement applicatif |
+
+----
 
 Schéma de flux (rappel)
 
@@ -37,16 +57,53 @@ Pièges courants
 
 ----
 
-h2. 2.2 OIDC – Gestion privée – Accompagné / Délégué
+h2. Exemples de code
 
-Mêmes étapes que la section 2.1 (tableau ci-dessous).
+Symfony (PHP) – configuration et récupération des attributs après connexion OIDC
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+{code:php}
+// config/packages/knpu_oauth2_client.yaml (exemple)
+// knpu_oauth2_client:
+//     clients:
+//         keycloak:
+//             type: generic
+//             client_id: '%env(OIDC_CLIENT_ID)%'
+//             client_secret: '%env(OIDC_CLIENT_SECRET)%'
+//             redirect_route: connect_keycloak_check
+//             url_authorize: '%env(OIDC_ISSUER)%/protocol/openid-connect/auth'
+//             url_access_token: '%env(OIDC_ISSUER)%/protocol/openid-connect/token'
+//             url_resource_owner_details: '%env(OIDC_ISSUER)%/protocol/openid-connect/userinfo'
 
-|| Étape || Acteur || Action || Durée || Étape réalisée ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Documenter le flux actuel (flux par code : redirection vers l'IdP, puis échange du code contre les tokens ; préciser si PKCE est utilisé — recommandé pour sécuriser) et transmettre à l'équipe IAM les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
-| 2 | Équipe IAM | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Débrancher l'authentification locale : s'assurer que l'application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, {{exp}}) ; désactiver l'ancienne page de connexion (login / mot de passe) ; documenter que l'accès se fait uniquement via le SSO cible. | À estimer | [ ] |
-| 4 | Équipe applicative ou Équipe de raccordement applicatif | Actualiser la configuration de l'application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
-| 5 | Équipe applicative ou Équipe de raccordement applicatif | Gérer les erreurs (redirect_uri mismatch, invalid_grant, consent refusé) et tester le flux complet (connexion, rafraîchissement, déconnexion si applicable). | À estimer | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 5) | À estimer | [ ] |
+$user = $this->getUser();
+$role = $user->getAttribute('role');
+{code}
+
+TypeScript (Node, express + openid-client)
+
+{code:javascript}
+import { Issuer, Strategy } from 'openid-client';
+
+const issuer = await Issuer.discover(process.env.OIDC_ISSUER!);
+const client = new issuer.Client({
+  client_id: process.env.OIDC_CLIENT_ID!,
+  client_secret: process.env.OIDC_CLIENT_SECRET!,
+  redirect_uris: [process.env.OIDC_REDIRECT_URI!],
+});
+// Utiliser client.authorizationUrl(), client.callbackParams(), client.callback()
+// Puis lire les claims depuis id_token ou userinfo
+{code}
+
+Python (Flask + authlib)
+
+{code:python}
+from authlib.integrations.flask_client import OAuth
+
+oauth = OAuth(app)
+oauth.register(
+    name='oidc',
+    server_metadata_url=os.environ['OIDC_ISSUER'].rstrip('/') + '/.well-known/openid-configuration',
+    client_kwargs={'scope': 'openid profile email'},
+)
+# Dans la route callback : token = oauth.oidc.authorize_access_token()
+# userinfo = token.get('userinfo') ou décoder id_token
+{code}
