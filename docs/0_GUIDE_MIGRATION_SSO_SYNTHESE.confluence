@@ -1,4 +1,4 @@
-h1. Migration SSO – Synthèse en 1 page
+h1. 0. Migration SSO – Synthèse en 1 page
 
 Ce document donne une vue d'ensemble de la migration vers le SSO cible.
 Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les guides dédiés listés plus bas.
