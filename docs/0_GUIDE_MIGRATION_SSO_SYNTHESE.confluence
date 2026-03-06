@@ -63,6 +63,8 @@ h2. 4. Glossaire (termes clés)
 
 || Terme || Définition ||
 | *OIDC* | OpenID Connect – couche d'identité au‑dessus d'OAuth 2.0 (id_token, userinfo, scopes {{openid}}). |
+| *PKCE* | Proof Key for Code Exchange – mécanisme qui renforce le flux Authorization Code (code_verifier / code_challenge) pour éviter l'interception du code ; recommandé dès qu'il n'y a pas de backend sécurisé. |
+| *Authorization Code (avec/sans PKCE)* | Flux OIDC : redirection vers le SSO → code → échange contre id_token + access_token. *Avec PKCE* : renforcement par code_verifier/code_challenge (recommandé). *Sans PKCE* : uniquement si backend sécurisé avec {{client_secret}}. Détail dans le guide 2 (OIDC gestion privée). |
 | *SAML v2* | Security Assertion Markup Language 2.0 – protocole d'échange d'assertions d'identité (XML). |
 | *IAM* | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
 | *IdP* | Identity Provider – fournisseur d'identité (service SSO). |

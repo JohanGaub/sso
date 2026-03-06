@@ -7,7 +7,7 @@ Vous devez reconfigurer le flux OIDC (endpoints, redirect_uri, scopes, client) e
 Suivi des étapes à réaliser (cocher étape lorsque réalisée)
 
 || Étape || Action || Durée || Réalisée ||
-| 1 | Documenter le flux actuel (flux par code : redirection vers l'IdP, puis échange du code contre les tokens ; préciser si PKCE est utilisé — recommandé pour sécuriser) et transmettre à l'équipe IAM les éléments nécessaires à l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
+| 1 | Choisir le type de flux : *avec PKCE* (recommandé, obligatoire sans backend sécurisé) ou *sans PKCE* (uniquement si backend sécurisé avec {{client_secret}}). Documenter le flux et transmettre à l'équipe IAM les éléments pour l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
 | 2 | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | À estimer | [ ] |
 | 3 | Débrancher l'authentification locale : s'assurer que l'application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, {{exp}}) ; désactiver l'ancienne page de connexion (login / mot de passe) ; documenter que l'accès se fait uniquement via le SSO cible. | À estimer | [ ] |
 | 4 | Actualiser la configuration de l'application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
@@ -38,22 +38,55 @@ Qui fait quoi :
 
 ----
 
+h2. Types de flux Authorization Code (OIDC)
+
+En gestion privée OIDC, l'authentification passe par l’*Authorization Code Flow* : l’application redirige l’utilisateur vers le SSO (IdP), qui renvoie un *code d’autorisation*.
+L’application échange ce code contre un *id_token* et un *access_token*.
+En fonction de la sécurisation de l'application, avec notamment sa capacité à stocker un {{client_secret}} de manière sécurisée, on détermine si on utilise ou non la *PKCE* (Proof Key for Code Exchange).
+
+|| Critère || Avec PKCE || Sans PKCE ||
+| *Quand l’utiliser* | Application sans backend sécurisé (SPA, mobile) ou pour renforcer la sécurité | Application avec un *backend sécurisé* où un {{client_secret}} est stocké |
+| *Échange du code* | L'application envoie le code + {{code_verifier}}. Le SSO vérifie que le {{code_challenge}} correspond | L'application envoie le code + {{client_secret}} ; le SSO vérifie le secret |
+| *Objectif* | Éviter l’interception du code (le code seul ne suffit pas à obtenir les tokens) | Même flux mais la confidentialité repose sur le {{client_secret}} côté serveur |
+
+Détail technique (PKCE) :
+
+|| Élément || Règle ||
+| {{code_verifier}} | Chaîne de 43 à 128 caractères (générée par l’application, stockée temporairement jusqu’à l’échange) |
+| {{code_challenge}} | Dérivé du {{code_verifier}} : Base64URL(SHA-256({{code_verifier}})) |
+| {{code_challenge_method}} | {{S256}} (obligatoire dans notre contexte) |
+| Envoi au SSO | À l’authorization : {{code_challenge}} + {{code_challenge_method}} ; au token : {{code_verifier}} + {{code}} |
+
+Séquence commune (résumé) :
+
+|| Étape || Action || Acteur principal ||
+| 1 | L’application redirige l’utilisateur vers le SSO (authorization endpoint, avec {{code_challenge}} si PKCE) | Équipe applicative |
+| 2 | Le SSO authentifie l’utilisateur puis redirige vers l’application avec un *code* dans l’URL ({{redirect_uri}} + {{code}}) | SSO (IdP) |
+| 3 | L’application échange le code contre id_token + access_token (avec {{code_verifier}} si PKCE, ou {{client_secret}} si sans PKCE) | Équipe applicative |
+| 4 | L’application crée la session et, si besoin, appelle le endpoint UserInfo pour des claims supplémentaires | Équipe applicative |
+
+*Principes* : (1) Le code d’autorisation est à usage unique et de courte durée. (2) Avec PKCE, seul le détenteur du {{code_verifier}} peut échanger le code. (3) Sans PKCE, le {{client_secret}} ne doit jamais être exposé côté client (navigateur, app mobile).
+
+----
+
 Schéma de flux (rappel)
 
 {noformat}
-[App] --> Redirection vers IdP (authorization endpoint)
+[App] --> Redirection vers IdP (authorization endpoint ; inclut code_challenge si PKCE)
 [IdP] --> Authentification utilisateur
 [IdP] --> Redirection vers App (redirect_uri + code)
-[App] --> Échange code contre access_token (et id_token)
+[App] --> Échange code contre access_token et id_token (code_verifier si PKCE, ou client_secret si backend sécurisé)
 [App] --> (Optionnel) UserInfo endpoint pour claims supplémentaires
 [App] --> Création de session / utilisateur local
 {noformat}
 
 Pièges courants
 
-* Redirect URI : doit être exactement identique (protocole, domaine, port, chemin) entre IdP et application.
-* Scopes : oublier {{openid}} rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
-* Secret : ne pas exposer le client_secret (variables d'environnement, pas de commit).
+* *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre IdP et application.
+* *Scopes* : oublier {{openid}} rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
+* *Secret* : ne jamais exposer le {{client_secret}} (variables d'environnement côté serveur, pas de commit, pas dans le front ou l’app mobile).
+* *Avec PKCE* : {{code_verifier}} entre 43 et 128 caractères ; {{code_challenge_method}} = {{S256}} ; envoyer {{code_challenge}} à l’authorization et {{code_verifier}} au token. Sans backend sécurisé, utiliser PKCE.
+* *Sans PKCE* : n’utiliser le flux sans PKCE que si un backend sécurisé stocke le {{client_secret}} ; sinon risque d’interception du code.
 
 ----
 
