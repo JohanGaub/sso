@@ -7,7 +7,7 @@ Vous devez reconfigurer le flux OIDC (endpoints, redirect_uri, scopes, client) e
 Suivi des étapes à réaliser (cocher étape lorsque réalisée)
 
 || Étape || Action || Durée || Réalisée ||
-| 1 | Choisir le type de flux : *avec PKCE* (recommandé, obligatoire sans backend sécurisé) ou *sans PKCE* (uniquement si backend sécurisé avec {{client_secret}}). Documenter le flux et transmettre à l'équipe IAM les éléments pour l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
+| 1 | Le flux est toujours l'*Authorization Code Flow*. Déterminer si on l'utilise *avec* ou *sans* PKCE (voir aide à la décision ci-dessous). Documenter le flux retenu et transmettre à l'équipe IAM les éléments pour l'enregistrement du client (URLs de redirection, scopes attendus). | À estimer | [ ] |
 | 2 | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | À estimer | [ ] |
 | 3 | Débrancher l'authentification locale : s'assurer que l'application ne valide que les tokens du SSO (issuer, client_id, audiences, signature, {{exp}}) ; désactiver l'ancienne page de connexion (login / mot de passe) ; documenter que l'accès se fait uniquement via le SSO cible. | À estimer | [ ] |
 | 4 | Actualiser la configuration de l'application (URLs, scopes, mapping des claims) et implémenter ou adapter le callback (échange du code contre tokens, récupération userinfo). | À estimer | [ ] |
@@ -38,16 +38,18 @@ Qui fait quoi :
 
 ----
 
-h2. Types de flux Authorization Code (OIDC)
+h2. Aide à la décision PKCE
 
-En gestion privée OIDC, l'authentification passe par l’*Authorization Code Flow* : l’application redirige l’utilisateur vers le SSO (IdP), qui renvoie un *code d’autorisation*.
-L’application échange ce code contre un *id_token* et un *access_token*.
-En fonction de la sécurisation de l'application, avec notamment sa capacité à stocker un {{client_secret}} de manière sécurisée, on détermine si on utilise ou non la *PKCE* (Proof Key for Code Exchange).
+En gestion privée OIDC, le flux est toujours l'*Authorization Code Flow* ; il n'y a pas d'autre type de flux à choisir. En revanche, il faut déterminer si on l'utilise *avec* ou *sans* PKCE. Avant de créer ou d'actualiser le client (étapes 1 et 2 du tableau), utiliser l'aide à la décision ci-dessous en fonction de l'architecture de l'application (présence ou non d'un backend sécurisé, stockage possible d'un {{client_secret}}).
 
-|| Critère || Avec PKCE || Sans PKCE ||
-| *Quand l’utiliser* | Application sans backend sécurisé (SPA, mobile) ou pour renforcer la sécurité | Application avec un *backend sécurisé* où un {{client_secret}} est stocké |
-| *Échange du code* | L'application envoie le code + {{code_verifier}}. Le SSO vérifie que le {{code_challenge}} correspond | L'application envoie le code + {{client_secret}} ; le SSO vérifie le secret |
-| *Objectif* | Éviter l’interception du code (le code seul ne suffit pas à obtenir les tokens) | Même flux mais la confidentialité repose sur le {{client_secret}} côté serveur |
+Rappel du flux (Authorization Code) :
+1) L’application redirige l’utilisateur vers le SSO (IdP), qui renvoie un *code d’autorisation*.
+2) L’application échange ce code contre
+   * un *id_token*
+   * un *access_token*.
+3) Si l'application
+   * dispose d'un backend sécurisé où un {{client_secret}} est stocké : pas d'obligation d'utiliser la *PKCE* (Proof Key for Code Exchange) mais elle est *recommandée*.
+   * n'a pas de backend sécurisé (SPA, mobile) : obligation d'utiliser la *PKCE*.
 
 Détail technique (PKCE) :
 
