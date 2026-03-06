@@ -55,6 +55,8 @@ h2. 3. Choisir votre guide détaillé
 | SAML v2 | Gestion managée (attributs uniquement) | 3. Guide migration SAML - Gestion managée |
 | SAML v2 | Gestion privée (flux + attributs) | 4. Guide migration SAML - Gestion privée |
 
+Pour l'OIDC en gestion privée (guide 2), une décision « avec ou sans PKCE » est à prendre ; le détail est dans le guide.
+
 Les exemples de code figurent en fin de chaque guide détaillé (après « Pièges courants »).
 
 ----
