@@ -34,7 +34,7 @@ Qui fait quoi :
 
 Pièges courants
 
-* Oublier de actualiser le schéma de validation des claims (liste des claims autorisés, types).
+* Oublier d'actualiser le schéma de validation des claims (liste des claims autorisés, types).
 * Confusion entre claims standard (ex. {{id}}, {{email}}, {{nom}}) et personnalisés (ex. {{role}}) : bien documenter la source (IdP) et le nom exact du claim.
 * Ne pas ignorer les erreurs quand l'application lit les claims :
 ** en développement/préproduction : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;

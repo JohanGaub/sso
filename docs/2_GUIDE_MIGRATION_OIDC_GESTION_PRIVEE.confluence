@@ -14,19 +14,6 @@ Vous devez reconfigurer le flux OIDC (endpoints, redirect_uri, scopes, client) e
 
 ----
 
-h2. Aide à la décision PKCE
-
-En gestion privée OIDC, le flux est toujours l'*Authorization Code Flow* ; il n'y a pas d'autre type de flux à choisir. En revanche, il faut déterminer si on l'utilise *avec* ou *sans* PKCE. Avant de créer ou d'actualiser le client (étapes 1 et 2 du tableau), utiliser l'aide à la décision ci-dessous en fonction de l'architecture de l'application (présence ou non d'un backend sécurisé, stockage possible d'un {{client_secret}}).
-
-Rappel du flux (Authorization Code) :
-1) L’application redirige l’utilisateur vers le SSO (IdP), qui renvoie un *code d’autorisation*.
-2) L’application échange ce code contre
-   * un *id_token*
-   * un *access_token*.
-3) Si l'application
-   * dispose d'un backend sécurisé où un {{client_secret}} est stocké : pas d'obligation d'utiliser la *PKCE* (Proof Key for Code Exchange) mais elle est *recommandée*.
-   * n'a pas de backend sécurisé (SPA, mobile) : obligation d'utiliser la *PKCE*.
-
 Détail technique (PKCE) :
 
 || Élément || Règle ||
@@ -42,8 +29,6 @@ Séquence commune (résumé) :
 | 2 | Le SSO authentifie l’utilisateur puis redirige vers l’application avec un *code* dans l’URL ({{redirect_uri}} + {{code}}) | SSO (IdP) |
 | 3 | L’application échange le code contre id_token + access_token (avec {{code_verifier}} si PKCE, ou {{client_secret}} si sans PKCE) | Équipe applicative |
 | 4 | L’application crée la session et, si besoin, appelle le endpoint UserInfo pour des claims supplémentaires | Équipe applicative |
-
-*Principes* : (1) Le code d’autorisation est à usage unique et de courte durée. (2) Avec PKCE, seul le détenteur du {{code_verifier}} peut échanger le code. (3) Sans PKCE, le {{client_secret}} ne doit jamais être exposé côté client (navigateur, app mobile).
 
 ----
 
@@ -63,7 +48,7 @@ Pièges courants
 * *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre IdP et application.
 * *Scopes* : oublier {{openid}} rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
 * *Secret* : ne jamais exposer le {{client_secret}} (variables d'environnement côté serveur, pas de commit, pas dans le front ou l’app mobile).
-* *Avec PKCE* : {{code_verifier}} entre 43 et 128 caractères ; {{code_challenge_method}} = {{S256}} ; envoyer {{code_challenge}} à l’authorization et {{code_verifier}} au token. Sans backend sécurisé, utiliser PKCE.
+* *Avec PKCE* : {{code_verifier}} entre 43 et 128 caractères ; {{code_challenge_method}} = {{S256}} ; envoyer {{code_challenge}} à l’authorization et {{code_verifier}} au token. Sans backend sécurisé, utiliser PKCE. Le code d’autorisation est à usage unique et de courte durée ; seul le détenteur du {{code_verifier}} peut échanger le code contre des tokens.
 * *Sans PKCE* : n’utiliser le flux sans PKCE que si un backend sécurisé stocke le {{client_secret}} ; sinon risque d’interception du code.
 
 ----
