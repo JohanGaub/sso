@@ -1,6 +1,6 @@
 h1. 4. Guide migration SAML - Gestion privée
 
-Vous devez reconfigurer le flux SAML (métadonnées SP/IdP, endpoints, binding, attributs) en plus des attributs.
+Reconfigurer le flux SAML (métadonnées, endpoints, binding, attributs) dans l'application.
 
 ----
 

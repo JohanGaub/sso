@@ -1,6 +1,6 @@
 h1. 3. Guide migration SAML - Gestion managée
 
-Le flux SAML est géré en interne ; seuls les attributs SAML doivent être mis à jour (côté IdP et éventuellement SP).
+Attributs SAML uniquement ; la mécanique du flux est gérée par l'équipe IAM.
 
 ----
 

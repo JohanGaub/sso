@@ -1,6 +1,6 @@
 h1. 1. Guide migration OIDC - Gestion managée
 
-Le flux OIDC est géré en interne ; seuls les attributs (claims) doivent être ajustés.
+En gestion managée, l'équipe IAM gère la mécanique OIDC. Vous ne traitez que les attributs : convenir des dénominations (et de la liste des claims) avec l'IAM, puis les lire dans l'application.
 
 ----
 
