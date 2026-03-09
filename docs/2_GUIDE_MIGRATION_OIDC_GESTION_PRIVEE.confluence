@@ -24,6 +24,11 @@ Détail technique (PKCE) :
 | {{code_challenge_method}} | {{S256}} (obligatoire dans notre contexte) |
 | Envoi au SSO | À l’authorization : {{code_challenge}} + {{code_challenge_method}} ; au token : {{code_verifier}} + {{code}} |
 
+*Authentification du client au token endpoint* :
+Pour échanger le code contre les tokens, le client doit s'authentifier auprès du token endpoint. Deux méthodes courantes :
+- *{{client_secret_basic}}* (recommandé) : le couple {{client_id}}:{{client_secret}} est encodé en Base64 et envoyé dans l'en-tête HTTP {{Authorization: Basic …}} ;
+- *{{client_secret_post}}* : le {{client_id}} et le {{client_secret}} sont envoyés dans le corps de la requête HTTP POST. Le choix dépend de la configuration de l'IdP et de la bibliothèque utilisée.
+
 ----
 
 Schéma de flux (rappel)
@@ -42,6 +47,7 @@ Pièges courants
 * *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre IdP et application.
 * *Scopes* : oublier {{openid}} rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
 * *Secret* : ne jamais exposer le {{client_secret}} (variables d'environnement côté serveur, pas de commit, pas dans le front ou l’app mobile).
+* *Token endpoint – authentification du client* : privilégier {{client_secret_basic}} (en-tête {{Authorization}}) ; n'utiliser {{client_secret_post}} (envoi dans le corps POST) que si la stack (bibliothèque, proxy) ne permet pas d'utiliser correctement l'en-tête {{Authorization}}.
 * *Avec PKCE* : {{code_verifier}} entre 43 et 128 caractères ; {{code_challenge_method}} = {{S256}} ; envoyer {{code_challenge}} à l’authorization et {{code_verifier}} au token. Sans backend sécurisé, utiliser PKCE. Le code d’autorisation est à usage unique et de courte durée ; seul le détenteur du {{code_verifier}} peut échanger le code contre des tokens.
 * *Sans PKCE* : n’utiliser le flux sans PKCE que si un backend sécurisé stocke le {{client_secret}} ; sinon risque d’interception du code.
 
@@ -97,3 +103,28 @@ oauth.register(
 # Dans la route callback : token = oauth.oidc.authorize_access_token()
 # userinfo = token.get('userinfo') ou décoder id_token
 {code}
+
+h3. Échange du code au token endpoint (PKCE + client_secret_basic)
+
+Exemple minimal qui illustre ce qui est envoyé au token endpoint : {{code_verifier}} (si PKCE) et l'authentification client via l'en-tête {{Authorization: Basic}} ({{client_secret_basic}}).
+
+{code:javascript}
+// 1. Construire l'en-tête Authorization (client_secret_basic)
+const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+const tokenResponse = await fetch(tokenEndpointUrl, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Authorization': `Basic ${credentials}`,
+  },
+  body: new URLSearchParams({
+    grant_type: 'authorization_code',
+    code: codeFromRedirect,
+    redirect_uri: redirectUri,
+    code_verifier: codeVerifier,  // si PKCE (généré côté app, 43–128 car.)
+  }),
+});
+const tokens = await tokenResponse.json(); // id_token, access_token
+{code}
+
+En pratique, les bibliothèques (openid-client, authlib, etc.) gèrent PKCE et l'en-tête {{Authorization}} ; il suffit de configurer {{client_secret}} et d'activer PKCE si besoin.
