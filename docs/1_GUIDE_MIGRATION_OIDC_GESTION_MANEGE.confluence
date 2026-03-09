@@ -4,31 +4,13 @@ Le flux OIDC est géré en interne ; seuls les attributs (claims) doivent être 
 
 ----
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+Suivi à réaliser (cocher chaque étape lorsque réalisée).
 
-|| Étape || Action || Durée || Réalisée ||
-| 1 | Identifier les nouveaux claims requis (ex. {{id}}, {{email}}, {{nom}}, {{role}}) et transmettre à l'équipe IAM la liste des claims attendus. | À estimer | [ ] |
-| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | À estimer | [ ] |
-| 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | À estimer | [ ] |
-| Total | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
-
-h2. 1.1 OIDC – Gestion managée – Autonome
-
-Qui fait quoi :
-
-|| Étape || Acteur ||
-| 1 | Équipe applicative |
-| 2 | Équipe IAM |
-| 3 | Équipe applicative |
-
-h2. 1.2 OIDC – Gestion managée – Accompagné / Délégué
-
-Qui fait quoi :
-
-|| Étape || Acteur ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif |
-| 2 | Équipe IAM |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif |
+|| Étape || Action || Acteur || Durée || Réalisée ||
+| 1 | Identifier les nouveaux claims requis (ex. {{id}}, {{email}}, {{nom}}, {{role}}) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | Équipe IAM | À estimer | [ ] |
+| 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 3) | — | À estimer | [ ] |
 
 ----
 

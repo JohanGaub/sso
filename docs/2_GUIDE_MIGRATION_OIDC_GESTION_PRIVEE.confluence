@@ -4,13 +4,15 @@ Vous devez reconfigurer le flux OIDC (endpoints, redirect_uri, scopes, client) e
 
 ----
 
-|| Étape || Action || Acteur || Réalisée ||
-| 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un {{client_secret}} est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | [ ] |
-| 2 | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | Équipe IAM | [ ] |
-| 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | [ ] |
-| 4 | Configurer l'application (URLs, scopes, claims) et le callback. En pratique : l'app redirige l'utilisateur vers le SSO ; le SSO authentifie et renvoie un *code* ; l'app échange ce code contre *id_token* et *access_token* (avec {{code_verifier}} si PKCE, avec {{client_secret}} si sans PKCE) ; l'app crée la session et peut appeler UserInfo pour les claims. | Équipe applicative ou Équipe de raccordement applicatif | [ ] |
-| 5 | Gérer les erreurs (redirect_uri, invalid_grant, consent) et tester le flux complet (connexion, déconnexion). | Équipe applicative ou Équipe de raccordement applicatif | [ ] |
-| Total | Durée totale à estimer | — | [ ] |
+Suivi à réaliser (cocher chaque étape lorsque réalisée).
+
+|| Étape || Action || Acteur || Durée || Réalisée ||
+| 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un {{client_secret}} est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 2 | Créer ou actualiser le client auprès de l'IdP (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | Équipe IAM | À estimer | [ ] |
+| 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 4 | Configurer l'application (URLs, scopes, claims) et le callback. En pratique : l'app redirige l'utilisateur vers le SSO ; le SSO authentifie et renvoie un *code* ; l'app échange ce code contre *id_token* et *access_token* (avec {{code_verifier}} si PKCE, avec {{client_secret}} si sans PKCE) ; l'app crée la session et peut appeler UserInfo pour les claims. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 5 | Gérer les erreurs (redirect_uri, invalid_grant, consent) et tester le flux complet (connexion, déconnexion). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
 ----
 
@@ -21,14 +23,6 @@ Détail technique (PKCE) :
 | {{code_challenge}} | Dérivé du {{code_verifier}} : Base64URL(SHA-256({{code_verifier}})) |
 | {{code_challenge_method}} | {{S256}} (obligatoire dans notre contexte) |
 | Envoi au SSO | À l’authorization : {{code_challenge}} + {{code_challenge_method}} ; au token : {{code_verifier}} + {{code}} |
-
-Séquence commune (résumé) :
-
-|| Étape || Action || Acteur principal ||
-| 1 | L’application redirige l’utilisateur vers le SSO (authorization endpoint, avec {{code_challenge}} si PKCE) | Équipe applicative |
-| 2 | Le SSO authentifie l’utilisateur puis redirige vers l’application avec un *code* dans l’URL ({{redirect_uri}} + {{code}}) | SSO (IdP) |
-| 3 | L’application échange le code contre id_token + access_token (avec {{code_verifier}} si PKCE, ou {{client_secret}} si sans PKCE) | Équipe applicative |
-| 4 | L’application crée la session et, si besoin, appelle le endpoint UserInfo pour des claims supplémentaires | Équipe applicative |
 
 ----
 

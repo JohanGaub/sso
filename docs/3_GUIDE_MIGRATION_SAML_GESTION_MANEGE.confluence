@@ -4,38 +4,19 @@ Le flux SAML est géré en interne ; seuls les attributs SAML doivent être mis 
 
 ----
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+Suivi à réaliser (cocher chaque étape lorsque réalisée).
 
-|| Étape || Action || Durée || Réalisée ||
-| 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | À estimer | [ ] |
-| 2 | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
-| 3 | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
-| Total | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
-
-h2. 3.1 SAML – Gestion managée – Autonome
-
-Qui fait quoi :
-
-|| Étape || Acteur ||
-| 1 | Équipe applicative |
-| 2 | Équipe IAM |
-| 3 | Équipe applicative |
-
-h2. 3.2 SAML – Gestion managée – Accompagné / Délégué
-
-Qui fait quoi :
-
-|| Étape || Acteur ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif |
-| 2 | Équipe IAM |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif |
+|| Étape || Action || Acteur || Durée || Réalisée ||
+| 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 2 | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | Équipe IAM | À estimer | [ ] |
+| 3 | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 3) | — | À estimer | [ ] |
 
 ----
 
-Validation : Utiliser un outil en ligne de décodage/validation SAML (ou un validateur local) pour vérifier la présence et le format des attributs dans l'Assertion reçue.
-
 Pièges courants
 
+* Vérifier la présence et le format des attributs dans l'Assertion reçue (outil de décodage/validation SAML en ligne ou local).
 * Noms d'attributs : différence entre URI, basic, unspecified ; s'assurer que l'IdP et l'SP utilisent le même nom (ou un mapping explicite).
 * Multiples valeurs : les attributs SAML sont souvent des tableaux ; prendre la première valeur ou gérer la liste selon la sémantique.
 * Signature et chiffrement : ne pas désactiver la vérification de signature en production.

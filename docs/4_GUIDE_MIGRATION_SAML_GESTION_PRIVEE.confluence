@@ -4,34 +4,14 @@ Vous devez reconfigurer le flux SAML (métadonnées SP/IdP, endpoints, binding, 
 
 ----
 
-Suivi des étapes à réaliser (cocher étape lorsque réalisée)
+Suivi à réaliser (cocher chaque étape lorsque réalisée).
 
-|| Étape || Action || Durée || Réalisée ||
-| 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | À estimer | [ ] |
-| 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | À estimer | [ ] |
-| 3 | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | À estimer | [ ] |
-| 4 | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | À estimer | [ ] |
-| Total | Durée totale (somme des étapes 1 à 4) | À estimer | [ ] |
-
-h2. 4.1 SAML – Gestion privée – Autonome
-
-Qui fait quoi :
-
-|| Étape || Acteur ||
-| 1 | Équipe applicative |
-| 2 | Équipe applicative |
-| 3 | Équipe IAM |
-| 4 | Équipe applicative |
-
-h2. 4.2 SAML – Gestion privée – Accompagné / Délégué
-
-Qui fait quoi :
-
-|| Étape || Acteur ||
-| 1 | Équipe applicative ou Équipe de raccordement applicatif |
-| 2 | Équipe applicative ou Équipe de raccordement applicatif |
-| 3 | Équipe IAM |
-| 4 | Équipe applicative ou Équipe de raccordement applicatif |
+|| Étape || Action || Acteur || Durée || Réalisée ||
+| 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 3 | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | Équipe IAM | À estimer | [ ] |
+| 4 | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 4) | — | À estimer | [ ] |
 
 ----
 
