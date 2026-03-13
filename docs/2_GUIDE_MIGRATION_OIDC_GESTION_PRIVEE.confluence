@@ -18,44 +18,38 @@ Cocher chaque étape lorsque réalisée.
 
 ----
 
-h2. Conventions
-
-*Paramètres vs claims*
-
-|| Terme || Où || Définition et utilité ||
-| *Paramètre* | Requêtes HTTP (URL d'autorisation, query string du callback, corps POST /token) | Nom d'un élément envoyé ou reçu dans les requêtes (ex. {{client_id}}, {{code}}, {{state}}) |
-| *Claim* | ID Token (payload et en-tête JWT) | Champ du JWT décrivant l'émetteur, le destinataire, l'utilisateur ou la signature (ex. {{aud}}, {{exp}}, {{kid}}) |
-
-Convention : les noms sont en minuscules avec souligné (ex. {{client_id}}, {{redirect_uri}}). Les valeurs à substituer sont notées entre accolades dans les tableaux (ex. {client_id}, {code}).
-
-----
-
 h2. Détail technique – Flux Authorization Code (Entra ID)
 
 Vue d'ensemble du processus :
 
 # *a) Récupérer les clés publiques (JWKS)* — avant la première authentification
 # *b) Rediriger l'utilisateur vers l'IdP* — requête GET vers l'URL d'autorisation
-# *c) Réception du code* — l'IdP redirige vers l'application avec un code et d'autres paramètres
+# *c) Recevoir le code d'autorisation* — l'IdP redirige vers l'application avec un code et d'autres paramètres
 # *d) Échanger le code contre les tokens* — requête POST vers l'endpoint token
 # *e) Valider l'ID Token* — vérifier signature, audience, expiration et intégrité
 
-h3. a) Récupération des clés publiques (JWKS)
+h3. a) Récupérer les clés publiques (JWKS)
 
-L'IdP expose un *document de découverte OpenID Connect* dont le champ {{jwks_uri}} pointe vers le jeu de clés publiques (JSON Web Key Set). Il est recommandé d'utiliser ce document pour obtenir les URLs à jour plutôt que de les figer.
+Ne codez pas les URLs des endpoints en dur : récupérez-les via le document de découverte (`.well-known/openid-configuration`) pour rester aligné avec l'IdP.
 
-|| Élément || Valeur / type || Définition et utilité ||
-| *Document de découverte* | {{GET https://login.microsoftonline.com/<tenant>/v2.0/.well-known/openid-configuration}} | JSON contenant notamment {{authorization_endpoint}}, {{token_endpoint}}, {{jwks_uri}}. Réf. [OIDC Discovery](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc#fetch-the-openid-configuration-document). |
-| *Source des clés* | Champ {{jwks_uri}} de la réponse du discovery | URL du jeu de clés pour vérifier les signatures des JWT (ID Token, Access Token). Format type : {{https://login.microsoftonline.com/<tenant>/discovery/v2.0/keys}} |
-| *Méthode* | GET | Téléchargement des clés |
-| *Usage* | Télécharger régulièrement ces clés ; utiliser la clé identifiée par {{kid}} (en-tête du JWT) pour vérifier la signature | Peut être fait de façon asynchrone avant la première authentification |
+|| Élément || Exemple || Rôle ||
+| *Document de découverte OIDC* | {{https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration}} | Fournit les métadonnées de l'IdP ({{authorization_endpoint}}, {{token_endpoint}}, {{jwks_uri}}, etc.) |
+| *Champ {{jwks_uri}}* | ex. {{https://login.microsoftonline.com/{tenant}/discovery/v2.0/keys}} | Donne l'URL du jeu de clés publiques (JWKS) utilisé pour signer les tokens |
+| *Clés publiques (JWKS)* | JSON retourné par {{jwks_uri}} | Contient les clés identifiées par {{kid}} pour vérifier la signature des JWT |
 
-h3. b) Redirection vers l'URL d'autorisation
+En pratique, le processus de récupération est le suivant :
+
+1. Appeler le document de découverte : {{GET https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration}}.
+2. Lire le champ {{jwks_uri}} dans la réponse.
+3. Appeler {{jwks_uri}} en {{GET}} pour télécharger les clés publiques (JWKS).
+4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l'en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
+
+h3. b) Rediriger l'utilisateur vers l'URL d'autorisation
 
 L'application envoie l'utilisateur vers l'endpoint d'autorisation de l'IdP via une requête HTTP GET.
 
 {noformat}
-GET https://login.microsoftonline.com/<tenant>/oauth2/v2.0/authorize?client_id=<client_id>&response_type=code&redirect_uri=<redirect_uri>&scope=<scope>&state=<state>&nonce=<nonce>&response_mode=query
+GET https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope={scope}&state={state}&nonce={nonce}&response_mode=query
 {noformat}
 
 Réf. [Request an authorization code](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code).
@@ -74,22 +68,22 @@ Réf. [Request an authorization code](https://learn.microsoft.com/en-us/entra/id
 
 *Note :* Microsoft recommande aussi la PKCE ({{code_challenge}}, {{code_challenge_method}}) pour tous les types d'applications ; pour une app avec backend, le {{client_secret}} reste la méthode d'authentification au token endpoint.
 
-h3. c) Paramètres renvoyés dans la redirection (callback)
+h3. c) Recevoir le code d'autorisation (callback)
 
 Après authentification, l'IdP redirige le navigateur vers {{redirect_uri}}. L'URL contient les paramètres du flux (ex. dans la query string). Les paramètres {{scope}} et {{client_id}} ne sont pas renvoyés ; l'application les gère lors de l'échange du code contre les tokens.
 
 *Exemple d'URL de callback :*
 {noformat}
-https://redirect.example.com/callback?code=0.AZERTYqsdfgh1234567&state=xyz123statevalue&session_state=abcd-efgh-ijklmnop&iss=https%3A%2F%2Flogin.microsoftonline.com%2F<tenant>%2Fv2.0
+https://redirect.example.com/callback?code=0.AZERTYqsdfgh1234567&state=xyz123statevalue&session_state=abcd-efgh-ijklmnop&iss=https%3A%2F%2Flogin.microsoftonline.com%2F{tenant}%2Fv2.0
 {noformat}
 
 || Paramètre (callback) || Valeur / type || Définition et utilité ||
 | {{code}} | {code} | Code d'autorisation à usage unique, courte durée (environ 1 minute). À échanger rapidement contre les tokens via POST vers /token. |
 | {{state}} | {state} | Même valeur que celle envoyée à l'étape b). À comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF) |
 | {{session_state}} | {session_state} | (Si présent) Identifiant de session côté IdP ; utilisé pour la gestion des sessions et du single logout |
-| {{iss}} | {iss} | (Si présent) Issuer : identifiant de l'émetteur. Valeur type : {{https://login.microsoftonline.com/<tenant>/v2.0}} |
+| {{iss}} | {iss} | (Si présent) Issuer : identifiant de l'émetteur. Valeur type : {{https://login.microsoftonline.com/{tenant}/v2.0}} |
 
-h3. d) Échange du code contre les tokens
+h3. d) Échanger le code contre les tokens
 
 Après réception du {{code}}, l'application appelle l'endpoint token de l'IdP en POST.
 
@@ -102,7 +96,7 @@ Pour échanger le code contre les tokens, le client doit s'authentifier auprès 
 Le choix dépend de la configuration de l'IdP et de la bibliothèque utilisée.
 
 {noformat}
-POST https://login.microsoftonline.com/<tenant>/oauth2/v2.0/token
+POST https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token
 Content-Type: application/x-www-form-urlencoded
 {noformat}
 
@@ -118,7 +112,8 @@ Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entr
 | {{redirect_uri}} | {redirect_uri} | Même valeur que celle utilisée à l'étape b) |
 | {{scope}} | optionnel | Scopes demandés (ex. {{openid profile}}). Si omis, les scopes sont ceux de la requête d'autorisation. |
 
-L'authentification du client peut se faire soit par {{client_secret}} dans le corps, soit par en-tête {{Authorization: Basic <base64(client_id:client_secret)>}} (RFC 6749 section 2.3.1). Ne jamais exposer le {{client_secret}} côté client (navigateur, app mobile) ; réservé aux applications avec backend.
+L'authentification du client peut se faire soit par {{client_secret}} dans le corps, soit par en-tête {{Authorization: Basic <base64(client_id:client_secret)>}} (RFC 6749 section 2.3.1).
+Ne jamais exposer le {{client_secret}} côté client (navigateur, app mobile) ; réservé aux applications avec backend.
 
 *Exemple de corps :*
 {noformat}
@@ -142,7 +137,7 @@ grant_type=authorization_code&client_id={client_id}&client_secret={client_secret
 | {{id_token}} | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l'utilisateur |
 | {{refresh_token}} | chaîne opaque | Fourni uniquement si le scope {{offline_access}} a été demandé. Permet d'obtenir de nouveaux tokens sans ré-authentifier l'utilisateur. |
 
-h3. e) Validation de l'ID Token
+h3. e) Valider l'ID Token
 
 L'application doit vérifier la signature du JWT puis les claims selon les recommandations Microsoft. Les applications confidentielles (avec backend) doivent valider l'ID Token. Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens#validate-tokens), [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
 
@@ -153,7 +148,7 @@ L'application doit vérifier la signature du JWT puis les claims selon les recom
 || Claim || Valeur / type || Définition et utilité ||
 | {{aud}} | tableau ou chaîne | *Audience* : doit contenir le {{client_id}} de l'application (celui enregistré auprès de l'IdP) |
 | {{azp}} | chaîne | *Authorized Party* : doit correspondre au {{client_id}} de l'application |
-| {{iss}} | chaîne | *Issuer* : doit correspondre à l'émetteur attendu (ex. {{https://login.microsoftonline.com/<tenant>/v2.0}}) |
+| {{iss}} | chaîne | *Issuer* : doit correspondre à l'émetteur attendu (ex. {{https://login.microsoftonline.com/{tenant}/v2.0}}) |
 | {{exp}} | nombre (timestamp) | Date/heure d'expiration. La date courante doit être strictement inférieure à {{exp}} |
 | {{iat}} | nombre (timestamp) | Date d'émission ; utilisée avec {{exp}} pour la durée de validité |
 | {{nbf}} | nombre (timestamp) | *Not Before* : le token ne doit pas être accepté avant cette date. Vérifier que la date courante est >= {{nbf}} |
@@ -207,7 +202,7 @@ h2. Exemples de code
 
 Symfony (PHP) – configuration et récupération des attributs après connexion OIDC
 
-Pour Entra ID, l'{{OIDC_ISSUER}} est {{https://login.microsoftonline.com/<tenant>/v2.0}}.
+Pour Entra ID, l'{{OIDC_ISSUER}} est {{https://login.microsoftonline.com/{tenant}/v2.0}}.
 
 {code:php}
 // config/packages/knpu_oauth2_client.yaml (exemple)
@@ -237,7 +232,7 @@ const client = new issuer.Client({
   client_secret: process.env.OIDC_CLIENT_SECRET!,
   redirect_uris: [process.env.OIDC_REDIRECT_URI!],
 });
-// OIDC_ISSUER = https://login.microsoftonline.com/<tenant>/v2.0
+// OIDC_ISSUER = https://login.microsoftonline.com/{tenant}/v2.0
 // Utiliser client.authorizationUrl(), client.callbackParams(), client.callback()
 // Puis lire les claims depuis id_token ou userinfo
 {code}
@@ -253,7 +248,7 @@ oauth.register(
     server_metadata_url=os.environ['OIDC_ISSUER'].rstrip('/') + '/.well-known/openid-configuration',
     client_kwargs={'scope': 'openid profile email'},
 )
-# OIDC_ISSUER = https://login.microsoftonline.com/<tenant>/v2.0
+# OIDC_ISSUER = https://login.microsoftonline.com/{tenant}/v2.0
 # Dans la route callback : token = oauth.oidc.authorize_access_token()
 # userinfo = token.get('userinfo') ou décoder id_token
 {code}

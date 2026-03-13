@@ -71,6 +71,9 @@ h2. 4. Glossaire (termes clés)
 | *SAML v2* | Security Assertion Markup Language 2.0 – protocole d'échange d'assertions d'identité (XML). |
 | *IAM* | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
 | *IdP* | Identity Provider – fournisseur d'identité (service SSO). |
+| *Paramètre* | Élément d'une requête HTTP (URL d'autorisation, query string de callback, corps POST /token). Exemples : {{client_id}}, {{code}}, {{state}}, {{redirect_uri}}. |
+| *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : {{aud}}, {{exp}}, {{iss}}, {{nonce}}, {{amr}}. |
+| *Convention de notation* | Dans les tableaux et exemples, les **noms** de paramètres/claims sont écrits avec double accolade (ex. {{client_id}}, {{redirect_uri}}) et les **valeurs** à remplacer par vos propres données sont écrites avec simple accolade (ex. {client_id}, {code}). |
 | *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
 | *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
 | *SLO* | Single Logout – déconnexion unique : fermeture de session côté IdP et SP. |
