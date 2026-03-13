@@ -139,7 +139,7 @@ grant_type=authorization_code&client_id={client_id}&client_secret={client_secret
 
 h3. e) Valider l'ID Token
 
-L'application doit vérifier la signature du JWT puis les claims selon les recommandations Microsoft. Les applications confidentielles (avec backend) doivent valider l'ID Token. Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens#validate-tokens), [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
+L'application doit vérifier la signature du JWT puis les claims. Les applications confidentielles (avec backend) doivent valider l'ID Token. Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens#validate-tokens), [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
 
 *Ordre recommandé :* 1) Vérifier la signature avec la clé publique ({{jwks_uri}}, {{kid}}) ; 2) Vérifier les claims ci-dessous.
 
@@ -153,7 +153,7 @@ L'application doit vérifier la signature du JWT puis les claims selon les recom
 | {{iat}} | nombre (timestamp) | Date d'émission ; utilisée avec {{exp}} pour la durée de validité |
 | {{nbf}} | nombre (timestamp) | *Not Before* : le token ne doit pas être accepté avant cette date. Vérifier que la date courante est >= {{nbf}} |
 | {{nonce}} | chaîne | Doit correspondre au paramètre {{nonce}} envoyé à l'étape b). Limite les attaques par rejeu |
-| {{amr}} | tableau (optionnel) | *Authentication Methods References* : modes d'authentification (ex. {{pwd}}, {{mfa}}) |
+| {{amr}} | tableau (optionnel) | *Authentication Methods References* : modes d'authentification (ex. {{pwd}} = par mot de passe, {{mfa}} = par multifacteur) |
 
 *En-tête JWT et signature*
 
