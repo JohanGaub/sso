@@ -27,6 +27,8 @@ Vue d'ensemble du processus :
 # *c) Recevoir le code d'autorisation* — l'IdP redirige vers l'application avec un code et d'autres paramètres
 # *d) Échanger le code contre les tokens* — requête POST vers l'endpoint token
 # *e) Valider l'ID Token* — vérifier signature, audience, expiration et intégrité
+# *f) Rafraîchir l'Access Token (optionnel)* — requête POST vers l'endpoint token avec un refresh_token
+# *g) Récupérer les informations utilisateur (optionnel)* — appel à l'endpoint UserInfo avec l'Access Token
 
 h3. a) Récupérer les clés publiques (JWKS)
 
@@ -171,6 +173,71 @@ Pour les applications sans backend sécurisé ou en complément recommandé :
 | {{code_challenge}} | Dérivé du {{code_verifier}} : Base64URL(SHA-256({{code_verifier}})) |
 | {{code_challenge_method}} | {{S256}} (obligatoire dans notre contexte) |
 | Envoi au SSO | À l'authorization : {{code_challenge}} + {{code_challenge_method}} ; au token : {{code_verifier}} + {{code}} |
+
+----
+
+h3. f) Rafraîchir l'Access Token (Refresh Token)
+
+Si le scope {{offline_access}} est demandé et accordé, l'IdP peut renvoyer un {{refresh_token}} en plus de l'{{access_token}} et de l'{{id_token}}. Le {{refresh_token}} permet d'obtenir de nouveaux Access Tokens sans ré-authentifier l'utilisateur.
+
+*Conditions d'émission*
+
+|| Élément || Règle ||
+| {{offline_access}} | Le scope {{offline_access}} doit être demandé pour que l'IdP puisse renvoyer un {{refresh_token}}. |
+| {{refresh_token}} | Jeton opaque, longue durée ; à stocker de façon sécurisée côté backend uniquement. |
+
+*Requête de rafraîchissement (même endpoint /token que pour d))* 
+
+Le backend appelle à nouveau l'endpoint {{token}} avec {{grant_type=refresh_token}}. Le corps de la requête ({{application/x-www-form-urlencoded}}) contient :
+
+|| Paramètre || Valeur / type || Définition et utilité ||
+| {{grant_type}} | {{refresh_token}} | Indique que l'on utilise un Refresh Token pour obtenir un nouvel Access Token. |
+| {{refresh_token}} | {refresh_token} | Refresh Token reçu lors de la première authentification. |
+| {{client_id}} | {client_id} | Identifiant du client. |
+| {{client_secret}} | {client_secret} | Secret du client (backend uniquement). |
+| {{scope}} | optionnel | Scopes souhaités. Doivent être équivalents ou inclus dans les scopes initiaux. Si omis, reprend les scopes initiaux. |
+
+*Exemple de corps (x-www-form-urlencoded)* :
+
+{noformat}
+grant_type=refresh_token&
+refresh_token={refresh_token}&
+client_id={client_id}&
+client_secret={client_secret}&
+scope=openid profile offline_access
+{noformat}
+
+La réponse a la même structure qu'en d) : nouveaux {{access_token}} et {{id_token}} (et potentiellement un nouveau {{refresh_token}}). Le backend doit remplacer l'ancien {{refresh_token}} par le nouveau si un nouveau est renvoyé.
+
+----
+
+h3. g) Récupérer les informations utilisateur (UserInfo)
+
+Certaines informations d'identité sont directement présentes dans l'{{id_token}} (email, nom, oid, tid, etc.). Pour des claims supplémentaires ou pour centraliser la lecture des attributs, l'application peut appeler l'endpoint UserInfo avec l'{{access_token}}.
+
+*Appel UserInfo*
+
+|| Élément || Exemple || Rôle ||
+| Endpoint UserInfo | {{https://graph.microsoft.com/oidc/userinfo}} | Dans le cas d'Entra ID avec Microsoft Graph comme UserInfo. |
+| Méthode | GET | Récupération des informations utilisateur. |
+| Authorization | {{Authorization: Bearer {access_token}}} | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
+
+*Exemple de réponse JSON (UserInfo simplifié)* :
+
+{code:json}
+{
+  "sub": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "name": "Alice Dupont",
+  "preferred_username": "alice@contoso.com",
+  "email": "alice@contoso.com",
+  "oid": "00000000-1111-2222-3333-444444444444",
+  "tid": "55555555-6666-7777-8888-999999999999"
+}
+{code}
+
+En pratique, selon les besoins métiers, l'application peut :
+- lire les claims directement dans l'{{id_token}} validé ;
+- ou appeler UserInfo avec l'{{access_token}} pour récupérer un profil enrichi.
 
 ----
 
