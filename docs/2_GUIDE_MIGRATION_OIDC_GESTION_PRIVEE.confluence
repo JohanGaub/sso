@@ -10,7 +10,7 @@ Cocher chaque étape lorsque réalisée.
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un {{client_secret}} est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 2 | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes {{openid}}, {{profile}}, {{email}} + personnalisés). | Équipe IAM | À estimer | [ ] |
+| 2 | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes \\{openid\\}, \\{profile\\}, \\{email\\} + personnalisés). | Équipe IAM | À estimer | [ ] |
 | 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | 4 | Configurer l'application (URLs, scopes, claims) et le callback. En pratique : l'app redirige l'utilisateur vers l'IdP ; l'IdP authentifie et renvoie un *code* ; l'app échange ce code contre *id_token* et *access_token* (avec {{code_verifier}} si PKCE, avec {{client_secret}} si sans PKCE) ; l'app crée la session et peut appeler UserInfo pour les claims. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | 5 | Gérer les erreurs (redirect_uri, invalid_grant, consent) et tester le flux complet (connexion, déconnexion). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
@@ -35,20 +35,20 @@ Vue d'ensemble du processus :
 Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.
 
 || Paramètre || Rôle || Utilisé dans ||
-| {{tenant}} | Identifiant du tenant IdP ({{common}}, {{organizations}}, {{consumers}}, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | b) authorize, d) token, f) token (dans l'URL) |
-| {{client_id}} | Identifiant du client fourni par l'équipe raccordement applicatif. | b) authorize, d) token (code), f) token (refresh) |
-| {{client_secret}} | Secret du client ; à garder côté backend uniquement. | d) token (code), f) token (refresh) |
-| {{redirect_uri}} | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre b) et d). | b) authorize, d) token (code) |
-| {{scope}} | Scopes demandés (ex. {{openid}}, {{profile}}, {{offline_access}}). Obligatoire : {{openid}}. | b) authorize, d) token (code), f) token (refresh) |
-| {{state}} | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | b) authorize, c) callback |
-| {{nonce}} | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | b) authorize, e) validation ID Token |
-| {{code}} | Code d'autorisation à usage unique, courte durée (~1 min). À échanger contre les tokens. | c) callback (reçu), d) token (envoyé) |
-| {{grant_type}} | Type de flux OAuth : {{authorization_code}} (échange du code) ou {{refresh_token}} (rafraîchissement). | d) token (code), f) token (refresh) |
-| {{refresh_token}} | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope {{offline_access}}. | d) réponse token, f) token (envoyé) |
-| {{response_type}} | Indique ce que l'on demande à l'IdP. Pour le flux « code » : {{code}}. | b) authorize |
-| {{response_mode}} | Méthode de renvoi du code : {{query}}, {{fragment}} ou {{form_post}}. Défaut « code only » : {{query}}. | b) authorize |
-| {{session_state}} | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | c) callback |
-| {{iss}} | Issuer : identifiant de l'émetteur (ex. {{https://login.microsoftonline.com/{tenant}/v2.0}}). | c) callback, e) validation ID Token |
+| \\{tenant\\} | Identifiant du tenant IdP ({{common}}, {{organizations}}, {{consumers}}, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | b) authorize, d) token, f) token (dans l'URL) |
+| \\{client_id\\} | Identifiant du client fourni par l'équipe raccordement applicatif. | b) authorize, d) token (code), f) token (refresh) |
+| \\{client_secret\\} | Secret du client ; à garder côté backend uniquement. | d) token (code), f) token (refresh) |
+| \\{redirect_uri\\} | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre b) et d). | b) authorize, d) token (code) |
+| \\{scope\\} | Scopes demandés (ex. \\{openid\\}, \\{profile\\}, \\{offline_access\\}). Obligatoire : \\{openid\\}. | b) authorize, d) token (code), f) token (refresh) |
+| \\{state\\} | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | b) authorize, c) callback |
+| \\{nonce\\} | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | b) authorize, e) validation ID Token |
+| \\{code\\} | Code d'autorisation à usage unique, courte durée (~1 min). À échanger contre les tokens. | c) callback (reçu), d) token (envoyé) |
+| \\{grant_type\\} | Type de flux OAuth : {{authorization_code}} (échange du code) ou {{refresh_token}} (rafraîchissement). | d) token (code), f) token (refresh) |
+| \\{refresh_token\\} | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope \\{offline_access\\}. | d) réponse token, f) token (envoyé) |
+| \\{response_type\\} | Indique ce que l'on demande à l'IdP. Pour le flux « code » : {{code}}. | b) authorize |
+| \\{response_mode\\} | Méthode de renvoi du code : {{query}}, {{fragment}} ou {{form_post}}. Défaut « code only » : {{query}}. | b) authorize |
+| \\{session_state\\} | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | c) callback |
+| \\{iss\\} | Issuer : identifiant de l'émetteur (ex. {{https://login.microsoftonline.com/{{tenant}}/v2.0}}). | c) callback, e) validation ID Token |
 
 ----
 
@@ -80,38 +80,38 @@ Réf. [Request an authorization code](https://learn.microsoft.com/en-us/entra/id
 
 *Paramètres de la requête d'autorisation*
 
-Voir *tableau maître* pour {{tenant}}, {{client_id}}, {{redirect_uri}}, {{scope}}, {{state}}, {{nonce}}, {{response_mode}}.
+Voir *tableau maître* pour \\{tenant\\}, \\{client_id\\}, \\{redirect_uri\\}, \\{scope\\}, \\{state\\}, \\{nonce\\}, \\{response_mode\\}.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
-| {{response_type}} | {{code}} | Obligatoire pour le flux Authorization Code : on demande un *code*, pas un token directement. |
+| \\{response_type\\} | {{code}} | Obligatoire pour le flux Authorization Code : on demande un *code*, pas un token directement. |
 
 *Note :* Microsoft recommande aussi la PKCE ({{code_challenge}}, {{code_challenge_method}}) pour tous les types d'applications ; pour une app avec backend, le {{client_secret}} reste la méthode d'authentification au token endpoint.
 
 h3. c) Recevoir le code d'autorisation (callback)
 
-Après authentification, l'IdP redirige le navigateur vers {{redirect_uri}}. L'URL contient les paramètres du flux (ex. dans la query string). Les paramètres {{scope}} et {{client_id}} ne sont pas renvoyés ; l'application les gère lors de l'échange du code contre les tokens.
+Après authentification, l'IdP redirige le navigateur vers {{redirect_uri}}. L'URL contient les paramètres du flux (ex. dans la query string). Les paramètres \\{scope\\} et \\{client_id\\} ne sont pas renvoyés ; l'application les gère lors de l'échange du code contre les tokens.
 
 *Exemple d'URL de callback :*
 {noformat}
 https://redirect.example.com/callback?code=0.AZERTYqsdfgh1234567&state=xyz123statevalue&session_state=abcd-efgh-ijklmnop&iss=https%3A%2F%2Flogin.microsoftonline.com%2F{tenant}%2Fv2.0
 {noformat}
 
-Voir *tableau maître* pour {{code}}, {{state}}, {{session_state}}, {{iss}}.
+Voir *tableau maître* pour \\{code\\}, \\{state\\}, \\{session_state\\}, \\{iss\\}.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
-| {{code}} | {code} (reçu de l'IdP) | À échanger rapidement en POST vers /token (étape d). Usage unique, courte durée (~1 min). |
-| {{state}} | {state} (identique à celui envoyé en b) | Comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF). |
-| {{session_state}}, {{iss}} | (Si présents) | Optionnels ; voir tableau maître. |
+| \\{code\\} | {{code}} (reçu de l'IdP) | À échanger rapidement en POST vers /token (étape d). Usage unique, courte durée (~1 min). |
+| \\{state\\} | {{state}} (identique à celui envoyé en b) | Comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF). |
+| \\{session_state\\}, \\{iss\\} | (Si présents) | Optionnels ; voir tableau maître. |
 
 h3. d) Échanger le code contre les tokens
 
-Après réception du {{code}}, l'application appelle l'endpoint token de l'IdP en POST.
+Après réception du \\{code\\}, l'application appelle l'endpoint token de l'IdP en POST.
 
 *Authentification du client au token endpoint*
 
 Pour échanger le code contre les tokens, le client doit s'authentifier auprès du token endpoint. Deux méthodes courantes :
-* *{{client_secret_basic}}* (recommandé) : le couple {{client_id}}:{{client_secret}} est encodé en Base64 et envoyé dans l'en-tête HTTP {{Authorization: Basic …}} ;
-* *{{client_secret_post}}* : le {{client_id}} et le {{client_secret}} sont envoyés dans le corps de la requête HTTP POST.
+* *\\{client_secret_basic\\}* (recommandé) : le couple \\{client_id\\}:\\{client_secret\\} est encodé en Base64 et envoyé dans l'en-tête HTTP {{Authorization: Basic …}} ;
+* *\\{client_secret_post\\}* : le \\{client_id\\} et le \\{client_secret\\} sont envoyés dans le corps de la requête HTTP POST.
 
 Le choix dépend de la configuration de l'IdP et de la bibliothèque utilisée.
 
@@ -124,37 +124,37 @@ Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entr
 
 *Corps de la requête (application/x-www-form-urlencoded)*
 
-Voir *tableau maître* pour {{client_id}}, {{client_secret}}, {{code}}, {{redirect_uri}}, {{scope}}.
+Voir *tableau maître* pour \\{client_id\\}, \\{client_secret\\}, \\{code\\}, \\{redirect_uri\\}, \\{scope\\}.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
-| {{grant_type}} | {{authorization_code}} | Obligatoire : indique l'échange du code contre les tokens. |
-| {{redirect_uri}} | {redirect_uri} | Doit être *exactement* la même valeur qu'à l'étape b). |
-| {{scope}} | optionnel | Si omis, les scopes sont ceux de la requête d'autorisation. |
+| \\{grant_type\\} | {{authorization_code}} | Obligatoire : indique l'échange du code contre les tokens. |
+| \\{redirect_uri\\} | {{redirect_uri}} | Doit être *exactement* la même valeur qu'à l'étape b). |
+| \\{scope\\} | optionnel | Si omis, les scopes sont ceux de la requête d'autorisation. |
 
-L'authentification du client peut se faire soit par {{client_secret}} dans le corps, soit par en-tête {{Authorization: Basic {authorization}}} avec {authorization} = Base64({{client_id}}:{{client_secret}}) (RFC 6749 section 2.3.1).
+L'authentification du client peut se faire soit par \\{client_secret\\} dans le corps, soit par en-tête {{Authorization: Basic {{authorization}}}} avec {{authorization}} = Base64(\\{client_id\\}:\\{client_secret\\}) (RFC 6749 section 2.3.1).
 Ne jamais exposer le {{client_secret}} côté client (navigateur, app mobile) ; réservé aux applications avec backend.
 
 *Exemple de corps :*
 {noformat}
-grant_type=authorization_code&client_id={client_id}&client_secret={client_secret}&code={code}&redirect_uri={redirect_uri}&scope=openid profile
+grant_type=authorization_code&client_id={{client_id}}&client_secret={{client_secret}}&code={{code}}&redirect_uri={{redirect_uri}}&scope=openid profile
 {noformat}
 
 *En-têtes HTTP*
 
 || En-tête || Valeur || Définition et utilité ||
 | {{Content-Type}} | {{application/x-www-form-urlencoded}} | Format du corps de la requête |
-| {{Authorization}} | {{Basic {authorization}}} | {authorization} = encodage Base64 de {{client_id:client_secret}}. Ex. : {{my-app:secret123}} → Base64 → {{bXktYXBwOnNlY3JldDEyMw==}} |
+| \\{Authorization\\} | {{Basic {{authorization}}}} | {{authorization}} = encodage Base64 de \\{client_id\\}:\\{client_secret\\}. Ex. : {{my-app:secret123}} → Base64 → {{bXktYXBwOnNlY3JldDEyMw==}} |
 
 *Réponse en cas de succès*
 
 || Champ || Valeur / type || Définition et utilité ||
 | {{token_type}} | {{Bearer}} | Type du token à utiliser dans l'en-tête {{Authorization}} pour les API protégées |
-| {{scope}} | ex. {{openid profile offline_access}} | Scopes accordés |
+| \\{scope\\} | ex. openid profile offline_access | Scopes accordés |
 | {{expires_in}} | entier (secondes) | Durée de validité de l'Access Token (ex. 3599) |
 | {{ext_expires_in}} | entier (secondes) | Durée supplémentaire avant expiration forcée |
 | {{access_token}} | JWT (chaîne) | Jeton OAuth 2.0 pour appeler les APIs protégées |
 | {{id_token}} | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l'utilisateur |
-| {{refresh_token}} | chaîne opaque | Fourni uniquement si le scope {{offline_access}} a été demandé. Permet d'obtenir de nouveaux tokens sans ré-authentifier l'utilisateur. |
+| \\{refresh_token\\} | chaîne opaque | Fourni uniquement si le scope \\{offline_access\\} a été demandé. Permet d'obtenir de nouveaux tokens sans ré-authentifier l'utilisateur. |
 
 h3. e) Valider l'ID Token
 
@@ -165,20 +165,20 @@ L'application doit vérifier la signature du JWT puis les claims. Les applicatio
 *Claims du payload à valider*
 
 || Claim || Valeur / type || Définition et utilité ||
-| {{aud}} | tableau ou chaîne | *Audience* : doit contenir le {{client_id}} de l'application (celui enregistré auprès de l'IdP) |
-| {{azp}} | chaîne | *Authorized Party* : doit correspondre au {{client_id}} de l'application |
-| {{iss}} | chaîne | *Issuer* : doit correspondre à l'émetteur attendu (ex. {{https://login.microsoftonline.com/{tenant}/v2.0}}) |
-| {{exp}} | nombre (timestamp) | Date/heure d'expiration. La date courante doit être strictement inférieure à {{exp}} |
-| {{iat}} | nombre (timestamp) | Date d'émission ; utilisée avec {{exp}} pour la durée de validité |
-| {{nbf}} | nombre (timestamp) | *Not Before* : le token ne doit pas être accepté avant cette date. Vérifier que la date courante est >= {{nbf}} |
-| {{nonce}} | chaîne | Doit correspondre au paramètre {{nonce}} envoyé à l'étape b). Limite les attaques par rejeu |
-| {{amr}} | tableau (optionnel) | *Authentication Methods References* : modes d'authentification (ex. {{pwd}} = par mot de passe, {{mfa}} = par multifacteur) |
+| \\{aud\\} | tableau ou chaîne | *Audience* : doit contenir \\{client_id\\} (celui enregistré auprès de l'IdP) |
+| \\{azp\\} | chaîne | *Authorized Party* : doit correspondre à \\{client_id\\} |
+| \\{iss\\} | chaîne | *Issuer* : doit correspondre à l'émetteur attendu (ex. {{https://login.microsoftonline.com/{{tenant}}/v2.0}}) |
+| \\{exp\\} | nombre (timestamp) | Date/heure d'expiration. La date courante doit être strictement inférieure à \\{exp\\} |
+| \\{iat\\} | nombre (timestamp) | Date d'émission ; utilisée avec \\{exp\\} pour la durée de validité |
+| \\{nbf\\} | nombre (timestamp) | *Not Before* : le token ne doit pas être accepté avant cette date. Vérifier que la date courante est >= \\{nbf\\} |
+| \\{nonce\\} | chaîne | Doit correspondre au paramètre \\{nonce\\} envoyé à l'étape b). Limite les attaques par rejeu |
+| \\{amr\\} | tableau (optionnel) | *Authentication Methods References* : modes d'authentification (ex. \\{pwd\\} = par mot de passe, \\{mfa\\} = par multifacteur) |
 
 *En-tête JWT et signature*
 
 || Élément || Valeur / type || Définition et utilité ||
-| {{alg}} (en-tête) | {{RS256}} | Algorithme de signature. Vérifier qu'il correspond à celui publié par l'IdP (RS256) |
-| {{kid}} (en-tête) | chaîne | Identifiant de la clé. Utiliser la clé correspondante (récupérée via {{jwks_uri}}) pour vérifier la signature |
+| \\{alg\\} (en-tête) | {{RS256}} | Algorithme de signature. Vérifier qu'il correspond à celui publié par l'IdP (RS256) |
+| \\{kid\\} (en-tête) | chaîne | Identifiant de la clé. Utiliser la clé correspondante (récupérée via \\{jwks_uri\\}) pour vérifier la signature |
 | Signature | JWS | Signature calculée avec la clé privée de l'IdP. Validation avec la clé publique ({{kid}}). Tenir compte du [signing key rollover](https://learn.microsoft.com/en-us/entra/identity-platform/signing-key-rollover) |
 
 h3. Choisir le type de client (confidentiel vs public)
@@ -186,14 +186,14 @@ h3. Choisir le type de client (confidentiel vs public)
 Avant de configurer le flux, identifiez le type d'application côté OAuth2/OIDC :
 
 || Type de client || Où tourne l'app ? || Secret possible ? || Flux à utiliser ||
-| Client confidentiel | Application avec backend sécurisé (serveur web, API) | OUI : on peut stocker un {{client_secret}} côté serveur | Authorization Code avec {{client_id}} + {{client_secret}} (PKCE recommandé) |
-| Client public | Application sans backend sécurisé (SPA JavaScript, app mobile, client lourd) | NON : impossible de protéger un {{client_secret}} dans le code envoyé à l'utilisateur | Authorization Code **avec PKCE**, sans {{client_secret}} (client public) |
+| Client confidentiel | Application avec backend sécurisé (serveur web, API) | OUI : on peut stocker un {{client_secret}} côté serveur | Authorization Code avec \\{client_id\\} + \\{client_secret\\} (PKCE recommandé) |
+| Client public | Application sans backend sécurisé (SPA JavaScript, app mobile, client lourd) | NON : impossible de protéger un {{client_secret}} dans le code envoyé à l'utilisateur | Authorization Code *avec PKCE*, sans {{client_secret}} (client public) |
 
 *À retenir :* « client public » n'est pas un état de l'utilisateur, mais un type d'application dans la configuration de l'IdP :
 - côté IdP, on déclare une application comme *confidentielle* (avec {{client_secret}}) ou *publique* (sans {{client_secret}}) ;
-- côté application, on utilise toujours le même {{client_id}}, mais :
-  - un client **confidentiel** envoie aussi un {{client_secret}} au token endpoint (étapes d et f) ;
-  - un client **public** n'a pas de {{client_secret}} et doit obligatoirement utiliser PKCE ({{code_verifier}}, {{code_challenge}}, {{code_challenge_method=S256}}) pour sécuriser l'échange du {{code}}.
+- côté application, on utilise toujours le même \\{client_id\\}, mais :
+  - un client *confidentiel* envoie aussi un {{client_secret}} au token endpoint (étapes d et f) ;
+  - un client *public* n'a pas de {{client_secret}} et doit obligatoirement utiliser PKCE ({{code_verifier}}, {{code_challenge}}, {{code_challenge_method=S256}}) pour sécuriser l'échange du \\{code\\}.
 
 En pratique :
 - backend sécurisé disponible → client confidentiel → Authorization Code (avec {{client_secret}}, PKCE recommandé) ;
@@ -213,32 +213,32 @@ Pour les applications sans backend sécurisé ou en complément recommandé :
 
 h3. f) Rafraîchir l'Access Token (Refresh Token)
 
-Si le scope {{offline_access}} est demandé et accordé, l'IdP peut renvoyer un {{refresh_token}} en plus de l'{{access_token}} et de l'{{id_token}}. Le {{refresh_token}} permet d'obtenir de nouveaux Access Tokens sans ré-authentifier l'utilisateur.
+Si le scope \\{offline_access\\} est demandé et accordé, l'IdP peut renvoyer un {{refresh_token}} en plus de l'{{access_token}} et de l'{{id_token}}. Le {{refresh_token}} permet d'obtenir de nouveaux Access Tokens sans ré-authentifier l'utilisateur.
 
 *Conditions d'émission*
 
 || Élément || Règle ||
-| {{offline_access}} | Le scope {{offline_access}} doit être demandé pour que l'IdP puisse renvoyer un {{refresh_token}}. |
-| {{refresh_token}} | Jeton opaque, longue durée ; à stocker de façon sécurisée côté backend uniquement. |
+| \\{offline_access\\} | Le scope \\{offline_access\\} doit être demandé pour que l'IdP puisse renvoyer un {{refresh_token}}. |
+| \\{refresh_token\\} | Jeton opaque, longue durée ; à stocker de façon sécurisée côté backend uniquement. |
 
 *Requête de rafraîchissement (même endpoint /token que pour d))* 
 
 Le backend appelle à nouveau l'endpoint {{token}} (même URL qu'en d)) en POST. Corps : {{application/x-www-form-urlencoded}}.
 
-Voir *tableau maître* pour {{client_id}}, {{client_secret}}, {{scope}}, {{refresh_token}}.
+Voir *tableau maître* pour \\{client_id\\}, \\{client_secret\\}, \\{scope\\}, \\{refresh_token\\}.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
-| {{grant_type}} | {{refresh_token}} | Obligatoire : indique le rafraîchissement via un Refresh Token. |
-| {{refresh_token}} | {refresh_token} (reçu en d)) | Le Refresh Token renvoyé par l'IdP lors de la première authentification. |
-| {{scope}} | optionnel | Doivent être équivalents ou inclus dans les scopes initiaux. Si omis, reprend les scopes initiaux. |
+| \\{grant_type\\} | {{refresh_token}} | Obligatoire : indique le rafraîchissement via un Refresh Token. |
+| \\{refresh_token\\} | {{refresh_token}} (reçu en d)) | Le Refresh Token renvoyé par l'IdP lors de la première authentification. |
+| \\{scope\\} | optionnel | Doivent être équivalents ou inclus dans les scopes initiaux. Si omis, reprend les scopes initiaux. |
 
 *Exemple de corps (x-www-form-urlencoded)* :
 
 {noformat}
 grant_type=refresh_token&
-refresh_token={refresh_token}&
-client_id={client_id}&
-client_secret={client_secret}&
+refresh_token={{refresh_token}}&
+client_id={{client_id}}&
+client_secret={{client_secret}}&
 scope=openid profile offline_access
 {noformat}
 
@@ -286,7 +286,7 @@ h2. Schéma de flux (rappel)
 h2. Pièges courants
 
 * *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre l'IdP et l'application.
-* *Scopes* : oublier {{openid}} rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
+* *Scopes* : oublier \\{openid\\} rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
 * *Secret* : ne jamais exposer le {{client_secret}} (variables d'environnement côté serveur, pas de commit, pas dans le front ou l'app mobile).
 * *Token endpoint – authentification du client* : privilégier {{client_secret_basic}} (en-tête {{Authorization}}) ; n'utiliser {{client_secret_post}} (envoi dans le corps POST) que si la stack (bibliothèque, proxy) ne permet pas d'utiliser correctement l'en-tête {{Authorization}}.
 * *Avec PKCE* : {{code_verifier}} entre 43 et 128 caractères ; {{code_challenge_method}} = {{S256}} ; envoyer {{code_challenge}} à l'authorization et {{code_verifier}} au token. Sans backend sécurisé, utiliser PKCE. Le code d'autorisation est à usage unique et de courte durée ; seul le détenteur du {{code_verifier}} peut échanger le code contre des tokens.
