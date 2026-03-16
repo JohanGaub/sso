@@ -270,12 +270,6 @@ Certaines informations d'identité sont directement présentes dans l'{{id_token
 }
 {code}
 
-En pratique, selon les besoins métiers, l'application peut :
-- lire les claims directement dans l'{{id_token}} validé ;
-- ou appeler UserInfo avec l'{{access_token}} pour récupérer un profil enrichi.
-
-----
-
 h2. Schéma de flux (rappel)
 
 {noformat}

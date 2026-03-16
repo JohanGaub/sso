@@ -68,11 +68,16 @@ h2. 4. Glossaire (termes clés)
 | *Discovery OIDC* | Document exposé par le SSO à l'URL {{/.well-known/openid-configuration}}. Il décrit les endpoints (authorization, token, userinfo, end_session) et l'URL des clés publiques ({{jwks_uri}}) pour vérifier les JWT. Les bibliothèques OIDC s'en servent pour configurer les URLs. |
 | *PKCE* | Proof Key for Code Exchange – mécanisme qui renforce le flux Authorization Code (code_verifier / code_challenge) pour éviter l'interception du code ; recommandé dès qu'il n'y a pas de backend sécurisé. |
 | *Authorization Code (avec/sans PKCE)* | Flux OIDC : redirection vers le SSO → code → échange contre id_token + access_token. *Avec PKCE* : renforcement par code_verifier/code_challenge (recommandé). *Sans PKCE* : uniquement si backend sécurisé avec {{client_secret}}. Détail dans le guide 2 (OIDC gestion privée). |
+| *ID Token* | Jeton OIDC qui contient les informations d'identité de l'utilisateur (claims) et permet à l'application de vérifier qu'il est authentifié. |
+| *Access Token* | Jeton OAuth2 utilisé pour accéder à des ressources protégées (API, Graph, backend applicatif…) ; envoyé en {{Authorization: Bearer …}}. |
+| *Refresh Token* | Jeton long terme qui permet d'obtenir de nouveaux Access Tokens sans redemander l'authentification à l'utilisateur (si scope {{offline_access}} accordé). |
+| *Authorization Code* | Code à usage unique et courte durée renvoyé à l'application, qui est échangé contre les tokens (ID/Access/Refresh) au token endpoint. |
 | *SAML v2* | Security Assertion Markup Language 2.0 – protocole d'échange d'assertions d'identité (XML). |
 | *IAM* | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
 | *IdP* | Identity Provider – fournisseur d'identité (service SSO). |
 | *Paramètre* | Élément d'une requête HTTP (URL d'autorisation, query string de callback, corps POST /token). Exemples : {{client_id}}, {{code}}, {{state}}, {{redirect_uri}}. |
 | *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : {{aud}}, {{exp}}, {{iss}}, {{nonce}}, {{amr}}. |
+| *Scopes OIDC de base* | {{openid}} : scope obligatoire pour OIDC ; {{profile}} : infos de profil (nom, prénom, etc.) ; {{email}} : adresse email ; {{offline_access}} : permet d'obtenir un refresh_token pour maintenir la session sans réauthentification. |
 | *Convention de notation* | Dans les tableaux et exemples, les **noms** de paramètres/claims sont écrits avec double accolade (ex. {{client_id}}, {{redirect_uri}}) et les **valeurs** à remplacer par vos propres données sont écrites avec simple accolade (ex. {client_id}, {code}). |
 | *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
 | *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
