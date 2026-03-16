@@ -376,6 +376,15 @@ En pratique, les bibliothèques (openid-client, authlib, etc.) gèrent PKCE et l
 
 ----
 
+h2. Correspondance d’attributs (Legacy → Entra ID)
+
+À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC/Entra ID).
+
+|| Attribut Legacy || Description || Attribut Entra ID / OIDC (claim) ||
+|  |  |  |
+|  |  |  |
+|  |  |  |
+
 h2. Références officielles Microsoft (Entra ID)
 
 * [OAuth 2.0 authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
