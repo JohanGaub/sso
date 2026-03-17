@@ -221,7 +221,7 @@ Si le scope offline_access est demandé et accordé, l'IdP peut renvoyer un refr
 | offline_access | Le scope offline_access doit être demandé pour que l'IdP puisse renvoyer un refresh_token. |
 | refresh_token | Jeton opaque, longue durée ; à stocker de façon sécurisée côté backend uniquement. |
 
-*Requête de rafraîchissement (même endpoint /token que pour d))* 
+*Requête de rafraîchissement (même endpoint /token que pour d))*
 
 Le backend appelle à nouveau l'endpoint {{token}} (même URL qu'en d)) en POST. Corps : {{application/x-www-form-urlencoded}}.
 
@@ -380,7 +380,7 @@ h2. Correspondance d’attributs (Legacy → Entra ID)
 
 À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC/Entra ID).
 
-|| Attribut Legacy || Description || Attribut Entra ID / OIDC (claim) ||
+|| Description || Attribut Legacy || Attribut Entra ID / OIDC (claim) ||
 |  |  |  |
 |  |  |  |
 |  |  |  |

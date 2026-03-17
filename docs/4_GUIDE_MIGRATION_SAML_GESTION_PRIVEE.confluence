@@ -25,6 +25,105 @@ Schéma de flux (SP-initiated, simplifié)
 [SP] --> Création de session
 {noformat}
 
+h2. Spécifications SAML 2.0 avec Entra ID
+
+Pour configurer correctement le flux SAML avec Entra ID, quelques notions clés sont utiles.
+
+h3. Format du NameID
+
+Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
+
+- Formats de NameID supportés :
+  - `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`
+  - `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`
+  - `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent`
+  - `urn:oasis:names:tc:SAML:2.0:nameid-format:transient`
+
+- Comportement Entra ID :
+  - si l’AuthnRequest contient une `NameIDPolicy` avec un format demandé, Entra ID utilise ce format ;
+  - si aucun format n’est demandé, Entra ID applique le format configuré côté application (par défaut : `unspecified`) ;
+  - pour `transient`, il suffit que le SP le demande : Entra ID renvoie une valeur aléatoire unique à la session (pas d’identifiant réutilisable).
+
+h3. Assertions signées
+
+Les Assertions SAML renvoyées par Entra ID sont signées.
+
+- Côté IdP (Entra ID) :
+  - l’Assertion est signée avec la clé privée de l’IdP ;
+  - le certificat public correspondant figure dans les métadonnées IdP.
+
+- Côté SP (votre appli) :
+  - la bibliothèque SAML (OneLogin, simplesamlphp, passport-saml, etc.) doit être configurée avec le certificat de l’IdP ;
+  - la vérification de signature doit être activée : le SP doit refuser une Assertion :
+    - dont la signature est invalide,
+    - ou qui n’est pas signée,
+    - ou qui ne vient pas du certificat attendu.
+
+*À retenir :* ne jamais désactiver la vérification de signature en production « pour que ça marche ».
+
+h3. Modes d’initiation : SP-initiated vs IdP-initiated
+
+- **SP-initiated SSO** (mode recommandé et illustré dans le schéma) :
+  - l’utilisateur commence par accéder à l’appli (SP) ;
+  - le SP génère une AuthnRequest et redirige le navigateur vers l’IdP (HTTP-Redirect) ;
+  - après authentification, l’IdP renvoie une Response SAML signée vers l’ACS du SP (HTTP-POST).
+
+- **IdP-initiated SSO** :
+  - l’utilisateur clique sur la tuile de l’appli dans le portail Entra ID / My Apps, ou sur une URL IdP-initiée ;
+  - l’IdP authentifie l’utilisateur (et applique les politiques de sécurité) ;
+  - l’IdP envoie directement une Response SAML signée vers l’ACS de l’appli.
+
+Ce mode est supporté par Entra ID mais n’est pas le scénario recommandé par défaut. L’appli doit simplement :
+- exposer une URL ACS cohérente avec la configuration Entra ID ;
+- accepter la Response SAML reçue, quel que soit le mode d’initiation.
+
+h3. Logout : SAML SLO vs déconnexion locale
+
+7.1 Single Logout (SLO) SAML
+
+- Le SLO permet de synchroniser la déconnexion entre IdP et SP :
+  - une déconnexion initiée par l’utilisateur ou par une appli peut fermer les sessions SSO sur les autres applis fédérées via le même IdP.
+- Dans Entra ID :
+  - le SLO est pris en charge mais pas activé par défaut ;
+  - il doit être configuré au niveau de l’appli SAML si le SP le requiert.
+- Côté SP :
+  - exposer un endpoint de déconnexion (`SingleLogoutService`) ;
+  - accepter et traiter les messages `LogoutRequest` / `LogoutResponse`.
+
+Si le SP ne supporte pas le SLO, prévoir un **fallback** : déconnexion locale (détruire la session applicative et rediriger vers une page d’atterrissage).
+
+7.2 Déconnexion locale sans SLO
+
+Il est possible de déconnecter un utilisateur d’une appli sans mettre en œuvre le SLO SAML.
+
+- Cinématique recommandée avec Entra ID :
+  - l’utilisateur clique sur “Déconnexion” dans l’appli ;
+  - l’appli détruit la session locale (cookies, jetons, session serveur) ;
+  - l’appli redirige l’utilisateur vers l’URL de déconnexion globale Entra ID ;
+  - Entra ID termine la session SSO et affiche une page de confirmation ou redirige (optionnel) vers une URL définie.
+
+- Points clés :
+  - cette méthode ne synchronise pas la déconnexion avec les autres applis (contrairement au SLO) ;
+  - elle est plus simple à mettre en œuvre ;
+  - si une URL de retour est utilisée, elle doit être déclarée dans la configuration de l’appli dans Entra ID.
+
+h3. Bindings HTTP-POST et HTTP-Redirect
+
+Deux bindings SAML sont utilisés dans Entra ID :
+
+- **HTTP-POST** (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`) :
+  - les messages SAML (notamment la Response contenant l’Assertion) sont transmis via un formulaire HTML encodé en Base64 et envoyés en POST vers l’ACS du SP.
+
+- **HTTP-Redirect** (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect`) :
+  - les messages SAML (ex. AuthnRequest) sont passés en paramètres d’URL et envoyés via une redirection HTTP.
+
+Comportement attendu côté application (SP) :
+
+- AuthnRequest → en pratique, envoyée en HTTP-Redirect (SP → IdP) ;
+- Response SAML → en pratique, reçue en HTTP-POST (IdP → SP, vers l’ACS).
+
+Ces bindings suivent le profil SAML 2.0 “Web Browser SSO” et constituent le mode de fonctionnement par défaut avec Entra ID.
+
 Pièges courants
 
 * Métadonnées : EntityID et ACS doivent être cohérents entre SP et IdP ; attention aux environnements (dev/preprod/prod).
