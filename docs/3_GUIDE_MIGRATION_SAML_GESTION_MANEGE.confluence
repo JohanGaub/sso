@@ -4,9 +4,7 @@ Attributs SAML uniquement ; la mécanique du flux est gérée par l'équipe IAM.
 
 ----
 
-h2. Suivi à réaliser
-
-(cocher chaque étape lorsque réalisée)
+h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |

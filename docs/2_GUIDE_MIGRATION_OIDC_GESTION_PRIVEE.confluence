@@ -4,9 +4,7 @@ Reconfigurer le flux OIDC dans l'application.
 
 ----
 
-h2. Suivi à réaliser
-
-Cocher chaque étape lorsque réalisée.
+h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |

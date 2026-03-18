@@ -4,7 +4,7 @@ En gestion managée, l'équipe IAM gère la mécanique OIDC. Vous ne traitez que
 
 ----
 
-Suivi à réaliser (cocher chaque étape lorsque réalisée).
+h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Identifier les nouveaux claims requis (ex. id, email, nom, role) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
@@ -14,19 +14,9 @@ Suivi à réaliser (cocher chaque étape lorsque réalisée).
 
 ----
 
-Pièges courants
+h2. Préparer la correspondance d’attributs (Legacy → IdP)
 
-* Oublier d'actualiser le schéma de validation des claims (liste des claims autorisés, types).
-* Confusion entre claims standard (ex. id, email, nom) et personnalisés (ex. role) : bien documenter la source (IdP) et le nom exact du claim.
-* Ne pas ignorer les erreurs quand l'application lit les claims :
-** en développement/préproduction : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
-** en production : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu'un claim attendu est manquant ou invalide.
-
-----
-
-h2. Correspondance d’attributs (Legacy → Entra ID)
-
-En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les claims OIDC exposés par Entra ID. Cette table sert :
+En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les claims OIDC envoyés par l'IdP. Cette table sert :
 * à l’équipe IAM pour configurer correctement les mappings côté IdP ;
 * au code applicatif pour lire les bons claims.
 
@@ -34,6 +24,16 @@ En gestion managée, le livrable principal côté dev est souvent la table de co
 |  |  |  |
 |  |  |  |
 |  |  |  |
+
+----
+
+h2. Pièges courants
+
+* Oublier d'actualiser le schéma de validation des claims (liste des claims autorisés, types).
+* Confusion entre claims standard (ex. id, email, nom) et personnalisés (ex. role) : bien documenter la source (IdP) et le nom exact du claim.
+* Ne pas ignorer les erreurs quand l'application lit les claims :
+** en développement/préproduction : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
+** en production : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu'un claim attendu est manquant ou invalide.
 
 ----
 

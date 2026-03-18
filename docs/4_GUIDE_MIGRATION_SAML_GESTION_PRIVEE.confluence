@@ -4,7 +4,7 @@ Reconfigurer le flux SAML (métadonnées, endpoints, binding, attributs) dans l'
 
 ----
 
-Suivi à réaliser (cocher chaque étape lorsque réalisée).
+h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
@@ -15,7 +15,9 @@ Suivi à réaliser (cocher chaque étape lorsque réalisée).
 
 ----
 
-Schéma de flux (SP-initiated, simplifié)
+h2. Schéma de flux (rappel)
+
+(SP-initiated, simplifié)
 
 {noformat}
 [App/SP] --> Génère AuthnRequest --> Redirection vers IdP
@@ -138,7 +140,7 @@ En gestion privée, au-delà du flux, le livrable côté dev est souvent la tabl
 |  |  |  |
 |  |  |  |
 
-Pièges courants
+h2. Pièges courants
 
 * Métadonnées : EntityID et ACS doivent être cohérents entre SP et IdP ; attention aux environnements (dev/preprod/prod).
 * Certificats : expiration, bon certificat (signature vs chiffrement) selon la config IdP.
