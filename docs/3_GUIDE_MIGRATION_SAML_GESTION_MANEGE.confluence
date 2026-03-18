@@ -4,7 +4,9 @@ Attributs SAML uniquement ; la mécanique du flux est gérée par l'équipe IAM.
 
 ----
 
-Suivi à réaliser (cocher chaque étape lorsque réalisée).
+h2. Suivi à réaliser
+
+(cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
@@ -14,7 +16,18 @@ Suivi à réaliser (cocher chaque étape lorsque réalisée).
 
 ----
 
-Pièges courants
+h2. Préparer la correspondance d’attributs (Legacy → IdP)
+
+En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
+* à l’équipe IAM pour configurer correctement les mappings côté IdP ;
+* au code applicatif pour lire les bons attributs.
+
+|| Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
+|  |  |  |
+|  |  |  |
+|  |  |  |
+
+h2. Pièges courants
 
 * Vérifier la présence et le format des attributs dans l'Assertion reçue (outil de décodage/validation SAML en ligne ou local).
 * Noms d'attributs : différence entre URI, basic, unspecified ; s'assurer que l'IdP et l'SP utilisent le même nom (ou un mapping explicite).

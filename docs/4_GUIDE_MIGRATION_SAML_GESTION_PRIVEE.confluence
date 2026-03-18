@@ -25,11 +25,11 @@ Schéma de flux (SP-initiated, simplifié)
 [SP] --> Création de session
 {noformat}
 
-h2. Spécifications SAML 2.0 avec Entra ID
+h2. Mettre en œuvre le flux SAML 2.0 (spécificités Entra ID)
 
 Pour configurer correctement le flux SAML avec Entra ID, quelques notions clés sont utiles.
 
-h3. Format du NameID
+h3. Définir le NameID
 
 Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 
@@ -44,7 +44,7 @@ Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 ** si aucun format n’est demandé, Entra ID applique le format configuré côté application (par défaut : `unspecified`) ;
 ** pour `transient`, si le SP le demande, Entra ID renvoie une valeur aléatoire unique à l’opération SSO (valeur temporaire, non réutilisable).
 
-h3. Assertions signées
+h3. Vérifier la signature SAML
 
 Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact de la signature est un paramètre de configuration* (réponse, assertion, ou les deux).
 
@@ -64,7 +64,7 @@ Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact 
 
 *À retenir :* ne jamais désactiver la vérification de signature en production « pour que ça marche ».
 
-h3. Modes d’initiation : SP-initiated vs IdP-initiated
+h3. Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
 
 * *SP-initiated SSO* (mode recommandé et illustré dans le schéma) :
 ** l’utilisateur commence par accéder à l’appli (SP) ;
@@ -80,7 +80,7 @@ Ce mode est supporté par Entra ID mais n’est pas le scénario recommandé par
 * exposer une URL ACS cohérente avec la configuration Entra ID ;
 * accepter la Response SAML reçue, quel que soit le mode d’initiation.
 
-h3. Logout : SAML SLO vs déconnexion locale
+h3. Gérer la déconnexion (SAML SLO vs déconnexion locale)
 
 *7.1 Single Logout (SLO) SAML*
 
@@ -110,7 +110,7 @@ Il est possible de déconnecter un utilisateur d’une appli sans mettre en œuv
 ** elle est plus simple à mettre en œuvre ;
 ** si une URL de retour est utilisée, elle doit être déclarée dans la configuration de l’appli dans Entra ID.
 
-h3. Bindings HTTP-POST et HTTP-Redirect
+h3. Choisir le binding (HTTP-POST vs HTTP-Redirect)
 
 Deux bindings SAML sont utilisés dans Entra ID :
 
@@ -126,6 +126,17 @@ Comportement attendu côté application (SP) :
 * Response SAML → en pratique, reçue en HTTP-POST (IdP → SP, vers l’ACS).
 
 Ces bindings suivent le profil SAML 2.0 “Web Browser SSO” et constituent le mode de fonctionnement par défaut avec Entra ID.
+
+h2. Préparer la correspondance d’attributs (Legacy → IdP)
+
+En gestion privée, au-delà du flux, le livrable côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
+* à l’équipe IAM pour configurer correctement les mappings côté IdP ;
+* au code applicatif pour lire les bons attributs dans l’Assertion.
+
+|| Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
+|  |  |  |
+|  |  |  |
+|  |  |  |
 
 Pièges courants
 
