@@ -10,8 +10,9 @@ h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
 | 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | 3 | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | Équipe IAM | À estimer | [ ] |
-| 4 | Configurer l'application (bibliothèque SAML, URLs IdP, certificats, mapping attributs), implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| Total | Durée totale (somme des étapes 1 à 4) | — | À estimer | [ ] |
+| 4 | Configurer l'application : bibliothèque SAML, URLs IdP, certificats, et mapping attributs (voir `Choisir le binding` + `Préparer la correspondance d’attributs` + `Exemples de code`). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 5 | Implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable) (voir `Vérifier la signature SAML` + checklist + `Pièges courants`). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
 ----
 
@@ -47,6 +48,7 @@ Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 h3. Vérifier la signature SAML
 
 Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact de la signature est un paramètre de configuration* (réponse, assertion, ou les deux).
+Dans la pratique, votre bibliothèque doit être capable de vérifier la signature au bon niveau : *Response* (élément `samlp:Response`), *Assertion* (élément `saml:Assertion`), ou les deux, selon ce qui est configuré côté IdP.
 
 * Côté IdP (Entra ID) :
 ** Entra ID peut signer :
@@ -63,6 +65,14 @@ Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact 
 *** ou qui ne vient pas du certificat attendu.
 
 *À retenir :* ne jamais désactiver la vérification de signature en production « pour que ça marche ».
+
+*Checklist de validation minimale (dev-first)*
+
+* Signature SAML : présente et valide (Response et/ou Assertion, selon config).
+* Issuer : correspond à l’IdP attendu (éviter toute confusion d’environnement).
+* Audience : correspond à l’identifiant attendu côté SP (EntityID / App ID URI selon configuration).
+* Fenêtre de validité : `NotBefore` / `NotOnOrAfter` cohérents (horloge serveur à l’heure).
+* Correlation : `InResponseTo` correspond à l’AuthnRequest envoyée (en SP-initiated).
 
 h3. Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
 
@@ -82,7 +92,9 @@ Ce mode est supporté par Entra ID mais n’est pas le scénario recommandé par
 
 h3. Gérer la déconnexion (SAML SLO vs déconnexion locale)
 
-*7.1 Single Logout (SLO) SAML*
+Deux cas sont possibles : mise en œuvre du SLO SAML, ou déconnexion locale (fallback).
+
+h4. Single Logout (SLO) SAML
 
 * Le SLO permet de synchroniser la déconnexion entre IdP et SP :
 ** une déconnexion initiée par l’utilisateur ou par une appli peut fermer les sessions SSO sur les autres applis fédérées via le même IdP.
@@ -93,9 +105,9 @@ h3. Gérer la déconnexion (SAML SLO vs déconnexion locale)
 ** exposer un endpoint de déconnexion (`SingleLogoutService`) ;
 ** accepter et traiter les messages `LogoutRequest` / `LogoutResponse`.
 
-Si le SP ne supporte pas le SLO, prévoir un **fallback** : déconnexion locale (détruire la session applicative et rediriger vers une page d’atterrissage).
+Si le SP ne supporte pas le SLO, prévoir un fallback : déconnexion locale (détruire la session applicative et rediriger vers une page d’atterrissage).
 
-*7.2 Déconnexion locale sans SLO*
+h4. Déconnexion locale sans SLO
 
 Il est possible de déconnecter un utilisateur d’une appli sans mettre en œuvre le SLO SAML.
 
