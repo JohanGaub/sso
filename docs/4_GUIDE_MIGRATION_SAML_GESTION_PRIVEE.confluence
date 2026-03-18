@@ -15,9 +15,7 @@ h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
 
 ----
 
-h2. Schéma de flux (rappel)
-
-(SP-initiated, simplifié)
+h2. Schéma de flux (SP-initiated, simplifié)
 
 {noformat}
 [App/SP] --> Génère AuthnRequest --> Redirection vers IdP
