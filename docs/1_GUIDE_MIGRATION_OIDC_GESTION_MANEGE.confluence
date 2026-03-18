@@ -27,8 +27,8 @@ Pièges courants
 h2. Correspondance d’attributs (Legacy → Entra ID)
 
 En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les claims OIDC exposés par Entra ID. Cette table sert :
-- à l’équipe IAM pour configurer correctement les mappings côté IdP ;
-- au code applicatif pour lire les bons claims.
+* à l’équipe IAM pour configurer correctement les mappings côté IdP ;
+* au code applicatif pour lire les bons claims.
 
 || Description || Attribut Legacy || Claim Entra ID / OIDC ||
 |  |  |  |

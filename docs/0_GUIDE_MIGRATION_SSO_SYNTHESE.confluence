@@ -82,3 +82,26 @@ h2. 4. Glossaire (termes clés)
 | *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
 | *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
 | *SLO* | Single Logout – déconnexion unique : fermeture de session côté IdP et SP. |
+
+----
+
+h2. 5. Références officielles (Microsoft + standards OASIS)
+
+h3. OIDC / OAuth (Microsoft Entra ID)
+
+* [OAuth 2.0 authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
+* [OpenID Connect on the Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc)
+* [ID tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens) et [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference)
+
+h3. SAML (Microsoft Entra ID)
+
+* [Single sign-on SAML protocol (Microsoft identity platform)](https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol)
+* [Certificate signing options in a SAML token](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/certificate-signing-options)
+* [Customize SAML token claims](https://learn.microsoft.com/en-us/entra/identity-platform/saml-claims-customization)
+
+h3. SAML 2.0 (OASIS Standards)
+
+* [SAML 2.0 Core (Assertions and Protocols)](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
+* [SAML 2.0 Bindings](https://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf)
+* [SAML 2.0 Profiles](https://docs.oasis-open.org/security/saml/v2.0/saml-profiles-2.0-os.pdf)
+* [SAML 2.0 Metadata](https://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf)

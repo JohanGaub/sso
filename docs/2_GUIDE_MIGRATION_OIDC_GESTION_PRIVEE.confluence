@@ -190,14 +190,14 @@ Avant de configurer le flux, identifiez le type d'application côté OAuth2/OIDC
 | Client public | Application sans backend sécurisé (SPA JavaScript, app mobile, client lourd) | NON : impossible de protéger un client_secret dans le code envoyé à l'utilisateur | Authorization Code *avec PKCE*, sans client_secret (client public) |
 
 *À retenir :* « client public » n'est pas un état de l'utilisateur, mais un type d'application dans la configuration de l'IdP :
-- côté IdP, on déclare une application comme *confidentielle* (avec client_secret) ou *publique* (sans client_secret) ;
-- côté application, on utilise toujours le même client_id, mais :
-  - un client *confidentiel* envoie aussi un client_secret au token endpoint (étapes d et f) ;
-  - un client *public* n'a pas de client_secret et doit obligatoirement utiliser PKCE (code_verifier, code_challenge, code_challenge_method=S256) pour sécuriser l'échange du code.
+* côté IdP, on déclare une application comme *confidentielle* (avec client_secret) ou *publique* (sans client_secret) ;
+* côté application, on utilise toujours le même client_id, mais :
+** un client *confidentiel* envoie aussi un client_secret au token endpoint (étapes d et f) ;
+** un client *public* n'a pas de client_secret et doit obligatoirement utiliser PKCE (code_verifier, code_challenge, code_challenge_method=S256) pour sécuriser l'échange du code.
 
 En pratique :
-- backend sécurisé disponible → client confidentiel → Authorization Code (avec client_secret, PKCE recommandé) ;
-- pas de backend sécurisé (SPA, mobile, client lourd) → client public → Authorization Code + PKCE, sans client_secret.
+* backend sécurisé disponible → client confidentiel → Authorization Code (avec client_secret, PKCE recommandé) ;
+* pas de backend sécurisé (SPA, mobile, client lourd) → client public → Authorization Code + PKCE, sans client_secret.
 
 h3. PKCE (complément)
 
@@ -384,9 +384,3 @@ h2. Correspondance d’attributs (Legacy → Entra ID)
 |  |  |  |
 |  |  |  |
 |  |  |  |
-
-h2. Références officielles Microsoft (Entra ID)
-
-* [OAuth 2.0 authorization code flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow)
-* [OpenID Connect on the Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc)
-* [ID tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens) et [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference)
