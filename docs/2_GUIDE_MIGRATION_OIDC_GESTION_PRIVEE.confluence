@@ -10,13 +10,15 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 | 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | 2 | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes openid, profile, email + personnalisés). | Équipe IAM | À estimer | [ ] |
 | 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 4 | Configurer l'application (URLs, scopes, claims) et le callback. En pratique : l'app redirige l'utilisateur vers l'IdP ; l'IdP authentifie et renvoie un *code* ; l'app échange ce code contre *id_token* et *access_token* (avec {{code_verifier}} si PKCE, avec {{client_secret}} si sans PKCE) ; l'app crée la session et peut appeler UserInfo pour les claims. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 5 | Gérer les erreurs (redirect_uri, invalid_grant, consent) et tester le flux complet (connexion, déconnexion). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 4 | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 5 | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
 ----
 
 h2. Détail technique – Flux Authorization Code (Entra ID)
+
+*Les étapes a) à g)* ci-dessous sont le *parcours technique* une fois le client IdP disponible ; dans le *Suivi à réaliser*, elles correspondent surtout à l’*étape 4* (et sont préparées par les étapes *1* et *2*).
 
 Vue d'ensemble du processus :
 
@@ -31,6 +33,31 @@ g) Récupérer les informations utilisateur (optionnel) — appel à l'endpoint 
 {noformat}
 
 *Tableau maître – Paramètres OIDC utilisés dans ce guide*
+
+h3. Mini “liste de pannes” à tester (étape 5)
+
+Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
+
+* Login OK :
+** l’app reçoit le *code* (c),
+** obtient *id_token*/*access_token* au token endpoint (d),
+** et valide l’*ID Token* (e) avant de marquer l’utilisateur “connecté”.
+* Login échoué – `redirect_uri` :
+** un `redirect_uri` non conforme provoque un échec côté redirection/callback,
+** l’app affiche un message clair et ne tente pas d’échanger un code invalide.
+* Login échoué – `invalid_grant` :
+** le code est expiré / déjà utilisé / PKCE mal apparié,
+** l’échange au token endpoint (d) échoue,
+** l’app gère correctement l’erreur (pas de crash) et propose une nouvelle authentification.
+* Login échoué – `consent` :
+** l’utilisateur refuse ou ne valide pas,
+** l’app traite la réponse d’erreur et ne valide aucun token.
+* Logout / déconnexion :
+** l’app détruit la session locale (cookies/tokens/session serveur),
+** l’utilisateur n’est plus considéré comme connecté côté application.
+* (Optionnel) Refresh / UserInfo si demandés :
+** si `offline_access` est utilisé : vérifier que le refresh (f) remplace bien les tokens,
+** si UserInfo est utilisé : vérifier que g) renvoie les claims attendus.
 
 Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.
 
