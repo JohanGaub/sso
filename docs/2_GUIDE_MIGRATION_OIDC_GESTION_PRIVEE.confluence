@@ -2,6 +2,22 @@ h1. 2. Guide migration OIDC - Gestion privée
 
 Reconfigurer le flux OIDC dans l'application.
 
+h2. Mode d’emploi (développeur)
+
+Ce guide s’utilise comme une référence « par étapes » pour implémenter puis diagnostiquer le flux Authorization Code.
+
+h3. Mode opératoire (lecture)
+
+* Pass 1 : dans *Suivi à réaliser*, faites l’*étape 4*, puis exécutez *a)* à *g)* dans *Détail technique*.
+* Pass 2 : dans *Suivi à réaliser*, faites l’*étape 5*, puis suivez *h) Tester et diagnostiquer*.
+* Pass 3 : ouvrez *Paramètres OIDC*, *Attributs (Legacy → IdP)* ou *Pièges courants* seulement si une valeur/erreur précise bloque.
+
+h3. Ressources
+
+* Paramètres OIDC
+* Attributs (Legacy → IdP)
+* Pièges courants
+
 ----
 
 h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
@@ -33,27 +49,7 @@ g) Récupérer les informations utilisateur (optionnel) — appel à l'endpoint 
 h) Tester et diagnostiquer — exécuter les cas d’échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
 {noformat}
 
-*Tableau maître – Paramètres OIDC utilisés dans ce guide*
-
-Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.
-
-|| Paramètre || Rôle || Utilisé dans ||
-| tenant | Identifiant du tenant IdP (common, organizations, consumers, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | b) authorize, d) token, f) token (dans l'URL) |
-| client_id | Identifiant du client fourni par l'équipe raccordement applicatif. | b) authorize, d) token (code), f) token (refresh) |
-| client_secret | Secret du client ; à garder côté backend uniquement. | d) token (code), f) token (refresh) |
-| redirect_uri | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre b) et d). | b) authorize, d) token (code) |
-| scope | Scopes demandés (ex. openid, profile, offline_access). Obligatoire : openid. | b) authorize, d) token (code), f) token (refresh) |
-| state | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | b) authorize, c) callback |
-| nonce | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | b) authorize, e) validation ID Token |
-| code | Code d'autorisation à usage unique, courte durée (~1 min). À échanger contre les tokens. | c) callback (reçu), d) token (envoyé) |
-| grant_type | Type de flux OAuth : authorization_code (échange du code) ou refresh_token (rafraîchissement). | d) token (code), f) token (refresh) |
-| refresh_token | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope offline_access. | d) réponse token, f) token (envoyé) |
-| response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | b) authorize |
-| response_mode | Méthode de renvoi du code : query, fragment ou form_post. Défaut « code only » : query. | b) authorize |
-| session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | c) callback |
-| iss | Issuer : identifiant de l'émetteur (ex. `https://login.microsoftonline.com/<TENANT_ID>/v2.0`). | c) callback, e) validation ID Token |
-
-----
+ 
 
 h3. a) Récupérer les clés publiques (JWKS)
 
@@ -298,6 +294,28 @@ Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en 
 ** si `offline_access` est utilisé : vérifier que le refresh (f) remplace bien les tokens,
 ** si UserInfo est utilisé : vérifier que g) renvoie les claims attendus.
 
+h3. Paramètres OIDC
+
+Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.
+
+|| Paramètre || Rôle || Utilisé dans ||
+| tenant | Identifiant du tenant IdP (common, organizations, consumers, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | b) authorize, d) token, f) token (dans l'URL) |
+| client_id | Identifiant du client fourni par l'équipe raccordement applicatif. | b) authorize, d) token (code), f) token (refresh) |
+| client_secret | Secret du client ; à garder côté backend uniquement. | d) token (code), f) token (refresh) |
+| redirect_uri | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre b) et d). | b) authorize, d) token (code) |
+| scope | Scopes demandés (ex. openid, profile, offline_access). Obligatoire : openid. | b) authorize, d) token (code), f) token (refresh) |
+| state | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | b) authorize, c) callback |
+| nonce | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | b) authorize, e) validation ID Token |
+| code | Code d'autorisation à usage unique, courte durée (~1 min). À échanger contre les tokens. | c) callback (reçu), d) token (envoyé) |
+| grant_type | Type de flux OAuth : authorization_code (échange du code) ou refresh_token (rafraîchissement). | d) token (code), f) token (refresh) |
+| refresh_token | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope offline_access. | d) réponse token, f) token (envoyé) |
+| response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | b) authorize |
+| response_mode | Méthode de renvoi du code : query, fragment ou form_post. Défaut « code only » : query. | b) authorize |
+| session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | c) callback |
+| iss | Issuer : identifiant de l'émetteur (ex. `https://login.microsoftonline.com/<TENANT_ID>/v2.0`). | c) callback, e) validation ID Token |
+
+----
+
 h2. Schéma de flux (rappel)
 
 {noformat}
@@ -311,7 +329,7 @@ h2. Schéma de flux (rappel)
 
 ----
 
-h2. Préparer la correspondance d’attributs (Legacy → IdP)
+h2. Correspondance d’attributs (Legacy → IdP)
 
 À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC exposés par l'IdP, ex. Entra ID).
 
