@@ -316,7 +316,7 @@ Pour la définition des paramètres communs à plusieurs étapes, se référer a
 
 ----
 
-h2. Schéma de flux (rappel)
+h3. Schéma de flux (rappel)
 
 {noformat}
 [App] --> Redirection vers l'IdP (authorization endpoint ; inclut code_challenge si PKCE)
@@ -329,7 +329,7 @@ h2. Schéma de flux (rappel)
 
 ----
 
-h2. Correspondance d’attributs (Legacy → IdP)
+h2. Attributs (Legacy → IdP)
 
 À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC exposés par l'IdP, ex. Entra ID).
 
