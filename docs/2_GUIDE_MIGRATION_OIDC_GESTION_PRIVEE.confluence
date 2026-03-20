@@ -20,13 +20,15 @@ h2. Détail technique – Flux Authorization Code (Entra ID)
 
 Vue d'ensemble du processus :
 
-# *a) Récupérer les clés publiques (JWKS)* — avant la première authentification
-# *b) Rediriger l'utilisateur vers l'IdP* — requête GET vers l'URL d'autorisation
-# *c) Recevoir le code d'autorisation* — l'IdP redirige vers l'application avec un code et d'autres paramètres
-# *d) Échanger le code contre les tokens* — requête POST vers l'endpoint token
-# *e) Valider l'ID Token* — vérifier signature, audience, expiration et intégrité
-# *f) Rafraîchir l'Access Token (optionnel)* — requête POST vers l'endpoint token avec un refresh_token
-# *g) Récupérer les informations utilisateur (optionnel)* — appel à l'endpoint UserInfo avec l'Access Token
+{noformat}
+a) Récupérer les clés publiques (JWKS) — avant la première authentification
+b) Rediriger l'utilisateur vers l'IdP — requête GET vers l'URL d'autorisation
+c) Recevoir le code d'autorisation — l'IdP redirige vers l'application avec un code et d'autres paramètres
+d) Échanger le code contre les tokens — requête POST vers l'endpoint token
+e) Valider l'ID Token — vérifier signature, audience, expiration et intégrité
+f) Rafraîchir l'Access Token (optionnel) — requête POST vers l'endpoint token avec un refresh_token
+g) Récupérer les informations utilisateur (optionnel) — appel à l'endpoint UserInfo avec l'Access Token
+{noformat}
 
 *Tableau maître – Paramètres OIDC utilisés dans ce guide*
 
