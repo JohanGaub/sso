@@ -283,6 +283,17 @@ h2. Schéma de flux (rappel)
 
 ----
 
+h2. Préparer la correspondance d’attributs (Legacy → IdP)
+
+À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC exposés par l'IdP, ex. Entra ID).
+
+|| Description || Attribut Legacy || Claim Entra ID / OIDC (claim) ||
+|  |  |  |
+|  |  |  |
+|  |  |  |
+
+----
+
 h2. Pièges courants
 
 * *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre l'IdP et l'application.
@@ -373,14 +384,3 @@ const tokens = await tokenResponse.json(); // id_token, access_token
 {code}
 
 En pratique, les bibliothèques (openid-client, authlib, etc.) gèrent PKCE et l'en-tête {{Authorization}} ; il suffit de configurer {{client_secret}} et d'activer PKCE si besoin.
-
-----
-
-h2. Correspondance d’attributs (Legacy → Entra ID)
-
-À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC/Entra ID).
-
-|| Description || Attribut Legacy || Attribut Entra ID / OIDC (claim) ||
-|  |  |  |
-|  |  |  |
-|  |  |  |
