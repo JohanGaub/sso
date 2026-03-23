@@ -13,6 +13,12 @@ h3. Comment utiliser ce document ?
 # Parcourir les étapes pour situer où vous en êtes.
 # Choisir le guide détaillé correspondant à votre cas (tableau de routage, section 3) et suivre les étapes décrites dedans.
 
+h3. Mode d’emploi (2 min)
+
+* Si vous ne savez pas par où commencer : lisez *Pré-requis* puis *Choisir votre guide détaillé*.
+* Si vous êtes déjà en implémentation : utilisez ce document comme repère de pilotage (étapes communes), puis travaillez dans le guide dédié.
+* Si un doute est purement technique : allez directement dans le guide détaillé (OIDC/SAML, managée/privée).
+
 ----
 
 h2. 1. Pré‑requis
@@ -30,12 +36,12 @@ h2. 1. Pré‑requis
 
 h2. 2. Étapes communes de la migration
 
-|| Étape || Objectif || Acteurs ||
-| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative + équipe IAM |
-| 2 | Aligner les identités : définir les claims/attributs nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + équipe IAM |
-| 3 | Si gestion privée : valider le flux d'authentification (OIDC flux par code, SAML SP/IdP‑initiated, ACS, SLO) | Équipe applicative + équipe IAM |
-| 4 | Actualiser l'application : configuration (URLs, clients, certificats) + lecture et usage des infos d'authentification côté code | Équipe applicative |
-| 5 | Tester la migration : scénarios de connexion / déconnexion / erreurs sur dev puis préprod, avant passage en prod | Équipe applicative + équipe IAM |
+|| Étape || Objectif || Acteurs || Sortie attendue ||
+| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative + équipe IAM | Guide cible identifié (1, 2, 3 ou 4). |
+| 2 | Aligner les identités : définir les claims/attributs nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + équipe IAM | Liste d’attributs/claims validée avec l’IAM. |
+| 3 | Si gestion privée : valider le flux d'authentification (OIDC flux par code, SAML SP/IdP‑initiated, ACS, SLO) | Équipe applicative + équipe IAM | Stratégie de flux validée (si gestion privée). |
+| 4 | Actualiser l'application : configuration (URLs, clients, certificats) + lecture et usage des infos d'authentification côté code | Équipe applicative | Configuration applicative + lecture des attributs/claims implémentées. |
+| 5 | Tester la migration : scénarios de connexion / déconnexion / erreurs sur dev puis préprod, avant passage en prod | Équipe applicative + équipe IAM | Tests dev/préprod validés avant passage en prod. |
 
 Les étapes ci‑dessus donnent une vue d'ensemble du process ; le suivi concret (étapes détaillées, acteurs, pièges) se fait dans le guide choisi (section 3).
 

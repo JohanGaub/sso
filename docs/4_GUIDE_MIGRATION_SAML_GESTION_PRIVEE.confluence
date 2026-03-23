@@ -210,8 +210,9 @@ Checklist rapide (ce que vérifier en priorité) :
 * g) déconnexion : stratégie validée (SLO si activé, sinon locale)
 
 En cas de doute, activez des logs détaillés en dev/preprod (sans données sensibles), et gardez des messages clairs en production (attribut manquant/invalide, signature refusée, etc.).
+Si le blocage concerne la validation de signature, revenez d’abord à *c) Vérifier la signature SAML* puis à *Checklist de validation minimale (dev-first)*.
 
-*Definition of Done (DoD) — validation minimale avant livraison*
+h4. Definition of Done (DoD) — validation minimale avant livraison
 
 * Login OK validé sur le parcours nominal.
 * Login KO correctement rejeté (signature/certificat/issuer/binding incohérent).

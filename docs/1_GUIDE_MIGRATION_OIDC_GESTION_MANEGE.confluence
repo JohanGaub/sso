@@ -5,6 +5,7 @@ En gestion managée, l'équipe IAM gère la mécanique OIDC. Vous ne traitez que
 h2. Mode d’emploi (développeur)
 
 Ce guide s’utilise pour préparer les claims avec l’IAM, documenter la correspondance d’attributs, puis adapter la lecture côté application.
+Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse en 1 page*.
 
 h3. Mode opératoire (lecture)
 
@@ -66,6 +67,8 @@ h3. Tester et diagnostiquer (2 min)
 * Cas 1 (nominal) : les claims attendus sont présents et consommés côté code.
 * Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
 * Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. role inconnu) ; le comportement de repli est maîtrisé.
+
+*Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
 
 ----
 

@@ -298,6 +298,23 @@ Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en 
 ** si `offline_access` est utilisé : vérifier que le refresh (f) remplace bien les tokens,
 ** si UserInfo est utilisé : vérifier que g) renvoie les claims attendus.
 
+h3. Checklist rapide (dev-first)
+
+* `state` callback validé avant appel `/token`.
+* `iss`/`aud`/`ver` validés (et `tid` si mono-tenant).
+* `redirect_uri` strictement identique entre authorize et token.
+* Gestion d’erreur stable (`invalid_grant`, consent refusé, callback invalide).
+
+h3. Definition of Done (DoD) — validation minimale avant livraison
+
+* Login OK validé sur le parcours nominal.
+* Login KO correctement rejeté (sans crash, message clair).
+* Claims attendus validés (id_token et/ou UserInfo selon architecture).
+* Déconnexion locale validée côté application.
+* Logs exploitables en cas d’échec, sans fuite de données sensibles.
+
+*Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).
+
 h3. Paramètres OIDC
 
 Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.

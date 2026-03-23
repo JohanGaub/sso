@@ -5,6 +5,7 @@ Attributs SAML uniquement ; la mécanique du flux est gérée par l'équipe IAM.
 h2. Mode d’emploi (développeur)
 
 Ce guide s’utilise pour cadrer les attributs SAML avec l’IAM, documenter le mapping Legacy → IdP, puis adapter la lecture côté application.
+Pour les définitions transverses (SAML, SP, ACS, SLO, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse en 1 page*.
 
 h3. Mode opératoire (lecture)
 
@@ -38,6 +39,7 @@ En gestion managée, le livrable principal côté dev est souvent la table de co
 * au code applicatif pour lire les bons attributs.
 
 *À faire absolument :* figer les noms exacts des attributs attendus (casse incluse) avant d’implémenter la lecture côté code.
+Format à transmettre à l’IAM pour chaque attribut : *Description* + *Attribut Legacy* + *Attribut SAML (Name / NameFormat)*.
 
 || Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
 |  |  |  |
@@ -64,6 +66,8 @@ h3. Tester et diagnostiquer (2 min)
 * Décodage rapide : récupérer l’Assertion SAML reçue au callback SP.
 * Contrôle prioritaire : vérifier d’abord la signature, puis la présence des attributs attendus.
 * Vérification mapping : comparer les noms d’attributs reçus avec *Attributs (Legacy → IdP)* avant d’ajuster le code.
+
+*Sortie attendue :* mapping attributaire validé et exploitable côté application.
 
 ----
 
