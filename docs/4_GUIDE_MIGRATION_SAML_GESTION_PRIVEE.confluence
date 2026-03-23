@@ -67,6 +67,7 @@ Avec les métadonnées produites/échangées (étapes 2 et 3 du *Suivi à réali
 * EntityID du SP et endpoint ACS (URL de callback).
 * URL de SSO de l’IdP et certificat x509 de signature (issu des métadonnées IdP).
 * Paramètres attendus côté SP (issuer/EntityID, et audience si applicable) + activation de la vérification de signature.
+* Requête AuthnRequest côté SP : `Issuer` doit correspondre exactement à l’identifiant déclaré côté Entra ID, et `ID` doit être unique (et ne pas commencer par un chiffre) pour sécuriser le contrôle `InResponseTo`.
 
 h3. b) Définir le NameID
 
@@ -146,12 +147,13 @@ Comportement attendu côté application (SP) :
 * Response SAML → en pratique, reçue en HTTP-POST (IdP → SP, vers l’ACS).
 
 Ces bindings suivent le profil SAML 2.0 “Web Browser SSO” et constituent le mode de fonctionnement par défaut avec Entra ID.
+Pour le *single logout* SAML avec Entra ID, le binding utilisé est HTTP-Redirect (GET), pas HTTP-POST.
 
 h3. f) Implémenter le callback ACS (Response + NameID/attributs + création de session)
 
 Déclenchez votre logique d’authentification à l’URL ACS :
 * Réception : récupérer la Response SAML soumise en POST.
-* Validation : vérifier la signature au niveau configuré (Response et/ou Assertion), puis contrôler issuer et fenêtre de validité (et correlation InResponseTo pour le SP-initiated).
+* Validation : vérifier la signature au niveau configuré (Response et/ou Assertion), puis contrôler issuer, audience, fenêtre de validité, et correlation `InResponseTo` (doit correspondre à l’`ID` AuthnRequest émise côté SP en mode SP-initiated).
 * Extraction : lire le NameID et les attributs depuis l’Assertion, puis appliquer le mapping de la section *Attributs (Legacy → IdP)*.
 * Session : créer la session applicative (et stocker ce qui est nécessaire côté app), puis finaliser la redirection/retour.
 
@@ -166,8 +168,8 @@ h4. Single Logout (SLO) SAML
 * Le SLO permet de synchroniser la déconnexion entre IdP et SP :
 ** une déconnexion initiée par l’utilisateur ou par une appli peut fermer les sessions SSO sur les autres applis fédérées via le même IdP.
 * Dans Entra ID :
-** le SLO est pris en charge mais pas activé par défaut ;
-** il doit être configuré au niveau de l’appli SAML si le SP le requiert.
+** le SLO est pris en charge, mais nécessite une configuration explicite de la `LogoutURL` côté application Entra ID ;
+** le flux SLO Entra ID utilise le binding HTTP-Redirect (GET).
 * Côté SP :
 ** exposer un endpoint de déconnexion (`SingleLogoutService`) ;
 ** accepter et traiter les messages `LogoutRequest` / `LogoutResponse`.
