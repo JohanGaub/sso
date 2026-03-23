@@ -277,6 +277,7 @@ h3. h) Tester et diagnostiquer
 
 Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
 Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert de contrôle immédiat, et la *DoD* sert de validation finale avant livraison.
+*Entrée attendue :* étapes a) à g) implémentées et exécutables dans l’environnement de test.
 
 * Login OK :
 ** l’app reçoit le *code* (c),

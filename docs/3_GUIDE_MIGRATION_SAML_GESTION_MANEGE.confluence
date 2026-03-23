@@ -64,6 +64,7 @@ h3. Checklist de validation minimale (dev-first)
 h3. Tester et diagnostiquer (2 min)
 
 Cette section décrit *les scénarios à exécuter*. La *Checklist de validation minimale* sert de contrôle immédiat avant clôture.
+*Entrée attendue :* mapping attributaire renseigné et assertions SAML accessibles en test.
 
 * Décodage rapide : récupérer l’Assertion SAML reçue au callback SP.
 * Contrôle prioritaire : vérifier d’abord la signature, puis la présence des attributs attendus.

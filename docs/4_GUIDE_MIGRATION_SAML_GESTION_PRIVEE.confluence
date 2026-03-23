@@ -195,6 +195,7 @@ h3. h) Tester et diagnostiquer
 
 Objectif : valider que l’enchaînement a) → g) produit une connexion correcte et robuste.
 Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert de contrôle immédiat, et la *DoD* sert de validation finale avant livraison.
+*Entrée attendue :* étapes a) à g) implémentées et exécutables dans l’environnement de test.
 
 Cas à tester :
 * login OK (SP-initiated et/ou IdP-initiated selon votre scénario)
@@ -221,6 +222,8 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Mapping d’attributs validé (NameID + attributs attendus).
 * Déconnexion validée (SLO si activé, sinon locale).
 * Logs exploitables en cas d’échec, sans fuite de données sensibles.
+
+*Sortie attendue :* flux SAML opérationnel et diagnostiquable de bout en bout (login, erreurs, logout).
 
 h2. Attributs (Legacy → IdP)
 

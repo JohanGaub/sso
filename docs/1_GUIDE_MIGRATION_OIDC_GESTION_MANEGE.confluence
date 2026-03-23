@@ -65,12 +65,21 @@ h3. Checklist de validation minimale (dev-first)
 
 h3. Tester et diagnostiquer (2 min)
 
+*Entrée attendue :* mapping claims validé avec l’IAM et lecture implémentée côté application.
+
 * Cas 1 (nominal) : les claims attendus sont présents et consommés côté code.
 * Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
 * Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. role inconnu) ; le comportement de repli est maîtrisé.
 * En cas d’échec : revenez à *Attributs (Legacy → IdP)*, corrigez le mapping IAM/côté code, puis rejouez les 3 cas.
 
 *Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
+
+h3. Definition of Done (DoD) — validation minimale avant livraison
+
+* Claims attendus lus sans erreur dans le cas nominal.
+* Claim manquant géré sans crash.
+* Claim invalide géré avec comportement maîtrisé.
+* Logs exploitables en dev/preprod et sûrs en production.
 
 ----
 

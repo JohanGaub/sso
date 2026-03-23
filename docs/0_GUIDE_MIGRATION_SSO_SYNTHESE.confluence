@@ -20,6 +20,12 @@ h3. Mode d’emploi (2 min)
 * Si un doute est purement technique : allez directement dans le guide détaillé (OIDC/SAML, managée/privée).
 * Si vous hésitez entre deux guides : utilisez la règle simple en section 3 (*protocole* + *mode*).
 
+h3. Chemin de lecture rapide
+
+* Je démarre : vérifier *Pré-requis* puis identifier le guide cible en section 3.
+* Je déroule : suivre les étapes communes avec leur *Sortie attendue*.
+* Je bloque techniquement : basculer immédiatement dans le guide détaillé correspondant.
+
 ----
 
 h2. 1. Pré‑requis
