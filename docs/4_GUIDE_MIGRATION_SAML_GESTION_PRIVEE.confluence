@@ -3,20 +3,54 @@ h1. 4. Guide migration SAML - Gestion privée
 Reconfigurer le flux SAML (métadonnées, endpoints, binding, attributs) dans l'application.
 
 ----
+h2. Mode d’emploi (développeur)
 
-h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
+Ce guide s’utilise comme une référence « par étapes » pour déployer le flux SAML côté SP et diagnostiquer les échecs.
+
+h3. Mode opératoire (lecture)
+
+* Pass 1 : dans *Suivi à réaliser*, faites l’*étape 4*, puis exécutez *a)* à *g)* dans *Détail technique*.
+* Pass 2 : dans *Suivi à réaliser*, faites l’*étape 5*, puis suivez *h) Tester et diagnostiquer*.
+* Pass 3 : ouvrez *Attributs (Legacy → IdP)*, *Pièges courants* ou *Exemples de code* seulement si une erreur précise bloque.
+
+h3. Ressources
+
+* Attributs (Legacy → IdP)
+* Pièges courants
+* Exemples de code
+
+----
+
+h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 3 | Enregistrer les métadonnées SP chez l'IdP et fournir les métadonnées IdP. | Équipe IAM | À estimer | [ ] |
-| 4 | Configurer l'application : bibliothèque SAML, URLs IdP, certificats, et mapping attributs (voir `Choisir le binding` + `Préparer la correspondance d’attributs` + `Exemples de code`). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 5 | Implémenter le callback ACS (réception Response SAML, vérification signature, lecture des attributs) et tester le flux complet (connexion, attributs, déconnexion SLO si applicable) (voir `Vérifier la signature SAML` + checklist + `Pièges courants`). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 3 | Enregistrer les métadonnées SP chez l'IdP et récupérer les métadonnées IdP. | Équipe IAM | À estimer | [ ] |
+| 4 | Implémenter le flux SAML côté appli : a) config bibliothèque/métadonnées, b) NameID, c) signature, d) mode d’initiation, e) binding, f) callback ACS, g) déconnexion (voir *Détail technique*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+| 5 | Tester le flux complet : login OK / login échoué / déconnexion (SLO si applicable, sinon fallback) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
 | Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
 ----
 
-h2. Schéma de flux (SP-initiated, simplifié)
+h2. Détail technique – Flux SAML 2.0 (Entra ID)
+
+*Les étapes a) à g)* ci-dessous correspondent au déploiement côté SP ; dans le *Suivi à réaliser*, elles sont couvertes par l’*étape 4*. Le *test et diagnostic* (h) est couvert par l’*étape 5*.
+
+Vue d'ensemble du processus :
+
+{noformat}
+a) Configurer la bibliothèque SAML avec les métadonnées/certificats
+b) Définir le NameID
+c) Vérifier la signature SAML
+d) Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
+e) Choisir le binding (HTTP-POST vs HTTP-Redirect)
+f) Implémenter le callback ACS (Response + NameID/attributs + création de session)
+g) Gérer la déconnexion (SAML SLO vs déconnexion locale)
+h) Tester et diagnostiquer
+{noformat}
+
+h3. Schéma de flux (SP-initiated, simplifié)
 
 {noformat}
 [App/SP] --> Génère AuthnRequest --> Redirection vers IdP
@@ -26,11 +60,14 @@ h2. Schéma de flux (SP-initiated, simplifié)
 [SP] --> Création de session
 {noformat}
 
-h2. Mettre en œuvre le flux SAML 2.0 (spécificités Entra ID)
+h3. a) Configurer la bibliothèque SAML avec les métadonnées/certificats
 
-Pour configurer correctement le flux SAML avec Entra ID, quelques notions clés sont utiles.
+Avec les métadonnées produites/échangées (étapes 2 et 3 du *Suivi à réaliser*), configurez votre bibliothèque SAML :
+* EntityID du SP et endpoint ACS (URL de callback).
+* URL de SSO de l’IdP et certificat x509 de signature (issu des métadonnées IdP).
+* Paramètres attendus côté SP (issuer/EntityID, et audience si applicable) + activation de la vérification de signature.
 
-h3. Définir le NameID
+h3. b) Définir le NameID
 
 Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 
@@ -45,7 +82,7 @@ Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 ** si aucun format n’est demandé, Entra ID applique le format configuré côté application (par défaut : `unspecified`) ;
 ** pour `transient`, si le SP le demande, Entra ID renvoie une valeur aléatoire unique à l’opération SSO (valeur temporaire, non réutilisable).
 
-h3. Vérifier la signature SAML
+h3. c) Vérifier la signature SAML
 
 Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact de la signature est un paramètre de configuration* (réponse, assertion, ou les deux).
 Dans la pratique, votre bibliothèque doit être capable de vérifier la signature au bon niveau : *Response* (élément `samlp:Response`), *Assertion* (élément `saml:Assertion`), ou les deux, selon ce qui est configuré côté IdP.
@@ -74,7 +111,7 @@ Dans la pratique, votre bibliothèque doit être capable de vérifier la signatu
 * Fenêtre de validité : `NotBefore` / `NotOnOrAfter` cohérents (horloge serveur à l’heure).
 * Correlation : `InResponseTo` correspond à l’AuthnRequest envoyée (en SP-initiated).
 
-h3. Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
+h3. d) Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
 
 * *SP-initiated SSO* (mode recommandé et illustré dans le schéma) :
 ** l’utilisateur commence par accéder à l’appli (SP) ;
@@ -90,7 +127,32 @@ Ce mode est supporté par Entra ID mais n’est pas le scénario recommandé par
 * exposer une URL ACS cohérente avec la configuration Entra ID ;
 * accepter la Response SAML reçue, quel que soit le mode d’initiation.
 
-h3. Gérer la déconnexion (SAML SLO vs déconnexion locale)
+h3. e) Choisir le binding (HTTP-POST vs HTTP-Redirect)
+
+Deux bindings SAML sont utilisés dans Entra ID :
+
+* *HTTP-POST* (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`) :
+** les messages SAML (notamment la Response contenant l’Assertion) sont transmis via un formulaire HTML encodé en Base64 et envoyés en POST vers l’ACS du SP.
+
+* *HTTP-Redirect* (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect`) :
+** les messages SAML (ex. AuthnRequest) sont passés en paramètres d’URL et envoyés via une redirection HTTP.
+
+Comportement attendu côté application (SP) :
+
+* AuthnRequest → en pratique, envoyée en HTTP-Redirect (SP → IdP) ;
+* Response SAML → en pratique, reçue en HTTP-POST (IdP → SP, vers l’ACS).
+
+Ces bindings suivent le profil SAML 2.0 “Web Browser SSO” et constituent le mode de fonctionnement par défaut avec Entra ID.
+
+h3. f) Implémenter le callback ACS (Response + NameID/attributs + création de session)
+
+Déclenchez votre logique d’authentification à l’URL ACS :
+* Réception : récupérer la Response SAML soumise en POST.
+* Validation : vérifier la signature au niveau configuré (Response et/ou Assertion), puis contrôler issuer et fenêtre de validité (et correlation InResponseTo pour le SP-initiated).
+* Extraction : lire le NameID et les attributs depuis l’Assertion, puis appliquer le mapping de la section *Attributs (Legacy → IdP)*.
+* Session : créer la session applicative (et stocker ce qui est nécessaire côté app), puis finaliser la redirection/retour.
+
+h3. g) Gérer la déconnexion (SAML SLO vs déconnexion locale)
 
 Deux cas sont possibles : mise en œuvre du SLO SAML, ou déconnexion locale (fallback).
 
@@ -122,26 +184,28 @@ Il est possible de déconnecter un utilisateur d’une appli sans mettre en œuv
 ** elle est plus simple à mettre en œuvre ;
 ** si une URL de retour est utilisée, elle doit être déclarée dans la configuration de l’appli dans Entra ID.
 
-h3. Choisir le binding (HTTP-POST vs HTTP-Redirect)
+h3. h) Tester et diagnostiquer
 
-Deux bindings SAML sont utilisés dans Entra ID :
+Objectif : valider que l’enchaînement a) → g) produit une connexion correcte et robuste.
 
-* *HTTP-POST* (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`) :
-** les messages SAML (notamment la Response contenant l’Assertion) sont transmis via un formulaire HTML encodé en Base64 et envoyés en POST vers l’ACS du SP.
+Cas à tester :
+* login OK (SP-initiated et/ou IdP-initiated selon votre scénario)
+* login échoué : signature invalide / mauvais certificat, issuer inattendu, binding incorrect
+* attributs manquants ou inattendus : NameID absent, attribut non mappé
+* déconnexion : SLO si activé, sinon déconnexion locale (fallback)
 
-* *HTTP-Redirect* (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect`) :
-** les messages SAML (ex. AuthnRequest) sont passés en paramètres d’URL et envoyés via une redirection HTTP.
+Checklist rapide (ce que vérifier en priorité) :
+* a) métadonnées/certificats : bon ACS/EntityID + bon certificat de signature
+* c) signature : niveau Response/Assertion conforme à la config IdP
+* d) mode d’initiation : le SP accepte bien le type de réponse attendu
+* f) binding : Response reçue en POST sur l’ACS attendu
+* g) callback : extraction correcte et mapping appliqué
 
-Comportement attendu côté application (SP) :
+En cas de doute, activez des logs détaillés en dev/preprod (sans données sensibles), et gardez des messages clairs en production (claim manquant/invalide, signature refusée, etc.).
 
-* AuthnRequest → en pratique, envoyée en HTTP-Redirect (SP → IdP) ;
-* Response SAML → en pratique, reçue en HTTP-POST (IdP → SP, vers l’ACS).
+h2. Attributs (Legacy → IdP)
 
-Ces bindings suivent le profil SAML 2.0 “Web Browser SSO” et constituent le mode de fonctionnement par défaut avec Entra ID.
-
-h2. Préparer la correspondance d’attributs (Legacy → IdP)
-
-En gestion privée, au-delà du flux, le livrable côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
+En gestion privée, le livrable côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
 * à l’équipe IAM pour configurer correctement les mappings côté IdP ;
 * au code applicatif pour lire les bons attributs dans l’Assertion.
 
