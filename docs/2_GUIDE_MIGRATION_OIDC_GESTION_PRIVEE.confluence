@@ -22,12 +22,12 @@ h3. Ressources
 
 h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
-|| Étape || Action || Acteur || Durée || Réalisée ||
-| 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 2 | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes openid, profile, email + personnalisés). | Équipe IAM | À estimer | [ ] |
-| 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 4 | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 5 | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+|| Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
+| 1 | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Décision PKCE formalisée et partagée avec l'IAM. | [ ] |
+| 2 | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes openid, profile, email + personnalisés). | Équipe IAM | À estimer | Client IdP configuré et utilisable en environnement cible. | [ ] |
+| 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Accès local désactivé, parcours SSO unique documenté. | [ ] |
+| 4 | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | [ ] |
+| 5 | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés et diagnostics exploitables. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
 ----
@@ -276,6 +276,7 @@ Certaines informations d'identité sont directement présentes dans l'id_token (
 h3. h) Tester et diagnostiquer
 
 Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
+Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert de contrôle immédiat, et la *DoD* sert de validation finale avant livraison.
 
 * Login OK :
 ** l’app reçoit le *code* (c),
@@ -297,6 +298,7 @@ Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en 
 * (Optionnel) Refresh / UserInfo si demandés :
 ** si `offline_access` est utilisé : vérifier que le refresh (f) remplace bien les tokens,
 ** si UserInfo est utilisé : vérifier que g) renvoie les claims attendus.
+* En cas d’échec : revenir à l’étape concernée (c, d, e, f ou g), corriger, puis rejouer le scénario avant de passer au suivant.
 
 h3. Checklist rapide (dev-first)
 
