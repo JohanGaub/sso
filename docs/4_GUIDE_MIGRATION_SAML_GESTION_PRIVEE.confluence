@@ -107,7 +107,7 @@ Dans la pratique, votre bibliothèque doit être capable de vérifier la signatu
 
 *À retenir :* ne jamais désactiver la vérification de signature en production « pour que ça marche ».
 
-*Checklist de validation minimale (dev-first)*
+h4. Checklist de validation minimale (dev-first)
 
 * Signature SAML : présente et valide (Response et/ou Assertion, selon config).
 * Issuer : correspond à l’IdP attendu (éviter toute confusion d’environnement).
@@ -205,8 +205,9 @@ Checklist rapide (ce que vérifier en priorité) :
 * a) métadonnées/certificats : bon ACS/EntityID + bon certificat de signature
 * c) signature : niveau Response/Assertion conforme à la config IdP
 * d) mode d’initiation : le SP accepte bien le type de réponse attendu
-* f) binding : Response reçue en POST sur l’ACS attendu
-* g) callback : extraction correcte et mapping appliqué
+* e) binding : Response reçue en POST sur l’ACS attendu
+* f) callback : extraction correcte et mapping appliqué
+* g) déconnexion : stratégie validée (SLO si activé, sinon locale)
 
 En cas de doute, activez des logs détaillés en dev/preprod (sans données sensibles), et gardez des messages clairs en production (attribut manquant/invalide, signature refusée, etc.).
 
