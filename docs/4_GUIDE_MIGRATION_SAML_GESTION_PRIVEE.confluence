@@ -15,6 +15,7 @@ h3. Mode opératoire (lecture)
 
 h3. Ressources
 
+* Schéma de flux (SP-initiated, simplifié)
 * Attributs (Legacy → IdP)
 * Pièges courants
 * Exemples de code
@@ -83,6 +84,8 @@ Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 ** pour `transient`, si le SP le demande, Entra ID renvoie une valeur aléatoire unique à l’opération SSO (valeur temporaire, non réutilisable).
 
 h3. c) Vérifier la signature SAML
+
+*À faire absolument :* activer la vérification de signature côté SP et refuser toute réponse non conforme.
 
 Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact de la signature est un paramètre de configuration* (réponse, assertion, ou les deux).
 Dans la pratique, votre bibliothèque doit être capable de vérifier la signature au bon niveau : *Response* (élément `samlp:Response`), *Assertion* (élément `saml:Assertion`), ou les deux, selon ce qui est configuré côté IdP.
@@ -154,6 +157,8 @@ Déclenchez votre logique d’authentification à l’URL ACS :
 
 h3. g) Gérer la déconnexion (SAML SLO vs déconnexion locale)
 
+*À faire absolument :* choisir explicitement une stratégie de déconnexion (SLO ou locale) et la tester.
+
 Deux cas sont possibles : mise en œuvre du SLO SAML, ou déconnexion locale (fallback).
 
 h4. Single Logout (SLO) SAML
@@ -201,7 +206,15 @@ Checklist rapide (ce que vérifier en priorité) :
 * f) binding : Response reçue en POST sur l’ACS attendu
 * g) callback : extraction correcte et mapping appliqué
 
-En cas de doute, activez des logs détaillés en dev/preprod (sans données sensibles), et gardez des messages clairs en production (claim manquant/invalide, signature refusée, etc.).
+En cas de doute, activez des logs détaillés en dev/preprod (sans données sensibles), et gardez des messages clairs en production (attribut manquant/invalide, signature refusée, etc.).
+
+*Definition of Done (DoD) — validation minimale avant livraison*
+
+* Login OK validé sur le parcours nominal.
+* Login KO correctement rejeté (signature/certificat/issuer/binding incohérent).
+* Mapping d’attributs validé (NameID + attributs attendus).
+* Déconnexion validée (SLO si activé, sinon locale).
+* Logs exploitables en cas d’échec, sans fuite de données sensibles.
 
 h2. Attributs (Legacy → IdP)
 
