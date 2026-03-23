@@ -54,7 +54,7 @@ h2. Pièges courants
 * Signature et chiffrement : ne pas désactiver la vérification de signature en production.
 * Logs : en dev/preprod, tracer les attributs reçus ; en production, conserver des messages clairs sans données sensibles.
 
-h3. Checklist de validation minimale (dev-first)
+h4. Checklist de validation minimale (dev-first)
 
 * Assertion reçue et signature valide.
 * Attributs attendus présents avec les bons noms.

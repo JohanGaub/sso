@@ -308,14 +308,14 @@ Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert 
 | Claims manquants ou incomplets | g) UserInfo (si utilisé), puis *Attributs (Legacy → IdP)* |
 | Erreur après expiration de session | f) Refresh Token (si utilisé), sinon relancer le login |
 
-h3. Checklist rapide (dev-first)
+h4. Checklist rapide (dev-first)
 
 * `state` callback validé avant appel `/token`.
 * `iss`/`aud`/`ver` validés (et `tid` si mono-tenant).
 * `redirect_uri` strictement identique entre authorize et token.
 * Gestion d’erreur stable (`invalid_grant`, consent refusé, callback invalide).
 
-h3. Definition of Done (DoD) — validation minimale avant livraison
+h4. Definition of Done (DoD) — validation minimale avant livraison
 
 * Login OK validé sur le parcours nominal.
 * Login KO correctement rejeté (sans crash, message clair).

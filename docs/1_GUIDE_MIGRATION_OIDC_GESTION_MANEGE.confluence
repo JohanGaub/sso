@@ -56,7 +56,7 @@ h2. Pièges courants
 ** en développement/préproduction : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
 ** en production : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu'un claim attendu est manquant ou invalide.
 
-h3. Checklist de validation minimale (dev-first)
+h4. Checklist de validation minimale (dev-first)
 
 * Claims attendus présents et exploitables côté code.
 * Noms de claims conformes au mapping validé avec l’IAM.
@@ -74,7 +74,7 @@ h3. Tester et diagnostiquer (2 min)
 
 *Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
 
-h3. Definition of Done (DoD) — validation minimale avant livraison
+h4. Definition of Done (DoD) — validation minimale avant livraison
 
 * Claims attendus lus sans erreur dans le cas nominal.
 * Claim manquant géré sans crash.
