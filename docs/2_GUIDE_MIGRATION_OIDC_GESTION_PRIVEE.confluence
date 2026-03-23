@@ -79,7 +79,7 @@ Réf. [Request an authorization code](https://learn.microsoft.com/en-us/entra/id
 
 *Paramètres de la requête d'autorisation*
 
-Voir *tableau maître* pour tenant, client_id, redirect_uri, scope, state, nonce, response_mode.
+Voir *Paramètres OIDC* pour tenant, client_id, redirect_uri, scope, state, nonce, response_mode.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
 | response_type | code | Obligatoire pour le flux Authorization Code : on demande un *code*, pas un token directement. |
@@ -95,12 +95,14 @@ Après authentification, l'IdP redirige le navigateur vers redirect_uri. L'URL c
 https://redirect.example.com/callback?code=<CODE>&state=<STATE>&session_state=<SESSION_STATE>&iss=https%3A%2F%2Flogin.microsoftonline.com%2F<TENANT_ID>%2Fv2.0
 {noformat}
 
-Voir *tableau maître* pour code, state, session_state, iss.
+Voir *Paramètres OIDC* pour code, state, session_state, iss.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
-| code | code (reçu de l'IdP) | À échanger rapidement en POST vers /token (étape d). Usage unique, courte durée (~1 min). |
+| code | code (reçu de l'IdP) | À échanger rapidement en POST vers /token (étape d). Usage unique, courte durée. |
 | state | state (identique à celui envoyé en b) | Comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF). |
-| session_state, iss | (Si présents) | Optionnels ; voir tableau maître. |
+| session_state, iss | (Si présents) | Optionnels ; voir Paramètres OIDC. |
+
+*À faire absolument :* vérifier que `state` reçu en callback est strictement identique à la valeur stockée avant de lancer l’échange du code (d).
 
 h3. d) Échanger le code contre les tokens
 
@@ -123,7 +125,7 @@ Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entr
 
 *Corps de la requête (application/x-www-form-urlencoded)*
 
-Voir *tableau maître* pour client_id, client_secret, code, redirect_uri, scope.
+Voir *Paramètres OIDC* pour client_id, client_secret, code, redirect_uri, scope.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
 | grant_type | authorization_code | Obligatoire : indique l'échange du code contre les tokens. |
@@ -180,6 +182,8 @@ L'application doit vérifier la signature du JWT puis les claims. Les applicatio
 | kid (en-tête) | chaîne | Identifiant de la clé. Utiliser la clé correspondante (récupérée via jwks_uri) pour vérifier la signature |
 | Signature | JWS | Signature calculée avec la clé privée de l'IdP. Validation avec la clé publique (kid). Tenir compte du [signing key rollover](https://learn.microsoft.com/en-us/entra/identity-platform/signing-key-rollover) |
 
+*À faire absolument :* valider `iss` et `aud` avec les valeurs attendues, et vérifier `ver` (`2.0` dans ce guide) ; si l’application est mono-tenant, vérifier aussi `tid` contre le tenant autorisé.
+
 h3. Choisir le type de client (confidentiel vs public)
 
 Avant de configurer le flux, identifiez le type d'application côté OAuth2/OIDC :
@@ -224,7 +228,7 @@ Si le scope offline_access est demandé et accordé, l'IdP peut renvoyer un refr
 
 Le backend appelle à nouveau l'endpoint {{token}} (même URL qu'en d)) en POST. Corps : {{application/x-www-form-urlencoded}}.
 
-Voir *tableau maître* pour client_id, client_secret, scope, refresh_token.
+Voir *Paramètres OIDC* pour client_id, client_secret, scope, refresh_token.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
 | grant_type | refresh_token | Obligatoire : indique le rafraîchissement via un Refresh Token. |
@@ -252,7 +256,7 @@ Certaines informations d'identité sont directement présentes dans l'id_token (
 *Appel UserInfo*
 
 || Élément || Exemple || Rôle ||
-| Endpoint UserInfo | {{https://graph.microsoft.com/oidc/userinfo}} | Dans le cas d'Entra ID avec Microsoft Graph comme UserInfo. |
+| Endpoint UserInfo | Valeur de `userinfo_endpoint` (discovery OIDC) | Utiliser l’endpoint publié par le document de découverte, plutôt qu’une URL codée en dur. |
 | Méthode | GET | Récupération des informations utilisateur. |
 | Authorization | `Authorization: Bearer <ACCESS_TOKEN>` | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
 
@@ -306,7 +310,7 @@ Pour la définition des paramètres communs à plusieurs étapes, se référer a
 | scope | Scopes demandés (ex. openid, profile, offline_access). Obligatoire : openid. | b) authorize, d) token (code), f) token (refresh) |
 | state | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | b) authorize, c) callback |
 | nonce | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | b) authorize, e) validation ID Token |
-| code | Code d'autorisation à usage unique, courte durée (~1 min). À échanger contre les tokens. | c) callback (reçu), d) token (envoyé) |
+| code | Code d'autorisation à usage unique, courte durée. À échanger contre les tokens. | c) callback (reçu), d) token (envoyé) |
 | grant_type | Type de flux OAuth : authorization_code (échange du code) ou refresh_token (rafraîchissement). | d) token (code), f) token (refresh) |
 | refresh_token | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope offline_access. | d) réponse token, f) token (envoyé) |
 | response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | b) authorize |
