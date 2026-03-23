@@ -41,7 +41,10 @@ h2. 1. Pré‑requis
 * Mode : gestion managée (attributs/claims uniquement) ou gestion privée (flux d'auth + attributs).
 * Niveau d'autonomie : autonome, accompagné, délégué.
 
-*Environnement de départ* : on commence toujours par le raccordement sur Préprod. L'équipe IAM met à disposition cet environnement ; l'équipe applicative doit s'assurer auprès d'elle qu'un compte / une application en préprod est disponible avant de démarrer. Une fois les tests validés en préprod, on passe en production.
+*Environnement de départ* :
+* Démarrage : toujours en Préprod.
+* Disponibilité : l’équipe IAM met l’environnement à disposition ; l’équipe applicative vérifie qu’un compte / une application Préprod est prêt avant de commencer.
+* Enchaînement : après validation des tests en Préprod, passage en Production.
 
 ----
 
@@ -54,7 +57,8 @@ h2. 2. Étapes communes de la migration
 | 4 | Actualiser l'application : configuration (URLs, clients, certificats) + lecture et usage des infos d'authentification côté code | Équipe applicative | Configuration applicative + lecture des attributs/claims implémentées. |
 | 5 | Tester la migration : scénarios de connexion / déconnexion / erreurs sur dev puis préprod, avant passage en prod | Équipe applicative + équipe IAM | Tests dev/préprod validés avant passage en prod. |
 
-Les étapes ci‑dessus donnent une vue d'ensemble du process ; le suivi concret (étapes détaillées, acteurs, pièges) se fait dans le guide choisi (section 3).
+Les étapes ci‑dessus donnent une vue d'ensemble du process.
+Le suivi concret (étapes détaillées, acteurs, pièges) se fait dans le guide choisi (section 3).
 
 {quote}
 Les détails techniques (tableaux d'étapes, schémas de flux, pièges courants) sont décrits dans les guides par type de raccordement ci‑dessous.

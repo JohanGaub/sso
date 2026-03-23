@@ -36,7 +36,9 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 h2. Détail technique – Flux SAML 2.0 (Entra ID)
 
-*Les étapes a) à g)* ci-dessous correspondent au déploiement côté SP ; dans le *Suivi à réaliser*, elles sont couvertes par l’*étape 4*. Le *test et diagnostic* (h) est couvert par l’*étape 5*.
+*Les étapes a) à g)* ci-dessous correspondent au déploiement côté SP.
+Dans le *Suivi à réaliser*, elles sont couvertes par l’*étape 4*.
+Le *test et diagnostic* (h) est couvert par l’*étape 5*.
 
 Vue d'ensemble du processus :
 
