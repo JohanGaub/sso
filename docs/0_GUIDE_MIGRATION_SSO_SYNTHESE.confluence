@@ -18,12 +18,17 @@ h3. Mode d’emploi (2 min)
 * Si vous ne savez pas par où commencer : lisez *Pré-requis* puis *Choisir votre guide détaillé*.
 * Si vous êtes déjà en implémentation : utilisez ce document comme repère de pilotage (étapes communes), puis travaillez dans le guide dédié.
 * Si un doute est purement technique : allez directement dans le guide détaillé (OIDC/SAML, managée/privée).
+* Si vous hésitez entre deux guides : utilisez la règle simple en section 3 (*protocole* + *mode*).
 
 ----
 
 h2. 1. Pré‑requis
 
-*Prérequis administratifs* : avant de commencer les étapes techniques, l'équipe applicative effectue une demande (formulaire + matrice des rôles) auprès de l'équipe IAM. L'équipe IAM valide et donne accès à un environnement préprod. Pour passer en production, même démarche (dossier : PV de test, fiche renseignement, métadonnées prod). L'équipe IAM approuve la demande pour passage en prod. L'équipe applicative récupère les métadonnées IdP prod auprès de l'équipe IAM et les intègre dans l'application. Le détail du process est décrit dans le guide de raccordement de l'équipe IAM.
+*Prérequis administratifs* :
+* Préprod : l’équipe applicative transmet la demande IAM (formulaire + matrice des rôles), puis récupère les accès/environnements.
+* Production : même démarche avec dossier de passage (PV de test, fiche de renseignement, métadonnées prod) puis approbation IAM.
+* Mise en œuvre : l’équipe applicative récupère les métadonnées IdP prod et les intègre dans l’application.
+* Référence process : guide de raccordement IAM.
 
 *Identifier le contexte actuel* :
 * Protocole : OIDC ou SAML v2.
@@ -53,7 +58,7 @@ Les détails techniques (tableaux d'étapes, schémas de flux, pièges courants)
 
 h2. 3. Choisir votre guide détaillé
 
-À partir de votre contexte (protocole + mode de gestion), consultez le guide correspondant :
+Choisissez votre guide en croisant uniquement 2 critères : protocole (OIDC/SAML) et mode de gestion (managée/privée).
 
 || Protocole || Mode || Guide détaillé ||
 | OIDC | Gestion managée (attributs/claims uniquement) | 1. Guide migration OIDC - Gestion managée |
