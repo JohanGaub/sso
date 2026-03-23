@@ -2,9 +2,26 @@ h1. 3. Guide migration SAML - Gestion managée
 
 Attributs SAML uniquement ; la mécanique du flux est gérée par l'équipe IAM.
 
+h2. Mode d’emploi (développeur)
+
+Ce guide s’utilise pour cadrer les attributs SAML avec l’IAM, documenter le mapping Legacy → IdP, puis adapter la lecture côté application.
+
+h3. Mode opératoire (lecture)
+
+* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *3*.
+* Pass 2 : renseignez *Attributs (Legacy → IdP)* pour l’IAM et le code applicatif.
+* Pass 3 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un attribut manque, une erreur bloque ou il faut un modèle.
+
+h3. Ressources
+
+* Attributs (Legacy → IdP)
+* Pièges courants
+* Exemples de code
+* Tester et diagnostiquer (2 min)
+
 ----
 
-h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
+h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Réalisée ||
 | 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
@@ -14,11 +31,13 @@ h2. Suivi à réaliser (cocher chaque étape lorsque réalisée)
 
 ----
 
-h2. Préparer la correspondance d’attributs (Legacy → IdP)
+h2. Attributs (Legacy → IdP)
 
 En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
 * à l’équipe IAM pour configurer correctement les mappings côté IdP ;
 * au code applicatif pour lire les bons attributs.
+
+*À faire absolument :* figer les noms exacts des attributs attendus (casse incluse) avant d’implémenter la lecture côté code.
 
 || Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
 |  |  |  |
@@ -31,6 +50,20 @@ h2. Pièges courants
 * Noms d'attributs : différence entre URI, basic, unspecified ; s'assurer que l'IdP et l'SP utilisent le même nom (ou un mapping explicite).
 * Multiples valeurs : les attributs SAML sont souvent des tableaux ; prendre la première valeur ou gérer la liste selon la sémantique.
 * Signature et chiffrement : ne pas désactiver la vérification de signature en production.
+* Logs : en dev/preprod, tracer les attributs reçus ; en production, conserver des messages clairs sans données sensibles.
+
+h3. Checklist de validation minimale (dev-first)
+
+* Assertion reçue et signature valide.
+* Attributs attendus présents avec les bons noms.
+* Mapping Legacy → IdP appliqué côté code.
+* Valeurs multiples gérées (première valeur ou liste selon règle métier).
+
+h3. Tester et diagnostiquer (2 min)
+
+* Décodage rapide : récupérer l’Assertion SAML reçue au callback SP.
+* Contrôle prioritaire : vérifier d’abord la signature, puis la présence des attributs attendus.
+* Vérification mapping : comparer les noms d’attributs reçus avec *Attributs (Legacy → IdP)* avant d’ajuster le code.
 
 ----
 

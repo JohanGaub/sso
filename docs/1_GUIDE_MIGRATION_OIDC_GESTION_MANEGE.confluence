@@ -17,6 +17,7 @@ h3. Ressources
 * Attributs (Legacy → IdP)
 * Pièges courants
 * Exemples de code
+* Tester et diagnostiquer (2 min)
 
 ----
 
@@ -36,6 +37,8 @@ En gestion managée, le livrable principal côté dev est souvent la table de co
 * à l’équipe IAM pour configurer correctement les mappings côté IdP ;
 * au code applicatif pour lire les bons claims.
 
+*À faire absolument :* figer les noms exacts des claims attendus (casse incluse) avant d’implémenter la lecture côté code.
+
 || Description || Attribut Legacy || Claim Entra ID / OIDC ||
 |  |  |  |
 |  |  |  |
@@ -50,6 +53,19 @@ h2. Pièges courants
 * Ne pas ignorer les erreurs quand l'application lit les claims :
 ** en développement/préproduction : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
 ** en production : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu'un claim attendu est manquant ou invalide.
+
+h3. Checklist de validation minimale (dev-first)
+
+* Claims attendus présents et exploitables côté code.
+* Noms de claims conformes au mapping validé avec l’IAM.
+* Gestion des claims manquants (pas de crash, message explicite).
+* Logs utiles en dev/preprod et sûrs en production.
+
+h3. Tester et diagnostiquer (2 min)
+
+* Cas 1 (nominal) : les claims attendus sont présents et consommés côté code.
+* Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
+* Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. role inconnu) ; le comportement de repli est maîtrisé.
 
 ----
 
