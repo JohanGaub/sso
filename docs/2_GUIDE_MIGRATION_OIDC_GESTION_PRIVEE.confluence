@@ -301,6 +301,13 @@ Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert 
 ** si UserInfo est utilisé : vérifier que g) renvoie les claims attendus.
 * En cas d’échec : revenir à l’étape concernée (c, d, e, f ou g), corriger, puis rejouer le scénario avant de passer au suivant.
 
+|| Symptôme observé || Étape à vérifier d’abord ||
+| `redirect_uri_mismatch` ou callback refusé | c) Callback puis d) Token |
+| `invalid_grant` au token endpoint | d) Échange du code puis c) Callback (code/state) |
+| ID Token rejeté (`iss`/`aud`/`nonce`) | e) Validation ID Token |
+| Claims manquants ou incomplets | g) UserInfo (si utilisé), puis *Attributs (Legacy → IdP)* |
+| Erreur après expiration de session | f) Refresh Token (si utilisé), sinon relancer le login |
+
 h3. Checklist rapide (dev-first)
 
 * `state` callback validé avant appel `/token`.

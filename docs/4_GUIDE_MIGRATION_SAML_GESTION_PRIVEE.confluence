@@ -215,6 +215,13 @@ En cas de doute, activez des logs détaillés en dev/preprod (sans données sens
 Si le blocage concerne la validation de signature, revenez d’abord à *c) Vérifier la signature SAML* puis à *Checklist de validation minimale (dev-first)*.
 En cas d’échec sur un scénario, corrigez l’étape concernée (c, e, f ou g), puis rejouez le scénario avant de passer au suivant.
 
+|| Symptôme observé || Étape à vérifier d’abord ||
+| Signature invalide ou assertion refusée | c) Vérifier la signature SAML |
+| Response non reçue au callback ACS | e) Binding puis f) Callback ACS |
+| Attributs manquants dans la session applicative | f) Callback ACS, puis *Attributs (Legacy → IdP)* |
+| Login OK mais logout incomplet | g) Déconnexion (SLO vs locale) |
+| Erreurs intermittentes selon environnement | a) Métadonnées/certificats puis c) Signature |
+
 h4. Definition of Done (DoD) — validation minimale avant livraison
 
 * Login OK validé sur le parcours nominal.
