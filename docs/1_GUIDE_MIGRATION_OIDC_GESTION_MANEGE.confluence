@@ -24,10 +24,10 @@ h3. Ressources
 
 h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
-|| Étape || Action || Acteur || Durée || Réalisée ||
-| 1 | Identifier les nouveaux claims requis (ex. id, email, nom, role) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
-| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | Équipe IAM | À estimer | [ ] |
-| 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | [ ] |
+|| Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
+| 1 | Identifier les nouveaux claims requis (ex. id, email, nom, role) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Liste des claims attendus transmise à l'IAM. | [ ] |
+| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | Équipe IAM | À estimer | Claims émis par l'IdP avec noms conformes au mapping. | [ ] |
+| 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Lecture applicative validée (nominal + erreurs maîtrisées). | [ ] |
 | Total | Durée totale (somme des étapes 1 à 3) | — | À estimer | [ ] |
 
 ----
@@ -39,6 +39,7 @@ En gestion managée, le livrable principal côté dev est souvent la table de co
 * au code applicatif pour lire les bons claims.
 
 *À faire absolument :* figer les noms exacts des claims attendus (casse incluse) avant d’implémenter la lecture côté code.
+Convention conseillée : choisir une seule clé métier (ex. `role` *ou* `roles`) et l’appliquer partout (IAM + code).
 
 || Description || Attribut Legacy || Claim Entra ID / OIDC ||
 |  |  |  |
@@ -67,6 +68,7 @@ h3. Tester et diagnostiquer (2 min)
 * Cas 1 (nominal) : les claims attendus sont présents et consommés côté code.
 * Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
 * Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. role inconnu) ; le comportement de repli est maîtrisé.
+* En cas d’échec : revenez à *Attributs (Legacy → IdP)*, corrigez le mapping IAM/côté code, puis rejouez les 3 cas.
 
 *Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
 
