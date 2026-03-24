@@ -49,30 +49,35 @@ h2. 1. Pré‑requis
 h3. Prérequis de démarrage (développeur) — checklist datée
 
 Règle simple : une ligne est considérée comme acquise uniquement quand la date est renseignée.
+Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1 à 4.
 
 h4. 1) Environnement local (développement)
 
-|| # || Prérequis local || Détail attendu || Date obtenue || Commentaire / blocage ||
-| 1.1 | Application locale lançable | Build/run local fonctionnel, sans contournement manuel |  |  |
-| 1.2 | URL locale de test | URL stable pour callback/login (ex. localhost ou domaine dev local) |  |  |
-| 1.3 | Compte utilisateur local | Compte test valide pour parcours nominal |  |  |
-| 1.4 | Compte administrateur local (si applicable) | Compte test admin valide |  |  |
-| 1.5 | Configuration SSO locale minimale | Variables/env + endpoints configurés pour tester le SSO en local |  |  |
+|| # || Prérequis local || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
+| 1.1 | Application locale lançable | Build/run local fonctionnel, sans contournement manuel | 1, 2, 3, 4 |  |  |
+| 1.2 | URL locale de test | URL stable pour callback/login (ex. localhost ou domaine dev local) | 1, 2, 3, 4 |  |  |
+| 1.3 | Redirect URI locale déclarée dans Entra ID | URI locale enregistrée et strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
+| 1.4 | Compte utilisateur local | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
+| 1.5 | Compte administrateur local (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
+| 1.6 | Type de client et flux validés | Type de client cohérent (confidentiel/public) et flux cible validé (Authorization Code, PKCE si client public) | 1, 2, 3, 4 |  |  |
+| 1.7 | Configuration SSO locale minimale | Variables/env + endpoints configurés pour tester le SSO en local | 1, 2, 3, 4 |  |  |
 
 h4. 2) Environnement distant (dev/préprod sur serveur dédié)
 
-|| # || Prérequis distant || Détail attendu || Date obtenue || Commentaire / blocage ||
-| 2.1 | Accès application distante | URL dédiée accessible depuis votre poste |  |  |
-| 2.2 | URL de l’application distante | URL HTTPS de l’application sur serveur dédié (hors localhost) pour valider le comportement en conditions réelles |  |  |
-| 2.3 | Compte utilisateur distant | Compte test valide pour parcours nominal |  |  |
-| 2.4 | Compte administrateur distant (si applicable) | Compte test admin valide |  |  |
-| 2.5 | Prérequis réseau/VPN (si nécessaire) | Accès réseau validé (VPN, ACL, proxy, etc.) |  |  |
+|| # || Prérequis distant || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
+| 2.1 | Accès application distante | URL dédiée accessible depuis votre poste | 1, 2, 3, 4 |  |  |
+| 2.2 | URL de l’application distante | URL HTTPS de l’application sur serveur dédié (hors localhost) pour valider le comportement en conditions réelles | 1, 2, 3, 4 |  |  |
+| 2.3 | Redirect URI distante déclarée dans Entra ID | URI distante enregistrée et strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
+| 2.4 | Compte utilisateur distant | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
+| 2.5 | Compte administrateur distant (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
+| 2.6 | Prérequis réseau/VPN (si nécessaire) | Accès réseau validé (VPN, ACL, proxy, etc.) | 1, 2, 3, 4 |  |  |
+| 2.7 | Politique d'authentification de test connue | Contraintes actives connues (MFA, Conditional Access, consentement) pour éviter les faux blocages | 1, 2, 3, 4 |  |  |
 
 h4. 3) Décision de démarrage
 
 || Critère || Date de validation || Commentaire ||
-| Local complet (1.1 à 1.5 renseignés) |  |  |
-| Distant complet (2.1 à 2.5 renseignés) |  |  |
+| Local complet (1.1 à 1.7 renseignés) |  |  |
+| Distant complet (2.1 à 2.7 renseignés) |  |  |
 | GO développement / raccordement |  |  |
 
 *Règle GO :* démarrage uniquement quand local + distant sont complets.
