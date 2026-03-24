@@ -107,7 +107,7 @@ Dans la pratique, votre bibliothèque doit être capable de vérifier la signatu
 *** ou qui n’est pas signée,
 *** ou qui ne vient pas du certificat attendu.
 
-*À retenir :* ne jamais désactiver la vérification de signature en production « pour que ça marche ».
+*À retenir :* ne jamais désactiver la vérification de signature en production pour contourner un incident.
 
 h4. Checklist de validation minimale (dev-first)
 

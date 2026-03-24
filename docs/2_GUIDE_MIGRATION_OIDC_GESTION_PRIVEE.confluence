@@ -343,7 +343,7 @@ Pour la définition des paramètres communs à plusieurs étapes, se référer a
 | grant_type | Type de flux OAuth : authorization_code (échange du code) ou refresh_token (rafraîchissement). | d) token (code), f) token (refresh) |
 | refresh_token | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope offline_access. | d) réponse token, f) token (envoyé) |
 | response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | b) authorize |
-| response_mode | Méthode de renvoi du code : query, fragment ou form_post. Défaut « code only » : query. | b) authorize |
+| response_mode | Méthode de renvoi du code : query, fragment ou form_post. Pour un flux Authorization Code standard, la valeur par défaut est query. | b) authorize |
 | session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | c) callback |
 | iss | Issuer : identifiant de l'émetteur (ex. `https://login.microsoftonline.com/<TENANT_ID>/v2.0`). | c) callback, e) validation ID Token |
 

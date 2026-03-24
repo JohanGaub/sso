@@ -46,6 +46,38 @@ h2. 1. Pré‑requis
 * Disponibilité : l’équipe IAM met l’environnement à disposition ; l’équipe applicative vérifie qu’un compte / une application Préprod est prêt avant de commencer.
 * Enchaînement : après validation des tests en Préprod, passage en Production.
 
+h3. Prérequis de démarrage (développeur) — checklist datée
+
+Règle simple : une ligne est considérée comme acquise uniquement quand la date est renseignée.
+
+h4. 1) Environnement local (développement)
+
+|| # || Prérequis local || Détail attendu || Date obtenue || Commentaire / blocage ||
+| 1.1 | Application locale lançable | Build/run local fonctionnel, sans contournement manuel |  |  |
+| 1.2 | URL locale de test | URL stable pour callback/login (ex. localhost ou domaine dev local) |  |  |
+| 1.3 | Compte utilisateur local | Compte test valide pour parcours nominal |  |  |
+| 1.4 | Compte administrateur local (si applicable) | Compte test admin valide |  |  |
+| 1.5 | Configuration SSO locale minimale | Variables/env + endpoints configurés pour tester le SSO en local |  |  |
+
+h4. 2) Environnement distant (dev/préprod sur serveur dédié)
+
+|| # || Prérequis distant || Détail attendu || Date obtenue || Commentaire / blocage ||
+| 2.1 | Accès application distante | URL dédiée accessible depuis votre poste |  |  |
+| 2.2 | URL de l’application distante | URL HTTPS de l’application sur serveur dédié (hors localhost) pour valider le comportement en conditions réelles |  |  |
+| 2.3 | Compte utilisateur distant | Compte test valide pour parcours nominal |  |  |
+| 2.4 | Compte administrateur distant (si applicable) | Compte test admin valide |  |  |
+| 2.5 | Prérequis réseau/VPN (si nécessaire) | Accès réseau validé (VPN, ACL, proxy, etc.) |  |  |
+
+h4. 3) Décision de démarrage
+
+|| Critère || Date de validation || Commentaire ||
+| Local complet (1.1 à 1.5 renseignés) |  |  |
+| Distant complet (2.1 à 2.5 renseignés) |  |  |
+| GO développement / raccordement |  |  |
+
+*Règle GO :* démarrage uniquement quand local + distant sont complets.
+*Règle NO-GO :* au moins une date manquante sur une ligne bloquante.
+
 ----
 
 h2. 2. Étapes communes de la migration
