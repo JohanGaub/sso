@@ -30,8 +30,8 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 | 3 | Enregistrer les métadonnées SP chez l'IdP et récupérer les métadonnées IdP. | Équipe IAM | À estimer | Métadonnées SP/IdP alignées et disponibles côté projet. | [ ] |
 | 4 | Implémenter le flux SAML côté appli : a) config bibliothèque/métadonnées, b) NameID, c) signature, d) mode d’initiation, e) binding, f) callback ACS, g) déconnexion (voir *Détail technique*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | [ ] |
 | 5 | Tester le flux complet : login OK / login échoué / déconnexion (SLO si applicable, sinon fallback) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés + diagnostic reproductible. | [ ] |
-| 6 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev disponible (preuve de validation applicative). | [ ] |
-| 7 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production disponible (preuve post-déploiement). | [ ] |
+| 6 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
+| 7 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 7) | — | À estimer | [ ] |
 
 ----
@@ -233,8 +233,8 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Mapping d’attributs validé (NameID + attributs attendus).
 * Déconnexion validée (SLO si activé, sinon locale).
 * Logs exploitables en cas d’échec, sans fuite de données sensibles.
-* Recette fonctionnelle préprod/dev validée par l’équipe applicative (PV).
-* Recette fonctionnelle production validée par l’équipe applicative (PV).
+* PV de recette fonctionnelle préprod/dev validé.
+* PV de recette fonctionnelle production validé.
 
 *Sortie attendue :* flux SAML opérationnel et diagnostiquable de bout en bout (login, erreurs, logout).
 

@@ -28,8 +28,8 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 | 1 | Identifier les nouveaux claims requis (ex. id, email, nom, role) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Liste des claims attendus transmise à l'IAM. | [ ] |
 | 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | Équipe IAM | À estimer | Claims émis par l'IdP avec noms conformes au mapping. | [ ] |
 | 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Lecture applicative validée (nominal + erreurs maîtrisées). | [ ] |
-| 4 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev disponible (preuve de validation applicative). | [ ] |
-| 5 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production disponible (preuve post-déploiement). | [ ] |
+| 4 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
+| 5 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
 ----
@@ -82,8 +82,8 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Claim manquant géré sans crash.
 * Claim invalide géré avec comportement maîtrisé.
 * Logs exploitables en dev/preprod et sûrs en production.
-* Recette fonctionnelle préprod/dev validée par l’équipe applicative (PV).
-* Recette fonctionnelle production validée par l’équipe applicative (PV).
+* PV de recette fonctionnelle préprod/dev validé.
+* PV de recette fonctionnelle production validé.
 
 ----
 

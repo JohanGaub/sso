@@ -29,8 +29,8 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 | 3 | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Accès local désactivé, parcours SSO unique documenté. | [ ] |
 | 4 | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | [ ] |
 | 5 | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés et diagnostics exploitables. | [ ] |
-| 6 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev disponible (preuve de validation applicative). | [ ] |
-| 7 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production disponible (preuve post-déploiement). | [ ] |
+| 6 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
+| 7 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 7) | — | À estimer | [ ] |
 
 ----
@@ -54,7 +54,7 @@ g) Récupérer les informations utilisateur (optionnel) — appel à l'endpoint 
 h) Tester et diagnostiquer — exécuter les cas d’échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
 {noformat}
 
- 
+
 
 h3. a) Récupérer les clés publiques (JWKS)
 
@@ -327,8 +327,8 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Claims attendus validés (id_token et/ou UserInfo selon architecture).
 * Déconnexion locale validée côté application.
 * Logs exploitables en cas d’échec, sans fuite de données sensibles.
-* Recette fonctionnelle préprod/dev validée par l’équipe applicative (PV).
-* Recette fonctionnelle production validée par l’équipe applicative (PV).
+* PV de recette fonctionnelle préprod/dev validé.
+* PV de recette fonctionnelle production validé.
 
 *Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).
 
