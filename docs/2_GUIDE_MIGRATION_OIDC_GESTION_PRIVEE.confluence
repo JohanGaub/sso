@@ -367,7 +367,7 @@ h3. Schéma de flux (rappel)
 
 ----
 
-h2. Attributs (Legacy → IdP)
+h2. Claims (Legacy → IdP)
 
 À compléter en fonction de votre contexte applicatif (claims de votre annuaire / application actuelle vers les *claims OIDC* exposés par l'IdP, ex. Entra ID).
 

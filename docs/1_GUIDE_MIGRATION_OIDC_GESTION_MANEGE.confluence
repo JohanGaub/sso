@@ -34,7 +34,7 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 ----
 
-h2. Attributs (Legacy → IdP)
+h2. Claims (Legacy → IdP)
 
 En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos *claims* existants (legacy) et les *claims OIDC* envoyés par l'IdP. Cette table sert :
 * à l’équipe IAM pour configurer correctement les mappings côté IdP ;
