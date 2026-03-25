@@ -256,7 +256,7 @@ La réponse a la même structure qu'en d) : nouveaux access_token et id_token (e
 
 h3. g) Récupérer les informations utilisateur (UserInfo)
 
-Certaines informations d'identité sont directement présentes dans l'id_token (email, nom, oid, tid, etc.). Pour des claims supplémentaires ou pour centraliser la lecture des attributs, l'application peut appeler l'endpoint UserInfo avec l'access_token.
+Certaines informations d'identité sont directement présentes dans l'id_token (email, nom, oid, tid, etc.). Pour des claims supplémentaires ou pour centraliser la lecture des claims, l'application peut appeler l'endpoint UserInfo avec l'access_token.
 
 *Appel UserInfo*
 
@@ -369,9 +369,9 @@ h3. Schéma de flux (rappel)
 
 h2. Attributs (Legacy → IdP)
 
-À compléter en fonction de votre contexte applicatif (attributs de votre annuaire / application actuelle vers les claims OIDC exposés par l'IdP, ex. Entra ID).
+À compléter en fonction de votre contexte applicatif (claims de votre annuaire / application actuelle vers les *claims OIDC* exposés par l'IdP, ex. Entra ID).
 
-|| Description || Attribut Legacy || Claim Entra ID / OIDC (claim) ||
+|| Description || Claim Legacy || Claim Entra ID ||
 |  |  |  |
 |  |  |  |
 |  |  |  |
@@ -391,7 +391,7 @@ h2. Pièges courants
 
 h2. Exemples de code
 
-Symfony (PHP) – configuration et récupération des attributs après connexion OIDC
+Symfony (PHP) – configuration et récupération des claims après connexion OIDC
 
 Pour Entra ID, l'`OIDC_ISSUER` est `https://login.microsoftonline.com/<TENANT_ID>/v2.0`.
 

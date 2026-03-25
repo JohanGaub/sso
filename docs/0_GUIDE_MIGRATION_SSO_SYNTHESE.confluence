@@ -38,7 +38,7 @@ h2. 1. Pré‑requis
 
 *Identifier le contexte actuel* :
 * Protocole : OIDC ou SAML v2.
-* Mode : gestion managée (attributs/claims uniquement) ou gestion privée (flux d'auth + attributs).
+* Mode : gestion managée (claims OIDC / attributs SAML uniquement) ou gestion privée (flux d'auth + attributs/claims).
 * Niveau d'autonomie : autonome, accompagné, délégué.
 
 *Environnement de départ* :
@@ -89,9 +89,9 @@ h2. 2. Étapes communes de la migration
 
 || Étape || Objectif || Acteurs || Sortie attendue ||
 | 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative + équipe IAM | Guide cible identifié (1, 2, 3 ou 4). |
-| 2 | Aligner les identités : définir les claims/attributs nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + équipe IAM | Liste d’attributs/claims validée avec l’IAM. |
+| 2 | Aligner les identités : définir les claims (OIDC) / attributs (SAML) nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + équipe IAM | Liste de claims/attributs validée avec l’IAM. |
 | 3 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative + équipe IAM | Stratégie de flux validée (si gestion privée). |
-| 4 | Configurer l'application : URLs, clients, certificats, puis implémenter la lecture et l’usage des informations d’authentification côté code. | Équipe applicative | Configuration applicative finalisée + lecture des attributs/claims implémentée. |
+| 4 | Configurer l'application : URLs, clients, certificats, puis implémenter la lecture et l’usage des informations d’authentification côté code. | Équipe applicative | Configuration applicative finalisée + lecture des claims/attributs implémentée. |
 | 5 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev validé. |
 | 6 | Réaliser la recette fonctionnelle en production : rejouer le socle de scénarios et produire un PV | Équipe applicative | PV de recette fonctionnelle production validé. |
 
@@ -109,8 +109,8 @@ h2. 3. Choisir votre guide détaillé
 Choisissez votre guide en croisant uniquement 2 critères : protocole (OIDC/SAML) et mode de gestion (managée/privée).
 
 || Protocole || Mode || Guide détaillé ||
-| OIDC | Gestion managée (attributs/claims uniquement) | 1. Guide migration OIDC - Gestion managée |
-| OIDC | Gestion privée (flux + attributs) | 2. Guide migration OIDC - Gestion privée |
+| OIDC | Gestion managée (claims uniquement) | 1. Guide migration OIDC - Gestion managée |
+| OIDC | Gestion privée (flux + claims) | 2. Guide migration OIDC - Gestion privée |
 | SAML v2 | Gestion managée (attributs uniquement) | 3. Guide migration SAML - Gestion managée |
 | SAML v2 | Gestion privée (flux + attributs) | 4. Guide migration SAML - Gestion privée |
 

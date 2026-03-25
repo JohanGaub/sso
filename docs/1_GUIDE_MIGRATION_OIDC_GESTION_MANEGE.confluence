@@ -1,10 +1,10 @@
 h1. 1. Guide migration OIDC - Gestion managée
 
-En gestion managée, l'équipe IAM gère la mécanique OIDC. Vous ne traitez que les attributs : convenir des dénominations (et de la liste des claims) avec l'IAM, puis les lire dans l'application.
+En gestion managée, l'équipe IAM gère la mécanique OIDC. Vous ne traitez que les informations d'identité portées par les tokens (*claims*) : convenir des dénominations (liste des claims) avec l'IAM, puis les lire dans l'application.
 
 h2. Mode d’emploi (développeur)
 
-Ce guide s’utilise pour préparer les claims avec l’IAM, documenter la correspondance d’attributs, puis adapter la lecture côté application.
+Ce guide s’utilise pour préparer les claims avec l’IAM, documenter la correspondance de claims, puis adapter la lecture côté application.
 Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse en 1 page*.
 
 h3. Mode opératoire (lecture)
@@ -26,7 +26,7 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
 | 1 | Identifier les nouveaux claims requis (ex. id, email, nom, role) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Liste des claims attendus transmise à l'IAM. | [ ] |
-| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les attributs sources (id, email, nom, role, etc.) sont bien exposés avec les noms attendus. | Équipe IAM | À estimer | Claims émis par l'IdP avec noms conformes au mapping. | [ ] |
+| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les valeurs sources (id, email, nom, role, etc.) sont bien exposées avec les noms attendus. | Équipe IAM | À estimer | Claims émis par l'IdP avec noms conformes au mapping. | [ ] |
 | 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Lecture applicative validée (nominal + erreurs maîtrisées). | [ ] |
 | 4 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
 | 5 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
@@ -36,14 +36,14 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 h2. Attributs (Legacy → IdP)
 
-En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les claims OIDC envoyés par l'IdP. Cette table sert :
+En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos *claims* existants (legacy) et les *claims OIDC* envoyés par l'IdP. Cette table sert :
 * à l’équipe IAM pour configurer correctement les mappings côté IdP ;
 * au code applicatif pour lire les bons claims.
 
 *À faire absolument :* figer les noms exacts des claims attendus (casse incluse) avant d’implémenter la lecture côté code.
 Convention conseillée : choisir une seule clé métier (ex. `role` *ou* `roles`) et l’appliquer partout (IAM + code).
 
-|| Description || Attribut Legacy || Claim Entra ID / OIDC ||
+|| Description || Claim Legacy || Claim Entra ID ||
 |  |  |  |
 |  |  |  |
 |  |  |  |
