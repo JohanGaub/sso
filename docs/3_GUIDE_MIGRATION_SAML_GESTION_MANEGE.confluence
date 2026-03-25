@@ -68,10 +68,12 @@ h3. Tester et diagnostiquer (2 min)
 Cette section décrit *les scénarios à exécuter*. La *Checklist de validation minimale* sert de contrôle immédiat avant clôture.
 *Entrée attendue :* mapping attributaire renseigné et assertions SAML accessibles en test.
 
-* Décodage rapide : récupérer l’Assertion SAML reçue au callback SP.
-* Contrôle prioritaire : vérifier d’abord la signature, puis la présence des attributs attendus.
-* Vérification mapping : comparer les noms d’attributs reçus avec *Attributs (Legacy → IdP)* avant d’ajuster le code.
-* En cas d’échec : corriger le mapping IAM/côté code, puis rejouer les 3 contrôles dans le même ordre.
+*Ordre simple (à garder en tête) :* récupérer l’Assertion → vérifier la signature → vérifier les attributs → comparer avec *Attributs (Legacy → IdP)*.
+
+* Cas 1 (nominal) : l’Assertion est reçue, la signature est valide, et les attributs attendus sont présents.
+* Cas 2 (absence) : un attribut attendu manque ; l’application ne crash pas et journalise clairement le problème.
+* Cas 3 (valeur invalide) : un attribut est présent mais incohérent (ex. rôle inconnu) ; le comportement de repli est maîtrisé.
+* En cas d’échec : corriger le mapping IAM/côté code (ou la lecture applicative), puis rejouer les 3 cas.
 
 *Sortie attendue :* mapping attributaire validé et exploitable côté application.
 
