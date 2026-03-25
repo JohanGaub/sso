@@ -32,7 +32,7 @@ h2. 1. Pré‑requis
 
 *Prérequis administratifs* :
 * Préprod : l’équipe applicative transmet la demande IAM (formulaire + matrice des rôles), puis récupère les accès/environnements.
-* Production : même démarche avec dossier de passage (PV de test, fiche de renseignement, métadonnées prod) puis approbation IAM.
+* Production : même démarche avec dossier de passage (PV de recette fonctionnelle, fiche de renseignement, métadonnées prod) puis approbation IAM.
 * Mise en œuvre : l’équipe applicative récupère les métadonnées IdP prod et les intègre dans l’application.
 * Référence process : guide de raccordement IAM.
 
@@ -92,7 +92,8 @@ h2. 2. Étapes communes de la migration
 | 2 | Aligner les identités : définir les claims/attributs nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + équipe IAM | Liste d’attributs/claims validée avec l’IAM. |
 | 3 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative + équipe IAM | Stratégie de flux validée (si gestion privée). |
 | 4 | Configurer l'application : URLs, clients, certificats, puis implémenter la lecture et l’usage des informations d’authentification côté code. | Équipe applicative | Configuration applicative finalisée + lecture des attributs/claims implémentée. |
-| 5 | Tester la migration : scénarios de connexion / déconnexion / erreurs sur dev puis préprod, avant passage en prod | Équipe applicative + équipe IAM | Tests dev/préprod validés avant passage en prod. |
+| 5 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev disponible (preuve de validation applicative). |
+| 6 | Réaliser la recette fonctionnelle en production : rejouer le socle de scénarios et produire un PV | Équipe applicative | PV de recette fonctionnelle production disponible (preuve post-déploiement). |
 
 Les étapes ci‑dessus donnent une vue d'ensemble du process.
 Le suivi concret (étapes détaillées, acteurs, pièges) se fait dans le guide choisi (section 3).
