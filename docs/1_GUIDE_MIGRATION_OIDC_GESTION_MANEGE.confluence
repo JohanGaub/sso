@@ -10,12 +10,12 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 h3. Mode opératoire (lecture)
 
 * Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *3*.
-* Pass 2 : renseignez *Attributs (Legacy → IdP)* pour l’IAM et le code applicatif.
+* Pass 2 : renseignez *Claims (Legacy → IdP)* pour l’IAM et le code applicatif.
 * Pass 3 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou il faut un modèle de lecture.
 
 h3. Ressources
 
-* Attributs (Legacy → IdP)
+* Claims (Legacy → IdP)
 * Pièges courants
 * Exemples de code
 * Tester et diagnostiquer (2 min)
@@ -72,7 +72,7 @@ h3. Tester et diagnostiquer (2 min)
 * Cas 1 (nominal) : les claims attendus sont présents et consommés côté code.
 * Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
 * Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. role inconnu) ; le comportement de repli est maîtrisé.
-* En cas d’échec : revenez à *Attributs (Legacy → IdP)*, corrigez le mapping IAM/côté code, puis rejouez les 3 cas.
+* En cas d’échec : revenez à *Claims (Legacy → IdP)*, corrigez le mapping IAM/côté code, puis rejouez les 3 cas.
 
 *Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
 
