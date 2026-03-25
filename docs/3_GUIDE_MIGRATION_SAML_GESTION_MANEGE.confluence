@@ -48,6 +48,8 @@ Format à transmettre à l’IAM pour chaque attribut : *Description* + *Attribu
 |  |  |  |
 |  |  |  |
 
+----
+
 h2. Pièges courants
 
 * Vérifier la présence et le format des attributs dans l'Assertion reçue (outil de décodage/validation SAML en ligne ou local).

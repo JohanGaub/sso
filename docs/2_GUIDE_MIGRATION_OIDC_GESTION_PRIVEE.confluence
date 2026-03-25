@@ -217,8 +217,6 @@ Pour les applications sans backend sécurisé ou en complément recommandé :
 | {{code_challenge_method}} | {{S256}} (obligatoire dans notre contexte) |
 | Envoi au SSO | À l'authorization : {{code_challenge}} + {{code_challenge_method}} ; au token : {{code_verifier}} + {{code}} |
 
-----
-
 h3. f) Rafraîchir l'Access Token (Refresh Token)
 
 Si le scope offline_access est demandé et accordé, l'IdP peut renvoyer un refresh_token en plus de l'access_token et de l'id_token. Le refresh_token permet d'obtenir de nouveaux Access Tokens sans ré-authentifier l'utilisateur.
@@ -251,8 +249,6 @@ scope=openid profile offline_access
 {noformat}
 
 La réponse a la même structure qu'en d) : nouveaux access_token et id_token (et potentiellement un nouveau refresh_token). Le backend doit remplacer l'ancien refresh_token par le nouveau si un nouveau est renvoyé.
-
-----
 
 h3. g) Récupérer les informations utilisateur (UserInfo)
 
@@ -351,8 +347,6 @@ Pour la définition des paramètres communs à plusieurs étapes, se référer a
 | response_mode | Méthode de renvoi du code : query, fragment ou form_post. Pour un flux Authorization Code standard, la valeur par défaut est query. | b) authorize |
 | session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | c) callback |
 | iss | Issuer : identifiant de l'émetteur (ex. `https://login.microsoftonline.com/<TENANT_ID>/v2.0`). | c) callback, e) validation ID Token |
-
-----
 
 h3. Schéma de flux (rappel)
 

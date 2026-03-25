@@ -1,8 +1,6 @@
 h1. 4. Guide migration SAML - Gestion privée
 
 Reconfigurer le flux SAML (métadonnées, endpoints, binding, attributs) dans l'application.
-
-----
 h2. Mode d’emploi (développeur)
 
 Ce guide s’utilise comme une référence « par étapes » pour déployer le flux SAML côté SP et diagnostiquer les échecs.
@@ -238,6 +236,8 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 
 *Sortie attendue :* flux SAML opérationnel et diagnostiquable de bout en bout (login, erreurs, logout).
 
+----
+
 h2. Attributs (Legacy → IdP)
 
 En gestion privée, le livrable côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
@@ -248,6 +248,8 @@ En gestion privée, le livrable côté dev est souvent la table de correspondanc
 |  |  |  |
 |  |  |  |
 |  |  |  |
+
+----
 
 h2. Pièges courants
 
