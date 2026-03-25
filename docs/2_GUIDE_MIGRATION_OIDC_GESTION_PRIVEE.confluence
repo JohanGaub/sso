@@ -38,8 +38,8 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 h2. Détail technique – Flux Authorization Code (Entra ID)
 
 *Les étapes a) à g)* ci-dessous sont le *parcours technique* une fois le client IdP disponible.
-Dans le *Suivi à réaliser*, elles correspondent surtout à l’*étape 4* (préparée par les étapes *1* et *2*).
-Le *test et diagnostic* (h) est couvert par l’*étape 5*.
+Dans le *Suivi à réaliser*, elles correspondent à l’*étape 4* (préparée par les étapes *1* et *2*).
+Le *test et diagnostic* (h) correspond à l’*étape 5*.
 
 Vue d'ensemble du processus :
 

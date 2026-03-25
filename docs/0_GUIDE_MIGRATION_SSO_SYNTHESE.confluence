@@ -31,9 +31,13 @@ h3. Chemin de lecture rapide
 h2. 1. Pré‑requis
 
 *Prérequis administratifs* :
-* Préprod : l’équipe applicative transmet la demande IAM (formulaire + matrice des rôles), puis récupère les accès/environnements.
-* Production : même démarche avec dossier de passage (PV de recette fonctionnelle, fiche de renseignement, métadonnées prod) puis approbation IAM.
-* Mise en œuvre : l’équipe applicative récupère les métadonnées IdP prod et les intègre dans l’application.
+* Préprod :
+** l’équipe applicative transmet la demande IAM (formulaire + matrice des rôles) ;
+** l’équipe IAM fournit les accès/environnements.
+* Production :
+** même démarche, avec dossier de passage (PV de recette fonctionnelle, fiche de renseignement, métadonnées prod) ;
+** approbation IAM.
+* Mise en œuvre : l’équipe applicative intègre les métadonnées IdP dans l’application.
 * Référence process : guide de raccordement IAM.
 
 *Identifier le contexte actuel* :
@@ -43,7 +47,9 @@ h2. 1. Pré‑requis
 
 *Environnement de départ* :
 * Démarrage : toujours en Préprod.
-* Disponibilité : l’équipe IAM met l’environnement à disposition ; l’équipe applicative vérifie qu’un compte / une application Préprod est prêt avant de commencer.
+* Disponibilité :
+** l’équipe IAM met l’environnement à disposition ;
+** l’équipe applicative vérifie qu’un compte / une application Préprod est prêt avant de commencer.
 * Enchaînement : après validation des tests en Préprod, passage en Production.
 
 h3. Prérequis de démarrage (développeur) — checklist datée
