@@ -11,7 +11,7 @@ h3. Mode opératoire (lecture)
 * Pass 1 : dans *Suivi à réaliser*, faites l’*étape 4*, puis exécutez *a)* à *g)* dans *Détail technique*.
 * Pass 2 : dans *Suivi à réaliser*, faites l’*étape 5*, puis suivez *h) Tester et diagnostiquer*.
 * Pass 3 : dans *Suivi à réaliser*, faites les *étapes 6 et 7* (recette fonctionnelle + PV).
-* Pass 3 : ouvrez *Paramètres OIDC*, *Attributs (Legacy → IdP)* ou *Pièges courants* seulement si une valeur/erreur précise bloque.
+* Pass 4 : ouvrez *Paramètres OIDC*, *Attributs (Legacy → IdP)* ou *Pièges courants* seulement si une valeur/erreur précise bloque.
 
 h3. Ressources
 

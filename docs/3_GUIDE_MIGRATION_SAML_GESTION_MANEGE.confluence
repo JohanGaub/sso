@@ -81,6 +81,7 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Attributs attendus présents avec les bons noms.
 * Mapping appliqué côté code (nominal + erreurs maîtrisées).
 * Recette fonctionnelle préprod/dev validée par l’équipe applicative (PV).
+* Recette fonctionnelle production validée par l’équipe applicative (PV).
 
 ----
 

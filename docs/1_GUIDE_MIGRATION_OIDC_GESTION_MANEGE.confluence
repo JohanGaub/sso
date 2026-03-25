@@ -83,6 +83,7 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Claim invalide géré avec comportement maîtrisé.
 * Logs exploitables en dev/preprod et sûrs en production.
 * Recette fonctionnelle préprod/dev validée par l’équipe applicative (PV).
+* Recette fonctionnelle production validée par l’équipe applicative (PV).
 
 ----
 
