@@ -14,6 +14,8 @@ Cursor charge des **instructions persistantes** pour l’Agent via :
 
 Référence officielle Cursor : `https://cursor.sh/docs/rules`
 
+Note projet : la source de vérité des instructions Agent est `.cursor/rules/` (Project Rules) et `AGENTS.md`.
+
 ## 2) Comment actualiser (pragmatique et “éclairé”)
 
 ### Ce qu’on ne fait pas

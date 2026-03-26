@@ -1,6 +1,5 @@
 ---
 description: "Symfony Security: auth, voters, secrets, moindre privilège"
-globs: "**/config/packages/security*.yaml"
 alwaysApply: false
 ---
 
