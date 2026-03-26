@@ -51,6 +51,8 @@ L’objectif réaliste n’est pas “implémenter automatiquement les nouvelles
 - Besoin d’un référentiel complet pour humains → `docs/STANDARDS_SYMFONY.md`
 - Besoin d’expliquer le système → ce fichier `docs/CURSOR_RULES.md`
 
+Voir aussi : `docs/SUBAGENTS_CURSOR.md` (guide complet subagents).
+
 ## 4) Sources (URLs)
 - Cursor Rules : `https://cursor.sh/docs/rules`
 - Symfony Docs : `https://symfony.com/doc`
