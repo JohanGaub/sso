@@ -246,6 +246,8 @@ git reset --soft HEAD~1
 - [PHPStan Documentation](https://phpstan.org/)
 - [Rector Documentation](https://getrector.com/)
 - [Documentation Qualité du Code](./QUALITE_CODE.md)
+- [Cursor Rules (process projet)](./CURSOR_RULES.md)
+- [Standards Symfony (projet)](./STANDARDS_SYMFONY.md)
 
 ---
 

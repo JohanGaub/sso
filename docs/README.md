@@ -8,6 +8,8 @@ Ce dossier contient toute la documentation pour l'intégration SSO dans votre ap
 docs/
 ├── README.md (ce fichier)
 ├── INDEX_DOCUMENTATION.md (index principal)
+├── STANDARDS_SYMFONY.md (standards de développement Symfony + règles d’équipe)
+├── CURSOR_RULES.md (Cursor rules : fonctionnement & maintenance)
 ├── GUIDE_SSO_GENERIQUE.md (guide complet générique)
 ├── GUIDE_DEMARRAGE_RAPIDE_SSO.md (guide rapide)
 ├── EXEMPLES_PROVIDERS.md (exemples par provider)
