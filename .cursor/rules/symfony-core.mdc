@@ -1,0 +1,19 @@
+---
+description: "Symfony core standards: architecture, style, pragmatism"
+alwaysApply: true
+---
+
+## A. Règles non négociables
+- **Lisibilité > micro-optimisation** : on mesure avant d’optimiser.
+- **KISS / DRY / SOLID** sans sur-abstraction (pas de “framework maison”).
+- **Logique métier dans des services**, jamais dans les contrôleurs.
+- **Contrôleurs = orchestration** : validation, appel de services, mapping en réponse HTTP.
+- **Nommage & langage** : tout le code technique est en **anglais** (classes, vars, DB, fichiers).
+- **Style** : respecter PSR-12 et les conventions Symfony (noms explicites, classes/méthodes courtes).
+- **Commentaires** : uniquement si le contexte/contrainte n’est pas évident.
+
+## B. Quand tu proposes du code
+- Préférer les composants Symfony standards avant d’ajouter une lib.
+- Pour les cas complexes : proposer des **DTO** d’entrée/sortie plutôt que d’exposer des entités.
+- Les erreurs métier : exceptions dédiées + mapping HTTP centralisé (format d’erreur stable).
+

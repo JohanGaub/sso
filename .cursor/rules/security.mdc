@@ -1,0 +1,13 @@
+---
+description: "Symfony Security: auth, voters, secrets, moindre privilège"
+globs: "**/config/packages/security*.yaml"
+alwaysApply: false
+---
+
+## Sécurité (Symfony)
+- Utiliser le **password hasher** Symfony (pas d’implémentation maison).
+- **Moindre privilège** : rôles minimum, permissions explicites.
+- **Voters** pour la logique d’accès métier (objet + contexte), éviter l’explosion de rôles.
+- **Secrets** : jamais en clair dans le dépôt ; utiliser `bin/console secrets:set`.
+- **API stateless** : préférer JWT si besoin (ex: `lexik/jwt-authentication-bundle`) selon le contexte projet.
+

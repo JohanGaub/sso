@@ -37,6 +37,8 @@ Ce document couvre :
 Pour approfondir vos connaissances :
 - `GUIDE_SSO_GENERIQUE.md` : Concepts OAuth2/OIDC et architecture
 - `EXEMPLES_PROVIDERS.md` : Guides détaillés par provider (Google, GitHub, etc.)
+- `STANDARDS_SYMFONY.md` : Standards de développement (Symfony + conventions équipe)
+- `CURSOR_RULES.md` : Règles Cursor (fonctionnement & maintenance)
 
 ---
 

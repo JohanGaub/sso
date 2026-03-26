@@ -1,0 +1,12 @@
+---
+description: "Doctrine & persistance: contraintes DB, migrations, perf"
+globs: "**/{Entity,Repository,Migrations,migrations}/**/*.php"
+alwaysApply: false
+---
+
+## Doctrine & persistance
+- **Contraintes DB explicites** : unique, index, FK (ne pas compter sur la validation applicative).
+- **N+1** : éviter (requêtes ciblées, fetch join, pagination).
+- **Migrations** : versionnées, relues ; message/description doit référencer le ticket (ex: Jira).
+- **API** : ne pas exposer automatiquement les entités Doctrine si un **DTO** est plus adapté.
+

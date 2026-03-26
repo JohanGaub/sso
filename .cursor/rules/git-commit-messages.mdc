@@ -1,0 +1,18 @@
+---
+description: "Git: always propose Conventional Commit message per docs/CONTRIBUTING.md"
+alwaysApply: true
+---
+
+## Commits (Conventional Commits) — règle projet
+- Avant de proposer un message de commit : exécuter `git status --short`.
+  - Si la sortie est vide : **ne pas proposer** de message de commit.
+- Si des changements existent : proposer **un seul** message Conventional Commits conforme à `docs/CONTRIBUTING.md`.
+- Le message doit respecter :
+  - format : `<type>(<scope>): <description>` (scope optionnel)
+  - description en **anglais**, minuscule, présent, **sans point final**, idéalement ≤ 72 chars
+  - type parmi : `feat|fix|docs|style|refactor|perf|test|chore|ci|build`
+  - scope optionnel pertinent (ex: `docker`, `config`, `auth`, `api`, `quality`, etc.)
+- Ne pas créer le commit sauf demande explicite.
+
+Référence : `docs/CONTRIBUTING.md`
+
