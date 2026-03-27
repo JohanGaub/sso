@@ -1,6 +1,6 @@
 ---
 name: pr-draft
-description: Generate a reviewer-friendly pull request draft based on .github/pull_request_template.md and current git changes. Use when preparing a PR.
+description: "Generate a reviewer-friendly pull request draft based on .github/pull_request_template.md and current git changes. Use when preparing a PR."
 disable-model-invocation: true
 ---
 

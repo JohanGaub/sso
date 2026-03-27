@@ -30,24 +30,18 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/CURSOR_RULES.md`
-- `docs/HOOKS_CURSOR.md`
-- `docs/INDEX_DOCUMENTATION.md`
-- `docs/README.md`
-- `.cursor/skills/`
-- `docs/SKILLS_CURSOR.md`
+- `.cursor/skills/pr-draft/SKILL.md`
+- `.cursor/skills/review-pack/SKILL.md`
 
 ### Last commits
+- 9f642a3 docs(devx): add Cursor skills and label hooks as advanced
 - ed5bc31 docs(devx): add reusable mail templates for training handoff
 - 1eb2d1e docs(devx): add PR template workflow and shareable agent specs
 - b075afd docs: document Cursor subagents and add project agents
 - 8ec7cfe chore: remove legacy Cursor rules file
-- 09bf02a docs: link Cursor rules and Symfony standards
 
 ### Diff summary
- .cursor/pr-draft.md         | 15 +++++----------
- docs/CURSOR_RULES.md        |  4 ++--
- docs/HOOKS_CURSOR.md        |  2 +-
- docs/INDEX_DOCUMENTATION.md |  3 ++-
- docs/README.md              |  3 ++-
- 5 files changed, 12 insertions(+), 15 deletions(-)
+ .cursor/pr-draft.md                 | 16 +++-------------
+ .cursor/skills/pr-draft/SKILL.md    |  2 +-
+ .cursor/skills/review-pack/SKILL.md |  2 +-
+ 3 files changed, 5 insertions(+), 15 deletions(-)

@@ -1,6 +1,6 @@
 ---
 name: review-pack
-description: Produce a short reviewer pack: summary, test plan, and list of files to review. Use before requesting peer review.
+description: "Produce a short reviewer pack: summary, test plan, and list of files to review. Use before requesting peer review."
 disable-model-invocation: true
 ---
 
