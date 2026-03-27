@@ -52,13 +52,13 @@ L’objectif réaliste n’est pas “implémenter automatiquement les nouvelles
 - Besoin d’expliquer le système → ce fichier `docs/CURSOR_RULES.md`
 
 Voir aussi : `docs/SUBAGENTS_CURSOR.md` (guide complet subagents).
-Voir aussi : `docs/HOOKS_CURSOR.md` (guide hooks, quand et comment les utiliser).
+Voir aussi : `docs/HOOKS_CURSOR.md` (**avancé** : hooks, triggers automatiques).
 
 ## 4) Enchaînement simple (à retenir)
 1. **Doc humaine** : formaliser la règle/procédure dans `docs/`.
 2. **Rule Cursor** : extraire les points stables et courts dans `.cursor/rules/`.
 3. **Subagent** : créer un spécialiste dans `.cursor/agents/` si la tâche est lourde/procédurale.
-4. **Hook** : automatiser un contrôle/traitement technique au bon moment (ex: génération auto de brouillon PR).
+4. **Hook (avancé)** : automatiser un contrôle/traitement technique au bon moment (ex: génération auto de brouillon PR).
 5. **PR template** : standardiser la review via `.github/pull_request_template.md`.
 
 ## 5) Sources (URLs)

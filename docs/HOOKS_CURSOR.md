@@ -1,4 +1,4 @@
-# Hooks Cursor — guide pratique (quand et comment)
+# Hooks Cursor — guide pratique (**avancé**)
 
 Objectif : comprendre rapidement comment les hooks complètent rules/subagents.
 
