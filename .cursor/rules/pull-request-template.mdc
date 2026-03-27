@@ -1,0 +1,15 @@
+---
+description: "When preparing a PR, provide a concise reviewer-friendly draft aligned with .github/pull_request_template.md"
+alwaysApply: false
+---
+
+## Pull request draft guidance
+- When user asks for a PR draft/summary, follow `.github/pull_request_template.md`.
+- Keep text concise, practical, and review-friendly.
+- Focus on:
+  - why the change exists
+  - what changed (high-impact items only)
+  - how it was tested
+  - risks and rollback notes
+- Avoid vague statements; include concrete checks/commands when available.
+

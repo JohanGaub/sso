@@ -188,6 +188,20 @@ git push origin main
 git push origin feat/ma-nouvelle-fonctionnalite
 ```
 
+### 6. Ouvrir une Pull Request
+
+Le projet fournit un template PR automatique :
+
+- Fichier : `.github/pull_request_template.md`
+- Objectif : faciliter et homogénéiser les reviews entre collègues
+
+Le template couvre :
+- Summary (objectif + pourquoi)
+- Changes (modifications clés)
+- Test plan (qualité + tests)
+- Risks and rollback
+- Checklist finale
+
 ---
 
 ## 🛠️ Outils et Commandes
