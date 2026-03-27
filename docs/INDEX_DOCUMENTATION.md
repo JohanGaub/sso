@@ -40,6 +40,8 @@ Pour approfondir vos connaissances :
 - `STANDARDS_SYMFONY.md` : Standards de développement (Symfony + conventions équipe)
 - `CURSOR_RULES.md` : Règles Cursor (fonctionnement & maintenance)
 - `SUBAGENTS_CURSOR.md` : Subagents Cursor (création & usage)
+- `HOOKS_CURSOR.md` : Hooks Cursor (automatisation et garde-fous)
+- `MAIL_TEMPLATES.md` : Modèles de mails (partage formation/docs)
 
 ---
 
