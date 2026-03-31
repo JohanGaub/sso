@@ -1,5 +1,14 @@
 # Cursor Rules (projet) — fonctionnement & maintenance
 
+## Glossaire express (2 mots + quand)
+
+- **Rules** : *standards persistants* — à utiliser pour des règles courtes “toujours vraies” (conventions, architecture, qualité).
+- **Skills** : *workflow à‑la‑demande* — à utiliser comme “commande” (`/skill`) pour générer un output répétable (ex: draft PR).
+- **Subagents** : *spécialistes délégués* — à utiliser pour des tâches lourdes/procédurales (audit, verification, sécurité) avec contexte isolé.
+- **Hooks** : *triggers automatiques* — (**avancé**) à utiliser pour déclencher automatiquement un script/politique à un moment du cycle agent.
+- **MCP** : *outils externes* — à utiliser quand l’agent doit appeler des systèmes/outils via intégration (browser, DB, etc.).
+- **PR template** : *review structurée* — à utiliser pour standardiser les descriptions de PR et accélérer la relecture.
+
 ## 1) Comment ça fonctionne (très concis)
 
 Cursor charge des **instructions persistantes** pour l’Agent via :
@@ -53,6 +62,7 @@ L’objectif réaliste n’est pas “implémenter automatiquement les nouvelles
 
 Voir aussi : `docs/SUBAGENTS_CURSOR.md` (guide complet subagents).
 Voir aussi : `docs/HOOKS_CURSOR.md` (**avancé** : hooks, triggers automatiques).
+Voir aussi : `docs/SKILLS_CURSOR.md` (skills, workflows simples pour la formation).
 
 ## 4) Enchaînement simple (à retenir)
 1. **Doc humaine** : formaliser la règle/procédure dans `docs/`.

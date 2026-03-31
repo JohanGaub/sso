@@ -29,19 +29,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ## Auto-collected context
 
 ### Changed files
-- `.cursor/pr-draft.md`
-- `.cursor/skills/pr-draft/SKILL.md`
-- `.cursor/skills/review-pack/SKILL.md`
+- `docs/CURSOR_RULES.md`
 
 ### Last commits
+- 524cba1 fix(skills): quote YAML descriptions in skill frontmatter
 - 9f642a3 docs(devx): add Cursor skills and label hooks as advanced
 - ed5bc31 docs(devx): add reusable mail templates for training handoff
 - 1eb2d1e docs(devx): add PR template workflow and shareable agent specs
 - b075afd docs: document Cursor subagents and add project agents
-- 8ec7cfe chore: remove legacy Cursor rules file
 
 ### Diff summary
- .cursor/pr-draft.md                 | 16 +++-------------
- .cursor/skills/pr-draft/SKILL.md    |  2 +-
- .cursor/skills/review-pack/SKILL.md |  2 +-
- 3 files changed, 5 insertions(+), 15 deletions(-)
+ .cursor/pr-draft.md  | 10 ++--------
+ docs/CURSOR_RULES.md | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 8 deletions(-)
