@@ -29,16 +29,18 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ## Auto-collected context
 
 ### Changed files
-- `docs/CURSOR_RULES.md`
+- `composer.json`
+- `composer.lock`
 
 ### Last commits
+- bbc2a80 docs(cursor): add quick glossary for Cursor concepts
 - 524cba1 fix(skills): quote YAML descriptions in skill frontmatter
 - 9f642a3 docs(devx): add Cursor skills and label hooks as advanced
 - ed5bc31 docs(devx): add reusable mail templates for training handoff
 - 1eb2d1e docs(devx): add PR template workflow and shareable agent specs
-- b075afd docs: document Cursor subagents and add project agents
 
 ### Diff summary
- .cursor/pr-draft.md  | 10 ++--------
- docs/CURSOR_RULES.md | 10 ++++++++++
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ .cursor/pr-draft.md |  8 +++-----
+ composer.json       |  4 ++--
+ composer.lock       | 44 ++++++++++++++------------------------------
+ 3 files changed, 19 insertions(+), 37 deletions(-)
