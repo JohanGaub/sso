@@ -29,25 +29,19 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ## Auto-collected context
 
 ### Changed files
-- `.cursor/agents/doc-curator.md`
-- `.cursor/agents/security-reviewer.md`
-- `.cursor/agents/verifier.md`
 - `.cursor/pr-draft.md`
 - `docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence`
 - `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 
 ### Last commits
+- 12af29c chore(cursor): refine project subagent prompts
 - 0ab56bb chore: update composer dependencies
 - 99870e6 chore: update composer dependencies
 - 9ef5869 docs(cursor): add quick glossary for Cursor concepts
 - bbc2a80 docs(cursor): add quick glossary for Cursor concepts
-- 524cba1 fix(skills): quote YAML descriptions in skill frontmatter
 
 ### Diff summary
- .cursor/agents/doc-curator.md                         |  2 +-
- .cursor/agents/security-reviewer.md                   |  2 +-
- .cursor/agents/verifier.md                            |  2 +-
- .cursor/pr-draft.md                                   | 18 +++++++++---------
- docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence        |  2 +-
- docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence |  4 ++--
- 6 files changed, 15 insertions(+), 15 deletions(-)
+ .cursor/pr-draft.md                                | 12 +-------
+ docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence     | 35 ++++++++++------------
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence |  4 +--
+ 3 files changed, 18 insertions(+), 33 deletions(-)

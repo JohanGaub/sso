@@ -62,26 +62,26 @@ h4. 1) Environnement local (développement)
 || # || Prérequis local || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
 | 1.1 | Application locale lançable | Build/run local fonctionnel, sans contournement manuel | 1, 2, 3, 4 |  |  |
 | 1.2 | URL locale de callback (et déclaration Entra ID) | URL stable de callback/login (ex. localhost) *et* Redirect URI déclarée dans Entra ID, strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
-| 1.4 | Compte utilisateur local | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
-| 1.5 | Compte administrateur local (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
-| 1.6 | Type de client et flux validés | Type de client cohérent (confidentiel/public) et flux cible validé (Authorization Code, PKCE si client public) | 1, 2, 3, 4 |  |  |
-| 1.7 | Configuration SSO locale minimale | Variables/env + endpoints configurés pour tester le SSO en local | 1, 2, 3, 4 |  |  |
+| 1.3 | Compte utilisateur local | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
+| 1.4 | Compte administrateur local (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
+| 1.5 | Type de client et flux validés | Type de client cohérent (confidentiel/public) et flux cible validé (Authorization Code, PKCE si client public) | 1, 2, 3, 4 |  |  |
+| 1.6 | Configuration SSO locale minimale | Variables/env + endpoints configurés pour tester le SSO en local | 1, 2, 3, 4 |  |  |
 
 h4. 2) Environnement distant (dev/préprod sur serveur dédié)
 
 || # || Prérequis distant || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
 | 2.1 | URL distante accessible | URL HTTPS dédiée accessible depuis votre poste (hors localhost) pour valider le comportement en conditions réelles | 1, 2, 3, 4 |  |  |
 | 2.2 | URL distante de callback (et déclaration Entra ID) | URL de callback/login *et* Redirect URI déclarée dans Entra ID, strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
-| 2.4 | Compte utilisateur distant | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
-| 2.5 | Compte administrateur distant (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
-| 2.6 | Prérequis réseau/VPN (si nécessaire) | Accès réseau validé (VPN, ACL, proxy, etc.) | 1, 2, 3, 4 |  |  |
-| 2.7 | Politique d'authentification de test connue | Contraintes actives connues (MFA, Conditional Access, consentement) pour éviter les faux blocages | 1, 2, 3, 4 |  |  |
+| 2.3 | Compte utilisateur distant | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
+| 2.4 | Compte administrateur distant (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
+| 2.5 | Prérequis réseau/VPN (si nécessaire) | Accès réseau validé (VPN, ACL, proxy, etc.) | 1, 2, 3, 4 |  |  |
+| 2.6 | Politique d'authentification de test connue | Contraintes actives connues (MFA, Conditional Access, consentement) pour éviter les faux blocages | 1, 2, 3, 4 |  |  |
 
 h4. 3) Décision de démarrage
 
 || Critère || Date de validation || Commentaire ||
-| Local complet (1.1 à 1.7 renseignés) |  |  |
-| Distant complet (2.1 à 2.7 renseignés) |  |  |
+| Local complet (1.1 à 1.6 renseignés) |  |  |
+| Distant complet (2.1 à 2.6 renseignés) |  |  |
 | GO développement / raccordement |  |  |
 
 *Règle GO :* démarrage uniquement quand local + distant sont complets.
@@ -92,19 +92,14 @@ h4. 3) Décision de démarrage
 h2. 2. Étapes communes de la migration
 
 || Étape || Objectif || Acteurs || Sortie attendue ||
-| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative + équipe IAM | Guide cible identifié (1, 2, 3 ou 4). |
-| 2 | Aligner les identités : définir les claims (OIDC) / attributs (SAML) nécessaires (id, email, nom, rôle, etc.) | Équipe applicative + équipe IAM | Liste de claims/attributs validée avec l’IAM. |
-| 3 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative + équipe IAM | Stratégie de flux validée (si gestion privée). |
-| 4 | Configurer l'application : URLs, clients, certificats, puis implémenter la lecture et l’usage des informations d’authentification côté code. | Équipe applicative | Configuration applicative finalisée + lecture des claims/attributs implémentée. |
+| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative ou équipe raccordement | Guide cible identifié (1, 2, 3 ou 4). |
+| 2 | Identifier les claims (OIDC) / attributs (SAML) utilisés (id, email, nom, rôle, etc.) par l'application et demander l'exposition des claims ou attributs auprès de l'équipe IAM ou de l'équipe *Gestion managée*, selon l'organisation | Équipe applicative ou équipe raccordement | Liste de claims/attributs validée avec l’IAM ou la gestion managée ; chaque valeur attendue est vérifiable côté application après authentification (session, contexte utilisateur ou objet d’identité fourni par votre stack — sans technologie imposée). |
+| 3 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative, équipe raccordement | Stratégie de flux validée. |
+| 4 | Configurer l'application : URLs, clients, certificats, puis implémenter la lecture et l’usage des informations d’authentification côté code. | Équipe applicative ou équipe raccordement | Configuration applicative finalisée + lecture des claims/attributs implémentée. |
 | 5 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev validé. |
 | 6 | Réaliser la recette fonctionnelle en production : rejouer le socle de scénarios et produire un PV | Équipe applicative | PV de recette fonctionnelle production validé. |
 
-Les étapes ci‑dessus donnent une vue d'ensemble du process.
-Le suivi concret (étapes détaillées, acteurs, pièges) se fait dans le guide choisi (section 3).
-
-{quote}
-Les détails techniques (tableaux d'étapes, schémas de flux, pièges courants) sont décrits dans les guides par type de raccordement ci‑dessous.
-{quote}
+Le suivi détaillé (étapes, acteurs, tableaux, schémas de flux, pièges courants) se fait dans le guide détaillé choisi via le tableau de routage ci‑dessous (section 3).
 
 ----
 
