@@ -1,7 +1,7 @@
 ---
 name: verifier
+model: default
 description: Validates completed work. Use after changes to confirm requirements, docs and rules compliance, and that QA commands pass.
-model: fast
 readonly: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
+model: default
 description: Security specialist for Symfony. Use when touching authentication, authorization, user data, tokens, sessions, cookies, or secrets.
-model: inherit
 readonly: true
 ---
 

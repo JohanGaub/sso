@@ -1,7 +1,7 @@
 ---
 name: doc-curator
+model: default
 description: Documentation curator. Use when adding/changing docs to keep docs index and entrypoints consistent.
-model: fast
 readonly: true
 ---
 
