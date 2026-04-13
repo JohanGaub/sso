@@ -3,28 +3,17 @@ h1. 0. Migration SSO – Synthèse en 1 page
 Ce document donne une vue d'ensemble de la migration vers le SSO cible.
 Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les guides dédiés listés plus bas.
 
-h3. À qui s'adresse ce document ?
+h2. À qui s'adresse ce document ?
 
-Équipe applicative ; équipe IAM ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l'équipe applicative).
+Équipe applicative ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l'équipe applicative).
 
-h3. Comment utiliser ce document ?
+h2. Lire ce document (2 minutes)
 
-# Vérifier les prérequis (contexte, accès Préprod auprès de l'équipe IAM).
-# Parcourir les étapes pour situer où vous en êtes.
-# Choisir le guide détaillé correspondant à votre cas (tableau de routage, section 3) puis appliquer le mode opératoire du guide.
+Ce document cadre la migration et oriente vers les guides 1 à 4 ; le détail d’exécution reste dans le guide choisi.
 
-h3. Mode d’emploi (2 min)
-
-* Si vous ne savez pas par où commencer : lisez *Pré-requis* puis *Choisir votre guide détaillé*.
-* Si vous êtes déjà en implémentation : utilisez ce document comme repère de pilotage (étapes communes), puis appliquez le guide dédié.
-* Si un doute est purement technique : allez directement dans le guide détaillé (OIDC/SAML, managée/privée).
-* Si vous hésitez entre deux guides : utilisez la règle simple en section 3 (*protocole* + *mode*).
-
-h3. Chemin de lecture rapide
-
-* Je démarre : vérifier *Pré-requis* puis identifier le guide cible en section 3.
-* Je déroule : suivre les étapes communes avec leur *Sortie attendue*.
-* Je bloque techniquement : basculer immédiatement dans le guide détaillé correspondant.
+* *Démarrer* : lire *1. Pré‑requis*, puis choisir le guide via la *section 3* (tableau *protocole* × *mode*).
+* *Dérouler* : appliquer le *mode opératoire* du guide retenu ; utiliser la *section 2* (*Étapes communes*) comme fil et pour les *sorties attendues* globales (claims/attributs, recette, PV).
+* *Bloquer ou un terme flou* : ouvrir le guide détaillé concerné ; pour les définitions, *section 4* (*Glossaire*).
 
 ----
 
@@ -61,7 +50,7 @@ h4. 1) Environnement local (développement)
 
 || # || Prérequis local || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
 | 1.1 | Application locale lançable | Build/run local fonctionnel, sans contournement manuel | 1, 2, 3, 4 |  |  |
-| 1.2 | URL locale de callback (et déclaration Entra ID) | URL stable de callback/login (ex. localhost) *et* Redirect URI déclarée dans Entra ID, strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
+| 1.23 | URL locale de callback (et déclaration Entra ID) | URL stable de callback/login (ex. localhost) *et* Redirect URI déclarée dans Entra ID, strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
 | 1.3 | Compte utilisateur local | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
 | 1.4 | Compte administrateur local (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
 | 1.5 | Type de client et flux validés | Type de client cohérent (confidentiel/public) et flux cible validé (Authorization Code, PKCE si client public) | 1, 2, 3, 4 |  |  |
