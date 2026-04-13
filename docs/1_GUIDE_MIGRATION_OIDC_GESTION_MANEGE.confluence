@@ -3,7 +3,8 @@ h1. 1. Guide migration OIDC - Gestion managée
 En gestion managée :
 * L’équipe *Gestion managée* sollicite l’équipe IAM pour configurer Entra ID (client, secrets, redirect URIs, claims émis)
 * L’équipe *Gestion managée* gère la mécanique OIDC.
-* L'équipe applicative et/ou l'équipe raccordement adapte la lecture des *claims* dans l'application (selon l’architecture : *ID Token*, endpoint *UserInfo* et/ou *access token* validé — ce qui est exposé au code dépend du middleware ou de la bibliothèque OIDC).
+* L'équipe applicative et/ou l'équipe raccordement adapte la lecture des *claims* dans le code applicatif.
+NB : Selon la stack OIDC, ces claims peuvent provenir de l’*ID Token*, de l’endpoint *UserInfo* et/ou d’un *access token* validé (ce que le code reçoit dépend du middleware ou de la bibliothèque).
 
 h2. Mode opératoire (lecture)
 
@@ -14,30 +15,30 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 
 ----
 
-h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
+h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
 | 1 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée et partagée (ex. wiki, ticket). | [ ] |
 | 2 | Obtenir un accès Gardian Recette | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette obtenu et vérifiable. | [ ] |
 | 3 | Obtenir un accès EntraID Recette | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès portail / tenant recette validé selon process interne. | [ ] |
-| 4 | Transmettre la liste des claims attendus et des URL de site + de redirection après authentification à l'équipe IAM | Équipe applicative et/ou Équipe de raccordement | À estimer | Liste des claims attendus transmise (noms exacts). | [ ] |
+| 4 | Transmettre la liste des claims attendus et des URL de site + de redirection après authentification à l'équipe IAM | Équipe applicative et/ou Équipe de raccordement | À estimer | Liste des claims (noms exacts) + URL site et URL de redirection transmises à l’IAM (trace : mail ou ticket). | [ ] |
 | 5 | Configurer EntraID avec la liste des claims attendus, URL site + redirection | Équipe IAM | À estimer | Liste des claims en sortie correspondant à ceux demandés. | [ ] |
-| 6 | Réaliser le raccordement dans les fichiers de configuration Terraform | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification. | [ ] |
-| 7 | Informer l'équipe applicative | Équipe Gestion managée | À estimer | Courriel ou message Teams à l'équipe applicative (raccordement prêt à tester). | [ ] |
-| 8 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification. | [ ] |
+| 6 | Réaliser le raccordement dans les fichiers de configuration Terraform | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification (MR Terraform mergée ou équivalent). | [ ] |
+| 7 | Informer l'équipe applicative | Équipe Gestion managée | À estimer | Mail ou message Teams auprès de l'équipe applicative (raccordement prêt à tester). | [ ] |
+| 8 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Même flux validé : connexion OK, page attendue après redirection OK. | [ ] |
 | 9 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request listant les modifications de code. | [ ] |
-| 10 | Voir avec Vincent : réaliser des tests unitaires UNIQUEMENT sur le processus de connexion et pas sur les claims dans le code (hors périmètre connexion) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request listant les modifications de code. | [ ] |
+| 10 | Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement — pas sur la logique métier des claims | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request avec tests de connexion. | [ ] |
 | 11 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
 | 12 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
 | 13 | Redéployer en développement  | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
 | 14 | Réaliser la recette fonctionnelle et valider le PV  | Équipe applicative et/ou Équipe de raccordement | À estimer | PV validé. | [ ] |
-| 15 | Envoyer le PV de recette (préprod / hors production) au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Courriel avec PV de recette envoyé au CAM Eagles. | [ ] |
-| 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Mail envoyé à l'équipe Gestion managée. | [ ] |
-| 17 | Basculer la configuration de test vers la production | Équipe Gestion managée | À estimer | Configuration prod appliquée (recette IAM / gestion managée). | [ ] |
+| 15 | Envoyer le PV de recette (préprod / hors production) au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Courriel avec PV de recette transmis au CAM Eagles. | [ ] |
+| 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Mail à l'équipe Gestion managée. | [ ] |
+| 17 | Basculer la configuration de test vers la production | Équipe Gestion managée | À estimer | Fichiers Terraform (ou équivalent) actualisés pour la prod (client, secrets, redirect URIs, tenant). | [ ] |
 | 18 | Taguer la branche main pour déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Tag ou release de production créée (référence traçable). | [ ] |
 | 19 | Tester en production, réadapter le code si nécessaire et valider le PV final | Équipe applicative | À estimer | Arrivée sur la mire de connexion Microsoft ; redirection vers l’URL attendue ; PV production validé. | [ ] |
-| 20 | Envoyer le PV de recette production au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Courriel avec PV de recette *production* envoyé au CAM Eagles. | [ ] |
-| Total | Durée totale (somme des étapes 1 à 20) | — | À estimer | [ ] |
+| 20 | Envoyer le PV de recette production au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Mail avec PV de recette *production* transmis au CAM Eagles. | [ ] |
+| Total | Durée totale (somme des étapes 1 à 20) | — | À estimer | — | [ ] |
 
 ----
 
@@ -54,9 +55,9 @@ h2. Pièges courants
 
 * Oublier d'actualiser le schéma de validation des claims (liste des claims autorisés, types).
 * Confusion entre claims standard (ex. id, email, nom) et personnalisés (ex. role) : bien documenter la source (IdP) et le nom exact du claim.
-* Ne pas ignorer les erreurs quand l'application lit les claims :
-** en développement/préproduction : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
-** en production : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu'un claim attendu est manquant ou invalide.
+* Lorsque l'application lit les claims, *traiter* les erreurs (ne pas les masquer) :
+** en développement/préproduction : journaliser ce que le SSO envoie réellement pour comprendre valeur manquante ou incorrecte ;
+** en production : logs sans données sensibles, mais message clair si un claim attendu est manquant ou invalide.
 
 h4. Checklist de validation minimale (dev-first)
 
