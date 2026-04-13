@@ -25,14 +25,14 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 5 | Configurer EntraID avec la liste des claims attendus, URL site + redirection | Équipe IAM | À estimer | Liste des claims en sortie correspondant à ceux demandés. | [ ] |
 | 6 | Réaliser le raccordement dans les fichiers de configuration Terraform | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification (MR Terraform mergée ou équivalent). | [ ] |
 | 7 | Informer l'équipe applicative | Équipe Gestion managée | À estimer | Mail ou message Teams auprès de l'équipe applicative (raccordement prêt à tester). | [ ] |
-| 8 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Même flux validé : connexion OK, page attendue après redirection OK. | [ ] |
+| 8 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Même flux validé que l'étape 6 : connexion OK, page attendue après redirection OK. | [ ] |
 | 9 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request listant les modifications de code. | [ ] |
 | 10 | Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement — pas sur la logique métier des claims | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request avec tests de connexion. | [ ] |
 | 11 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
 | 12 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
 | 13 | Redéployer en développement  | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
 | 14 | Réaliser la recette fonctionnelle et valider le PV  | Équipe applicative et/ou Équipe de raccordement | À estimer | PV validé. | [ ] |
-| 15 | Envoyer le PV de recette (préprod / hors production) au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Courriel avec PV de recette transmis au CAM Eagles. | [ ] |
+| 15 | Envoyer le PV de recette (préprod / hors production) au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Mail avec PV de recette transmis au CAM Eagles. | [ ] |
 | 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Mail à l'équipe Gestion managée. | [ ] |
 | 17 | Basculer la configuration de test vers la production | Équipe Gestion managée | À estimer | Fichiers Terraform (ou équivalent) actualisés pour la prod (client, secrets, redirect URIs, tenant). | [ ] |
 | 18 | Taguer la branche main pour déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Tag ou release de production créée (référence traçable). | [ ] |
@@ -122,10 +122,10 @@ nom = user_info.get('nom')
 role = user_info.get('role')
 {code}
 
-TypeScript (Node / front)
+TypeScript (Node.js, backend — ex. Express / Nest)
 
 {code:javascript}
-// Côté backend après validation du JWT
+// Après vérification du JWT (signature, issuer, audience), lecture du payload
 const payload = decodedToken as { email?: string; nom?: string; role?: string };
 const email = payload.email;
 const nom = payload.nom;
