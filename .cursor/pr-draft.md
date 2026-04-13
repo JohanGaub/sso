@@ -33,13 +33,13 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence`
 
 ### Last commits
+- eb77b15 docs(synthesis): replace redundant intro with quick path bullets
 - c850b31 docs(oidc-managed-guide): clarify node typescript sample as backend-only
 - b307ca7 docs(oidc-managed-guide): refine suivi flow, intro and pitfalls wording
 - 5f55018 docs(oidc-managed-guide): fix tracking table, claims wording and section refs
 - 158bd35 docs(sso): align synthesis checklist and clarify managed OIDC ownership
-- 12af29c chore(cursor): refine project subagent prompts
 
 ### Diff summary
- .cursor/pr-draft.md                            |  7 ++-----
- docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence | 27 ++++++++------------------
- 2 files changed, 10 insertions(+), 24 deletions(-)
+ .cursor/pr-draft.md                            |  5 +----
+ docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence | 29 ++++++++++++++++++++------
+ 2 files changed, 24 insertions(+), 10 deletions(-)
