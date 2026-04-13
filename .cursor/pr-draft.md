@@ -30,18 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence`
 - `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 
 ### Last commits
+- 158bd35 docs(sso): align synthesis checklist and clarify managed OIDC ownership
 - 12af29c chore(cursor): refine project subagent prompts
 - 0ab56bb chore: update composer dependencies
 - 99870e6 chore: update composer dependencies
 - 9ef5869 docs(cursor): add quick glossary for Cursor concepts
-- bbc2a80 docs(cursor): add quick glossary for Cursor concepts
 
 ### Diff summary
- .cursor/pr-draft.md                                | 12 +-------
- docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence     | 35 ++++++++++------------
- ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence |  4 +--
- 3 files changed, 18 insertions(+), 33 deletions(-)
+ .cursor/pr-draft.md                                |  7 +-
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 76 +++++++++++-----------
+ 2 files changed, 38 insertions(+), 45 deletions(-)

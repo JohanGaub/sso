@@ -1,47 +1,47 @@
 h1. 1. Guide migration OIDC - Gestion managée
 
-En gestion managée, l’équipe *Gestion managée* gère la mécanique OIDC. L’équipe IAM est sollicitée pour le provisioning / la configuration dans Entra ID (client, secrets, redirect URIs, claims émis), selon le process. Vous ne traitez que les informations d'identité portées par les tokens (*claims*) : convenir des dénominations (liste des claims) avec la gestion managée/IAM, puis les lire dans l'application.
+En gestion managée :
+* L’équipe *Gestion managée* sollicite l’équipe IAM pour configurer Entra ID (client, secrets, redirect URIs, claims émis)
+* L’équipe *Gestion managée* gère la mécanique OIDC.
+* L'équipe applicative et/ou l'équipe raccordement adapte la lecture des *claims* dans l'application (selon l’architecture : *ID Token*, endpoint *UserInfo* et/ou *access token* validé — ce qui est exposé au code dépend du middleware ou de la bibliothèque OIDC).
 
-h2. Mode d’emploi (développeur)
+h2. Mode opératoire (lecture)
 
-Ce guide s’utilise pour préparer les claims avec l’IAM, documenter la correspondance de claims, puis adapter la lecture côté application.
+* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *20*.
+* Pass 2 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou il faut un modèle de lecture.
+
 Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse en 1 page*.
-
-h3. Mode opératoire (lecture)
-
-* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *3*.
-* Pass 2 : renseignez *Claims (Legacy → IdP)* pour l’IAM et le code applicatif.
-* Pass 3 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou il faut un modèle de lecture.
-
-h3. Ressources
-
-* Claims (Legacy → IdP)
-* Pièges courants
-* Exemples de code
-* Tester et diagnostiquer (2 min)
 
 ----
 
 h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | Identifier les nouveaux claims requis (ex. id, email, nom, role) et transmettre à l'équipe IAM la liste des claims attendus. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Liste des claims attendus transmise à l'IAM. | [ ] |
-| 2 | Actualiser la configuration de l'IdP pour que les tokens contiennent ces claims (l'IdP puise les valeurs dans son annuaire) ; vérifier que les valeurs sources (id, email, nom, role, etc.) sont bien exposées avec les noms attendus. | Équipe Gestion managée + Équipe IAM | À estimer | Claims émis par l'IdP avec noms conformes au mapping. | [ ] |
-| 3 | Adapter et tester la consommation des claims dans l'application : actualiser le code (lecture, validation) puis tester la connexion au SSO cible et vérifier que les claims attendus sont bien reçus et utilisés (connexion OK, valeurs visibles dans l'appli). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Lecture applicative validée (nominal + erreurs maîtrisées). | [ ] |
-| 4 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
-| 5 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
-| Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
+| 1 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée et partagée (ex. wiki, ticket). | [ ] |
+| 2 | Obtenir un accès Gardian Recette | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette obtenu et vérifiable. | [ ] |
+| 3 | Obtenir un accès EntraID Recette | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès portail / tenant recette validé selon process interne. | [ ] |
+| 4 | Transmettre la liste des claims attendus et des URL de site + de redirection après authentification à l'équipe IAM | Équipe applicative et/ou Équipe de raccordement | À estimer | Liste des claims attendus transmise (noms exacts). | [ ] |
+| 5 | Configurer EntraID avec la liste des claims attendus, URL site + redirection | Équipe IAM | À estimer | Liste des claims en sortie correspondant à ceux demandés. | [ ] |
+| 6 | Réaliser le raccordement dans les fichiers de configuration Terraform | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification. | [ ] |
+| 7 | Informer l'équipe applicative | Équipe Gestion managée | À estimer | Courriel ou message Teams à l'équipe applicative (raccordement prêt à tester). | [ ] |
+| 8 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification. | [ ] |
+| 9 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request listant les modifications de code. | [ ] |
+| 10 | Voir avec Vincent : réaliser des tests unitaires UNIQUEMENT sur le processus de connexion et pas sur les claims dans le code (hors périmètre connexion) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request listant les modifications de code. | [ ] |
+| 11 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
+| 12 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
+| 13 | Redéployer en développement  | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 14 | Réaliser la recette fonctionnelle et valider le PV  | Équipe applicative et/ou Équipe de raccordement | À estimer | PV validé. | [ ] |
+| 15 | Envoyer le PV de recette (préprod / hors production) au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Courriel avec PV de recette envoyé au CAM Eagles. | [ ] |
+| 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Mail envoyé à l'équipe Gestion managée. | [ ] |
+| 17 | Basculer la configuration de test vers la production | Équipe Gestion managée | À estimer | Configuration prod appliquée (recette IAM / gestion managée). | [ ] |
+| 18 | Taguer la branche main pour déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Tag ou release de production créée (référence traçable). | [ ] |
+| 19 | Tester en production, réadapter le code si nécessaire et valider le PV final | Équipe applicative | À estimer | Arrivée sur la mire de connexion Microsoft ; redirection vers l’URL attendue ; PV production validé. | [ ] |
+| 20 | Envoyer le PV de recette production au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Courriel avec PV de recette *production* envoyé au CAM Eagles. | [ ] |
+| Total | Durée totale (somme des étapes 1 à 20) | — | À estimer | [ ] |
 
 ----
 
-h2. Claims (Legacy → IdP)
-
-En gestion managée, le livrable principal côté dev est souvent la table de correspondance entre vos *claims* existants (legacy) et les *claims OIDC* envoyés par l'IdP. Cette table sert :
-* à l’équipe IAM pour configurer correctement les mappings côté IdP ;
-* au code applicatif pour lire les bons claims.
-
-*À faire absolument :* figer les noms exacts des claims attendus (casse incluse) avant d’implémenter la lecture côté code.
-Convention conseillée : choisir une seule clé métier (ex. `role` *ou* `roles`) et l’appliquer partout (IAM + code).
+h2. Claims (Legacy → EntraID)
 
 || Description || Claim Legacy || Claim Entra ID ||
 |  |  |  |
@@ -61,18 +61,16 @@ h2. Pièges courants
 h4. Checklist de validation minimale (dev-first)
 
 * Claims attendus présents et exploitables côté code.
-* Noms de claims conformes au mapping validé avec l’IAM.
+* Noms de claims conformes au mapping de ce document (voir la section *Claims (Legacy → EntraID)* ci-dessus).
 * Gestion des claims manquants (pas de crash, message explicite).
-* Logs utiles en dev/preprod et sûrs en production.
+* Logs utiles en dev/preprod et production sans données sensibles.
 
-h3. Tester et diagnostiquer (2 min)
+h3. Tester et diagnostiquer
 
-*Entrée attendue :* mapping claims validé avec l’IAM et lecture implémentée côté application.
-
-* Cas 1 (nominal) : les claims attendus sont présents et consommés côté code.
+* Cas 1 (succès) : tous les claims attendus sont reçus dans le code (voir la section *Claims (Legacy → EntraID)* ci-dessus).
 * Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
-* Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. role inconnu) ; le comportement de repli est maîtrisé.
-* En cas d’échec : revenez à *Claims (Legacy → IdP)*, corrigez le mapping IAM/côté code, puis rejouez les 3 cas.
+* Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. rôle inconnu) ; comportement maîtrisé = *refus d’accès explicite* (403 / exception métier), *valeur de repli documentée*, ou *message utilisateur clair* — sans crash ni fuite de données sensibles dans les logs.
+* En cas d’échec : revenez à la section *Claims (Legacy → EntraID)*, corrigez le mapping côté code, puis rejouez les 3 cas.
 
 *Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
 
@@ -81,7 +79,7 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Claims attendus lus sans erreur dans le cas nominal.
 * Claim manquant géré sans crash.
 * Claim invalide géré avec comportement maîtrisé.
-* Logs exploitables en dev/preprod et sûrs en production.
+* Logs exploitables en dev/preprod et sécurisés en production (=sans données sensibles).
 * PV de recette fonctionnelle préprod/dev validé.
 * PV de recette fonctionnelle production validé.
 
