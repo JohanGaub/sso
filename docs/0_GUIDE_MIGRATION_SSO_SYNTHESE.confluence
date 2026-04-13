@@ -17,13 +17,13 @@ Ce document cadre la migration et oriente vers les guides 1 à 4 ; le détail d�
 
 * *Démarrer* : lire *1. Pré‑requis*, puis choisir le guide via la *section 3* (tableau *protocole* × *mode*).
 * *Dérouler* : appliquer le *mode opératoire* du guide retenu ; utiliser la *section 2* (*Étapes communes*) comme fil et pour les *sorties attendues* globales (claims/attributs, recette, PV).
-* *Bloquer ou un terme flou* : ouvrir le guide détaillé concerné ; pour les définitions, *section 4* (*Glossaire*).
+* *En cas de blocage ou un terme flou* : ouvrir le guide détaillé concerné ; pour les définitions, *section 4* (*Glossaire*).
 
 ----
 
 h2. 1. Pré‑requis
 
-h3. Prérequis administratifs et parcours IAM
+h3. Prérequis administratifs
 
 * Préprod :
 ** l’équipe applicative transmet la demande IAM (formulaire + matrice des rôles) ;
