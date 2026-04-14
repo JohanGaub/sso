@@ -1,87 +1,30 @@
 h1. 0. Migration SSO – Synthèse en 1 page
 
-h2. Introduction
+Ce document cadre la migration et oriente vers les guides 1 à 4.
+Chaque guide détaille l’exécution.
 
-h3. Objet et périmètre
-
-Ce document donne une vue d'ensemble de la migration vers le SSO cible.
-Les détails par cas (OIDC/SAML, gestion managée/privée) se trouvent dans les guides dédiés listés plus bas.
-
-h3. À qui s'adresse ce document ?
+h2. À qui s'adresse ce document ?
 
 Équipe applicative ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l'équipe applicative).
 
-h3. Lire ce document
+h2. Mode opératoire
 
-Ce document cadre la migration et oriente vers les guides 1 à 4 ; le détail d’exécution reste dans le guide choisi.
-
-* *Démarrer* : lire *1. Pré‑requis*, puis choisir le guide via la *section 3* (tableau *protocole* × *mode*).
-* *Dérouler* : appliquer le *mode opératoire* du guide retenu ; utiliser la *section 2* (*Étapes communes*) comme fil et pour les *sorties attendues* globales (claims/attributs, recette, PV).
-* *En cas de blocage ou un terme flou* : ouvrir le guide détaillé concerné ; pour les définitions, *section 4* (*Glossaire*).
+# Vérifier les pré-requis.
+# Identifier votre guide (tableau de routage, section 3).
+# Dérouler le mode opératoire du guide.
 
 ----
 
 h2. 1. Pré‑requis
 
-h3. Prérequis administratifs
-
-* Préprod :
-** l’équipe applicative transmet la demande IAM (formulaire + matrice des rôles) ;
-** l’équipe IAM fournit les accès/environnements.
-* Production :
-** même démarche, avec dossier de passage (PV de recette fonctionnelle, fiche de renseignement, métadonnées prod) ;
-** approbation IAM.
-* Mise en œuvre : l’équipe applicative intègre les métadonnées IdP dans l’application.
-* Référence process : guide de raccordement IAM.
-
-h3. Contexte à clarifier avant le détail
-
-* Protocole : OIDC ou SAML v2.
-* Mode : gestion managée (claims OIDC / attributs SAML uniquement) ou gestion privée (flux d'auth + attributs/claims).
-* Niveau d'autonomie : autonome, accompagné, délégué.
-
-h3. Environnement de départ
-
-* Démarrage : toujours en Préprod.
-* Disponibilité :
-** l’équipe IAM met l’environnement à disposition ;
-** l’équipe applicative vérifie qu’un compte / une application Préprod est prêt avant de commencer.
-* Enchaînement : après validation des tests en Préprod, passage en Production.
-
-h3. Prérequis de démarrage (développeur) — checklist datée
-
 Règle simple : une ligne est considérée comme acquise uniquement quand la date est renseignée.
 Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1 à 4.
 
-h4. 1) Environnement local (développement)
-
-|| # || Prérequis local || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
-| 1.1 | Application locale lançable | Build/run local fonctionnel, sans contournement manuel | 1, 2, 3, 4 |  |  |
-| 1.2 | URL locale de callback (et déclaration Entra ID) | URL stable de callback/login (ex. localhost) *et* Redirect URI déclarée dans Entra ID, strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
-| 1.3 | Compte utilisateur local | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
-| 1.4 | Compte administrateur local (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
-| 1.5 | Type de client et flux validés | Type de client cohérent (confidentiel/public) et flux cible validé (Authorization Code, PKCE si client public) | 1, 2, 3, 4 |  |  |
-| 1.6 | Configuration SSO locale minimale | Variables/env + endpoints configurés pour tester le SSO en local | 1, 2, 3, 4 |  |  |
-
-h4. 2) Environnement distant (dev/préprod sur serveur dédié)
-
-|| # || Prérequis distant || Détail attendu (preuve) || Renvoi guide || Date obtenue || Commentaire / blocage ||
-| 2.1 | URL distante accessible | URL HTTPS dédiée accessible depuis votre poste (hors localhost) pour valider le comportement en conditions réelles | 1, 2, 3, 4 |  |  |
-| 2.2 | URL distante de callback (et déclaration Entra ID) | URL de callback/login *et* Redirect URI déclarée dans Entra ID, strictement identique à celle utilisée par l'application | 1, 2, 3, 4 |  |  |
-| 2.3 | Compte utilisateur distant | Compte test valide pour parcours nominal | 1, 2, 3, 4 |  |  |
-| 2.4 | Compte administrateur distant (si applicable) | Compte test admin valide | 1, 2, 3, 4 |  |  |
-| 2.5 | Prérequis réseau/VPN (si nécessaire) | Accès réseau validé (VPN, ACL, proxy, etc.) | 1, 2, 3, 4 |  |  |
-| 2.6 | Politique d'authentification de test connue | Contraintes actives connues (MFA, Conditional Access, consentement) pour éviter les faux blocages | 1, 2, 3, 4 |  |  |
-
-h4. 3) Décision de démarrage
-
-|| Critère || Date de validation || Commentaire ||
-| Local complet (1.1 à 1.6 renseignés) |  |  |
-| Distant complet (2.1 à 2.6 renseignés) |  |  |
-| GO développement / raccordement |  |  |
-
-*Règle GO :* démarrage uniquement quand local + distant sont complets.
-*Règle NO-GO :* au moins une date manquante sur une ligne bloquante.
+|| # || Prérequis local || Résultat attendu (preuve) || Date obtenue || Commentaire / blocage ||
+| 1 | Tirer la branche "main" de l'application sur Gitlab pour l'avoir en local sur son PC | Code visualisable sur IDE |  |  |
+| 2 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli |  |  |
+| 3 | Obtenir l'accès / habilitation EntraID Recette pour cette appli | après raccordement, en utilisant l'URL de test, on a accès au portail de l'appli. Pré-requis difficile à prouver avant raccordement. |  |  |
+| 4 | Obtenir un compte utilisateur habilité pour l'appli sur URL de test | En s'identifiant, l'utilisateur se retrouve à l'intérieur de l'appli |  |  |
 
 ----
 
@@ -90,12 +33,15 @@ h2. 2. Étapes communes de la migration
 h3. Tableau synthétique
 
 || Étape || Objectif || Acteurs || Sortie attendue ||
-| 1 | Choisir le bon parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative ou équipe raccordement | Guide cible identifié (1, 2, 3 ou 4). |
-| 2 | Identifier les claims (OIDC) / attributs (SAML) utilisés (id, email, nom, rôle, etc.) par l'application et demander l'exposition des claims ou attributs auprès de l'équipe IAM ou de l'équipe *Gestion managée*, selon l'organisation | Équipe applicative ou équipe raccordement | Liste de claims/attributs validée avec l’IAM ou la gestion managée ; chaque valeur attendue est vérifiable côté application après authentification (session, contexte utilisateur ou objet d’identité fourni par votre stack — sans technologie imposée). |
-| 3 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative, équipe raccordement | Stratégie de flux validée. |
-| 4 | Configurer l'application : URLs, clients, certificats, puis implémenter la lecture et l’usage des informations d’authentification côté code. | Équipe applicative ou équipe raccordement | Configuration applicative finalisée + lecture des claims/attributs implémentée. |
-| 5 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev validé. |
-| 6 | Réaliser la recette fonctionnelle en production : rejouer le socle de scénarios et produire un PV | Équipe applicative | PV de recette fonctionnelle production validé. |
+| 1 | Choisir le parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative ou équipe raccordement | Guide cible identifié (1, 2, 3 ou 4). |
+| 2 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative et/ou équipe raccordement | Stratégie de flux validée. |
+| 3 | Lister les claims (OIDC) / attributs (SAML) utilisés (id, email, nom, rôle, etc.) par l'application + URL d'appli et de redirection | Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur formulaire Archifactory. |
+| 4 | Fournir ces informations à l'équipe IAM ou à l'équipe Gestion managée, selon l'organisation | Équipe Gestion managée ou Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur formulaire Archifactory. |
+| 5 | Configurer EntraID avec ces informations | Équipe IAM | Accès à la mire d'authentification + à l'application après authentification. |
+| 6 | Ajuster le code de l'application : claims (OIDC) / attributs (SAML), URLs, clients, certificats. | Équipe applicative et/ou équipe raccordement | Configuration applicative réalisée. |
+| 7 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev validé. |
+| 8 | Planifier la mise en production | Équipe applicative et équipe Eagles | Date planifiée dans l'agenda. |
+| 9 | Réaliser la recette fonctionnelle en production : rejouer le socle de scénarios et produire un PV | Équipe applicative | PV de recette fonctionnelle production validé. |
 
 h3. Poursuite du suivi
 
@@ -110,22 +56,18 @@ h3. Règle de routage
 Choisissez votre guide en croisant uniquement 2 critères : protocole (OIDC/SAML) et mode de gestion (managée/privée).
 
 || Protocole || Mode || Guide détaillé ||
-| OIDC | Gestion managée (claims uniquement) | 1. Guide migration OIDC - Gestion managée |
-| OIDC | Gestion privée (flux + claims) | 2. Guide migration OIDC - Gestion privée |
-| SAML v2 | Gestion managée (attributs uniquement) | 3. Guide migration SAML - Gestion managée |
-| SAML v2 | Gestion privée (flux + attributs) | 4. Guide migration SAML - Gestion privée |
+| OIDC | Gestion managée (claims uniquement) | 1. Guide migration OIDC - Gestion managée (hébergement Cloud Place avec module Apache) |
+| OIDC | Gestion privée (flux + claims) | 2. Guide migration OIDC - Gestion privée (hébergement DataCenter ZCI, Cloud Public et Cloud Place sans module Apache) |
+| SAML v2 | Gestion managée (attributs uniquement) | 3. Guide migration SAML - Gestion managée (hébergement Cloud Place avec module Apache) |
+| SAML v2 | Gestion privée (flux + attributs) | 4. Guide migration SAML - Gestion privée (hébergement DataCenter ZCI, Cloud Public et Cloud Place sans module Apache) |
 
 h3. Précisions
 
 Pour l'OIDC en gestion privée (guide 2), une décision « avec ou sans PKCE » est à prendre ; le détail est dans le guide.
 
-Les exemples de code figurent en fin de chaque guide détaillé (après « Pièges courants »).
-
 ----
 
 h2. 4. Glossaire (termes clés)
-
-h3. Définitions
 
 || Terme || Définition ||
 | *OIDC* | OpenID Connect – couche d'identité au‑dessus d'OAuth 2.0 (id_token, userinfo, scopes openid). |
