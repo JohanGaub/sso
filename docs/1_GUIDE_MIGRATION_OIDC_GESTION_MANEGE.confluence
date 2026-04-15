@@ -57,14 +57,15 @@ h2. Pièges courants
 * Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
 * En production, vérifier que les logs ne contiennent pas de données sensibles (token brut, claims complets, données personnelles identifiantes).
 
-h2. Validation minimale (tests + DoD)
+h2. Checklist de validation avant livraison
 
-* Cas 1 (succès) : les claims nécessaires au fonctionnement de l’application sont bien reçus et exploitables côté code. Le tableau *Claims (Legacy → Entra ID)* sert de repère de correspondance, pas de liste exhaustive à valider.
-* Cas 2 (absence) : un claim nécessaire manque ; l’application ne crash pas et journalise clairement le problème sans données sensibles.
-* Cas 3 (valeur invalide) : un claim nécessaire est présent mais incohérent ; l’application ne crash pas, bloque l’accès ou affiche un message clair, et ne journalise pas de données sensibles.
-* Logs exploitables en dev/preprod et sécurisés en production (=sans données sensibles).
-* PV de recette fonctionnelle préprod/dev validé.
-* PV de recette fonctionnelle production validé.
+|| Critère à vérifier avant livraison || Validé ||
+| Cas 1 (succès) : les claims nécessaires au fonctionnement de l’application sont bien reçus et exploitables côté code. Le tableau *Claims (Legacy → Entra ID)* sert de repère de correspondance, pas de liste exhaustive à valider. | [ ] |
+| Cas 2 (absence) : un claim nécessaire manque ; l’application ne crash pas et journalise clairement le problème sans données sensibles. | [ ] |
+| Cas 3 (valeur invalide) : un claim nécessaire est présent mais incohérent ; l’application ne crash pas, bloque l’accès ou affiche un message clair, et ne journalise pas de données sensibles. | [ ] |
+| Logs exploitables en dev/preprod et sécurisés en production (sans données sensibles). | [ ] |
+| PV de recette fonctionnelle préprod/dev validé. | [ ] |
+| PV de recette fonctionnelle production validé. | [ ] |
 
 ----
 

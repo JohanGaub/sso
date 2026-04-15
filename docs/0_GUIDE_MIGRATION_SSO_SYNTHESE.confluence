@@ -85,7 +85,6 @@ h2. 4. Glossaire (termes clés)
 | *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : aud, exp, iss, nonce, amr. |
 | *Scopes OIDC de base* | openid : scope obligatoire pour OIDC ; profile : infos de profil (nom, prénom, etc.) ; email : adresse email ; offline_access : permet d'obtenir un refresh_token pour maintenir la session sans réauthentification. |
 | *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent `main`). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
-| *DoD (Definition of Done)* | Liste minimale de vérifications à valider avant de considérer une migration comme « terminée » (ex. tests réussis, logs corrects, PV validé). Tant que le DoD n'est pas rempli, le travail n'est pas considéré comme fini. |
 | *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. `<CLIENT_ID>`, `<CODE>`, `<REDIRECT_URI>`). |
 | *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
 | *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |

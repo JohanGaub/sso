@@ -34,14 +34,14 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 
 ### Last commits
+- ef9deb5 docs(sso-guides): simplify guide wording and align validation sections
 - 631379d docs(oidc-managed-guide): simplify follow-up checks and align claims validation wording
 - 5389000 docs(oidc-managed-guide): simplify follow-up section and pitfalls wording
 - ee448d1 docs(oidc-managed-guide): improve follow-up flow clarity and consistency
 - 594f02a docs(guides): simplify synthesis wording and renumber oidc managed steps
-- 8d7bce3 chore: update composer dependencies
 
 ### Diff summary
- .cursor/pr-draft.md                                   |  6 ++----
- docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence        |  1 +
- docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 16 ++--------------
- 3 files changed, 5 insertions(+), 18 deletions(-)
+ .cursor/pr-draft.md                                   |  6 +-----
+ docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence        |  1 -
+ docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 17 +++++++++--------
+ 3 files changed, 10 insertions(+), 14 deletions(-)
