@@ -33,13 +33,13 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 
 ### Last commits
+- ee448d1 docs(oidc-managed-guide): improve follow-up flow clarity and consistency
 - 594f02a docs(guides): simplify synthesis wording and renumber oidc managed steps
 - 8d7bce3 chore: update composer dependencies
 - c4ea785 docs(synthesis): simplify wording and streamline migration steps
 - 884c138 docs(synthesis): restructure heading hierarchy and intro sections
-- 6f329fd docs(synthesis): restructure heading hierarchy and intro sections
 
 ### Diff summary
- .cursor/pr-draft.md                                |  7 +---
- ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 45 +++++++++++-----------
- 2 files changed, 24 insertions(+), 28 deletions(-)
+ .cursor/pr-draft.md                                   | 5 +----
+ docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 7 ++-----
+ 2 files changed, 3 insertions(+), 9 deletions(-)

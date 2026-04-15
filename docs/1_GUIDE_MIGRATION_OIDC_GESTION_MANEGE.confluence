@@ -54,11 +54,8 @@ h2. Claims (Legacy → Entra ID)
 
 h2. Pièges courants
 
-* Oublier d'actualiser le schéma de validation des claims (liste des claims autorisés, types).
-* Confusion entre claims standard (ex. id, email, nom) et personnalisés (ex. role) : bien documenter la source (IdP) et le nom exact du claim.
-* Lorsque l'application lit les claims, *traiter* les erreurs (ne pas les masquer) :
-** en développement/préproduction : journaliser ce que le SSO envoie réellement pour comprendre valeur manquante ou incorrecte ;
-** en production : logs sans données sensibles, mais message clair si un claim attendu est manquant ou invalide.
+* Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
+* En production, vérifier que les logs ne contiennent pas de données sensibles (token brut, claims complets, données personnelles identifiantes).
 
 h4. Checklist de validation minimale (dev-first)
 
