@@ -57,23 +57,11 @@ h2. Pièges courants
 * Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
 * En production, vérifier que les logs ne contiennent pas de données sensibles (token brut, claims complets, données personnelles identifiantes).
 
-h4. Checklist de validation minimale (dev-first)
-
-* Pour chaque claim utile au fonctionnement (souvent employee_id, name), le nom attendu est bien lu dans le code et la valeur permet un fonctionnement de l’application.
-* Si un claim nécessaire au fonctionnement manque ou est invalide, l’application ne crash pas et produit un message explicite.
-* Logs utiles en dev/preprod et production sans données sensibles.
-
-h3. Tester et diagnostiquer
+h2. Validation minimale (tests + DoD)
 
 * Cas 1 (succès) : les claims nécessaires au fonctionnement de l’application sont bien reçus et exploitables côté code. Le tableau *Claims (Legacy → Entra ID)* sert de repère de correspondance, pas de liste exhaustive à valider.
-* Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème sans données sensibles.
+* Cas 2 (absence) : un claim nécessaire manque ; l’application ne crash pas et journalise clairement le problème sans données sensibles.
 * Cas 3 (valeur invalide) : un claim nécessaire est présent mais incohérent ; l’application ne crash pas, bloque l’accès ou affiche un message clair, et ne journalise pas de données sensibles.
-
-h4. Definition of Done (DoD) — validation minimale avant livraison
-
-* Claims nécessaires au fonctionnement lus sans erreur.
-* Claim nécessaire manquant géré sans crash.
-* Claim nécessaire invalide géré avec comportement maîtrisé.
 * Logs exploitables en dev/preprod et sécurisés en production (=sans données sensibles).
 * PV de recette fonctionnelle préprod/dev validé.
 * PV de recette fonctionnelle production validé.
