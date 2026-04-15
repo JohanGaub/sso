@@ -21,7 +21,7 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
 | 1 | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Code visualisable en local sur le poste de travail. | [ ] |
 | 2 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée dans le formulaire ArchiFactory. | [ ] |
-| 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Avant raccordement, accéder au portail de l'appli en utilisant l'URL de test. | [ ] |
+| 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès au portail de l'appli possible via l'URL de test avant raccordement. | [ ] |
 | 4 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de confirmation d'accès. | [ ] |
 | 5 | Demander à l'équipe IAM de configurer Entra ID (transmettre la liste des claims attendus, l'URL du site et l'URL de redirection après authentification) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
 | 6 | Configurer Entra ID avec la liste des claims attendus, l'URL du site et l'URL de redirection | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
@@ -34,7 +34,7 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 13 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs production (sans données sensibles) dans la Merge Request GitLab. | [ ] |
 | 14 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
 | 15 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette préprod au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
-| 16 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaire Eagles précisant la date de raccordement en production. | [ ] |
+| 16 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaires Eagles précisant la date de raccordement en production. | [ ] |
 | 17 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
 | 18 | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (production prête à tester). | [ ] |
 | 19 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (tag ou release de production créé(e)). | [ ] |
@@ -59,25 +59,21 @@ h2. Pièges courants
 
 h4. Checklist de validation minimale (dev-first)
 
-* Claims attendus présents et exploitables côté code.
-* Noms de claims conformes au mapping de ce document (voir la section *Claims (Legacy → Entra ID)* ci-dessus).
-* Gestion des claims manquants (pas de crash, message explicite).
+* Pour chaque claim utile au fonctionnement (souvent employee_id, name), le nom attendu est bien lu dans le code et la valeur permet un fonctionnement de l’application.
+* Si un claim nécessaire au fonctionnement manque ou est invalide, l’application ne crash pas et produit un message explicite.
 * Logs utiles en dev/preprod et production sans données sensibles.
 
 h3. Tester et diagnostiquer
 
-* Cas 1 (succès) : tous les claims attendus sont reçus dans le code (voir la section *Claims (Legacy → Entra ID)* ci-dessus).
-* Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
-* Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. rôle inconnu) ; comportement maîtrisé = *refus d’accès explicite* (403 / exception métier), *valeur de repli documentée*, ou *message utilisateur clair* — sans crash ni fuite de données sensibles dans les logs.
-* En cas d’échec : revenez à la section *Claims (Legacy → Entra ID)*, corrigez le mapping côté code, puis rejouez les 3 cas.
-
-*Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
+* Cas 1 (succès) : les claims nécessaires au fonctionnement de l’application sont bien reçus et exploitables côté code. Le tableau *Claims (Legacy → Entra ID)* sert de repère de correspondance, pas de liste exhaustive à valider.
+* Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème sans données sensibles.
+* Cas 3 (valeur invalide) : un claim nécessaire est présent mais incohérent ; l’application ne crash pas, bloque l’accès ou affiche un message clair, et ne journalise pas de données sensibles.
 
 h4. Definition of Done (DoD) — validation minimale avant livraison
 
-* Claims attendus lus sans erreur dans le cas nominal.
-* Claim manquant géré sans crash.
-* Claim invalide géré avec comportement maîtrisé.
+* Claims nécessaires au fonctionnement lus sans erreur.
+* Claim nécessaire manquant géré sans crash.
+* Claim nécessaire invalide géré avec comportement maîtrisé.
 * Logs exploitables en dev/preprod et sécurisés en production (=sans données sensibles).
 * PV de recette fonctionnelle préprod/dev validé.
 * PV de recette fonctionnelle production validé.
