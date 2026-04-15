@@ -8,6 +8,7 @@ NB : Selon la stack OIDC, ces claims peuvent provenir de l’*ID Token*, de l’
 
 h2. Mode opératoire (lecture)
 
+* Repère rapide : *1–9 = préparation & raccordement préprod*, *10–15 = code & validation préprod*, *16–20 = bascule & validation production*.
 * Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *20*.
 * Pass 2 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou il faut un modèle de lecture.
 
@@ -18,31 +19,31 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | Tirer la branche "main" de l'application à partir de Gitlab pour avoir le code en local sur son PC | À estimer | Code visualisable sur PC | [ ] |
+| 1 | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Code visualisable en local sur le poste de travail. | [ ] |
 | 2 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée dans le formulaire ArchiFactory. | [ ] |
-| 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli. | [ ] |
-| 4 | Obtenir l'accès / habilitation EntraID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Pré-requis difficile à prouver avant raccordement. La preuve est donc le message informant que c'est effectué. | [ ] |
-| 5 | (Etape nécessaire ? Comment la tracer ?) Demander à l'équipe IAM de configurer EntraID (avec transmission de la liste des claims attendus et des URL de site + de redirection après authentification | Équipe Gestion managée | À estimer | Message envoyé par l'équipe Gestion managée de demande d'intervention. | [ ] |
-| 6 | (idem ?) Configurer EntraID avec la liste des claims attendus, URL site + redirection | Équipe IAM | À estimer | Message recu par l'équipe Gestion managée d'intervention réalisée. | [ ] |
-| 7 | (idem ?) Réaliser le raccordement pour l'environnement de préprod/dév | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL. Authentification OK. Page attendue après redirection OK. | [ ] |
-| 8 | Recevoir l'info que le raccordement a été réalisée | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
-| 9 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL. Authentification OK. Page attendue après redirection OK. | [ ] |
-| 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
-| 11 | (idem ?) Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement — pas sur la logique métier des claims | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
-| 12 | (idem ?) Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
-| 13 | (idem ?) Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
+| 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Avant raccordement, accéder au portail de l'appli en utilisant l'URL de test. | [ ] |
+| 4 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de confirmation d'accès. | [ ] |
+| 5 | Demander à l'équipe IAM de configurer Entra ID (transmettre la liste des claims attendus, l'URL du site et l'URL de redirection après authentification) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
+| 6 | Configurer Entra ID avec la liste des claims attendus, l'URL du site et l'URL de redirection | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
+| 7 | Réaliser le raccordement pour l'environnement de préprod/dév | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 8 | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
+| 9 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur GitLab. | [ ] |
+| 11 | Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement (pas sur la logique métier des claims) | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code et tests ajoutés dans la Merge Request GitLab. | [ ] |
+| 12 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs en dev/préprod dans la Merge Request GitLab. | [ ] |
+| 13 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs production (sans données sensibles) dans la Merge Request GitLab. | [ ] |
 | 14 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
-| 15 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette préprod au CAM Eagles  | Équipe applicative | À estimer | Message envoyé au Chargé d'affaire Eagles avec PV. | [ ] |
-| 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaire Eagles précisant la date de raccordement en production. | [ ] |
-| 17 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL. Authentification OK. Page attendue après redirection OK. | [ ] |
-| 18 | Recevoir l'info que le raccordement a été réalisée | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
-| 19 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Tag ou release de production créée. | [ ] |
-| 20 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette prod au CAM Eagles | Équipe applicative | À estimer | Message envoyé au Chargé d'affaire Eagles avec PV. | [ ] |
+| 15 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette préprod au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
+| 16 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaire Eagles précisant la date de raccordement en production. | [ ] |
+| 17 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 18 | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (production prête à tester). | [ ] |
+| 19 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (tag ou release de production créé(e)). | [ ] |
+| 20 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette prod au CAM Eagles | Équipe applicative | À estimer | Message avec PV production validé et transmis au chargé d'affaires Eagles. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 20) | — | À estimer | — | [ ] |
 
 ----
 
-h2. Claims (Legacy → EntraID)
+h2. Claims (Legacy → Entra ID)
 
 || Description || Claim Legacy || Claim Entra ID ||
 |  |  |  |
@@ -62,16 +63,16 @@ h2. Pièges courants
 h4. Checklist de validation minimale (dev-first)
 
 * Claims attendus présents et exploitables côté code.
-* Noms de claims conformes au mapping de ce document (voir la section *Claims (Legacy → EntraID)* ci-dessus).
+* Noms de claims conformes au mapping de ce document (voir la section *Claims (Legacy → Entra ID)* ci-dessus).
 * Gestion des claims manquants (pas de crash, message explicite).
 * Logs utiles en dev/preprod et production sans données sensibles.
 
 h3. Tester et diagnostiquer
 
-* Cas 1 (succès) : tous les claims attendus sont reçus dans le code (voir la section *Claims (Legacy → EntraID)* ci-dessus).
+* Cas 1 (succès) : tous les claims attendus sont reçus dans le code (voir la section *Claims (Legacy → Entra ID)* ci-dessus).
 * Cas 2 (absence) : un claim attendu manque ; l’application ne crash pas et journalise clairement le problème.
 * Cas 3 (valeur invalide) : un claim est présent mais incohérent (ex. rôle inconnu) ; comportement maîtrisé = *refus d’accès explicite* (403 / exception métier), *valeur de repli documentée*, ou *message utilisateur clair* — sans crash ni fuite de données sensibles dans les logs.
-* En cas d’échec : revenez à la section *Claims (Legacy → EntraID)*, corrigez le mapping côté code, puis rejouez les 3 cas.
+* En cas d’échec : revenez à la section *Claims (Legacy → Entra ID)*, corrigez le mapping côté code, puis rejouez les 3 cas.
 
 *Sortie attendue :* lecture des claims stable côté application (nominal + erreurs maîtrisées).
 
