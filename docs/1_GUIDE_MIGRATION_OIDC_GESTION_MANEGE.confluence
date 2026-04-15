@@ -11,33 +11,33 @@ h2. Mode opératoire (lecture)
 * Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *20*.
 * Pass 2 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou il faut un modèle de lecture.
 
-Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse en 1 page*.
+Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
 
 ----
 
 h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée et partagée (ex. wiki, ticket). | [ ] |
-| 2 | Obtenir un accès Gardian Recette | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette obtenu et vérifiable. | [ ] |
-| 3 | Obtenir un accès EntraID Recette | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès portail / tenant recette validé selon process interne. | [ ] |
-| 4 | Transmettre la liste des claims attendus et des URL de site + de redirection après authentification à l'équipe IAM | Équipe applicative et/ou Équipe de raccordement | À estimer | Liste des claims (noms exacts) + URL site et URL de redirection transmises à l’IAM (trace : mail ou ticket). | [ ] |
-| 5 | Configurer EntraID avec la liste des claims attendus, URL site + redirection | Équipe IAM | À estimer | Liste des claims en sortie correspondant à ceux demandés. | [ ] |
-| 6 | Réaliser le raccordement dans les fichiers de configuration Terraform | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL du site ; redirection vers l’URL attendue après authentification (MR Terraform mergée ou équivalent). | [ ] |
-| 7 | Informer l'équipe applicative | Équipe Gestion managée | À estimer | Mail ou message Teams auprès de l'équipe applicative (raccordement prêt à tester). | [ ] |
-| 8 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Même flux validé que l'étape 6 : connexion OK, page attendue après redirection OK. | [ ] |
-| 9 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request listant les modifications de code. | [ ] |
-| 10 | Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement — pas sur la logique métier des claims | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request avec tests de connexion. | [ ] |
-| 11 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
-| 12 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request correspondante. | [ ] |
-| 13 | Redéployer en développement  | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
-| 14 | Réaliser la recette fonctionnelle et valider le PV  | Équipe applicative et/ou Équipe de raccordement | À estimer | PV validé. | [ ] |
-| 15 | Envoyer le PV de recette (préprod / hors production) au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Mail avec PV de recette transmis au CAM Eagles. | [ ] |
-| 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Mail à l'équipe Gestion managée. | [ ] |
-| 17 | Basculer la configuration de test vers la production | Équipe Gestion managée | À estimer | Fichiers Terraform (ou équivalent) actualisés pour la prod (client, secrets, redirect URIs, tenant). | [ ] |
-| 18 | Taguer la branche main pour déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Tag ou release de production créée (référence traçable). | [ ] |
-| 19 | Tester en production, réadapter le code si nécessaire et valider le PV final | Équipe applicative | À estimer | Arrivée sur la mire de connexion Microsoft ; redirection vers l’URL attendue ; PV production validé. | [ ] |
-| 20 | Envoyer le PV de recette production au CAM Eagles | Équipe applicative et/ou Équipe de raccordement | À estimer | Mail avec PV de recette *production* transmis au CAM Eagles. | [ ] |
+| 1 | Tirer la branche "main" de l'application à partir de Gitlab pour avoir le code en local sur son PC | À estimer | Code visualisable sur PC | [ ] |
+| 2 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée dans le formulaire ArchiFactory. | [ ] |
+| 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli. | [ ] |
+| 4 | Obtenir l'accès / habilitation EntraID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Pré-requis difficile à prouver avant raccordement. La preuve est donc le message informant que c'est effectué. | [ ] |
+| 5 | (Etape nécessaire ? Comment la tracer ?) Demander à l'équipe IAM de configurer EntraID (avec transmission de la liste des claims attendus et des URL de site + de redirection après authentification | Équipe Gestion managée | À estimer | Message envoyé par l'équipe Gestion managée de demande d'intervention. | [ ] |
+| 6 | (idem ?) Configurer EntraID avec la liste des claims attendus, URL site + redirection | Équipe IAM | À estimer | Message recu par l'équipe Gestion managée d'intervention réalisée. | [ ] |
+| 7 | (idem ?) Réaliser le raccordement pour l'environnement de préprod/dév | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL. Authentification OK. Page attendue après redirection OK. | [ ] |
+| 8 | Recevoir l'info que le raccordement a été réalisée | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
+| 9 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL. Authentification OK. Page attendue après redirection OK. | [ ] |
+| 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
+| 11 | (idem ?) Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement — pas sur la logique métier des claims | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
+| 12 | (idem ?) Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
+| 13 | (idem ?) Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur Gitlab. | [ ] |
+| 14 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 15 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette préprod au CAM Eagles  | Équipe applicative | À estimer | Message envoyé au Chargé d'affaire Eagles avec PV. | [ ] |
+| 16 | Planifier le raccordement EntraID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaire Eagles précisant la date de raccordement en production. | [ ] |
+| 17 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Arrivée sur la mire de connexion Microsoft lors de l'utilisation de l'URL. Authentification OK. Page attendue après redirection OK. | [ ] |
+| 18 | Recevoir l'info que le raccordement a été réalisée | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
+| 19 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Tag ou release de production créée. | [ ] |
+| 20 | Réaliser la recette fonctionnelle, valider le PV et envoyer le PV de recette prod au CAM Eagles | Équipe applicative | À estimer | Message envoyé au Chargé d'affaire Eagles avec PV. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 20) | — | À estimer | — | [ ] |
 
 ----

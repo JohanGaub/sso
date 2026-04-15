@@ -21,9 +21,9 @@ Règle simple : une ligne est considérée comme acquise uniquement quand la dat
 Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1 à 4.
 
 || # || Prérequis local || Résultat attendu (preuve) || Date obtenue || Commentaire / blocage ||
-| 1 | Tirer la branche "main" de l'application sur Gitlab pour l'avoir en local sur son PC | Code visualisable sur IDE |  |  |
-| 2 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli |  |  |
-| 3 | Obtenir l'accès / habilitation EntraID Recette pour cette appli | après raccordement, en utilisant l'URL de test, on a accès au portail de l'appli. Pré-requis difficile à prouver avant raccordement. |  |  |
+| 1 | Tirer la branche "main" de l'application à partir de Gitlab pour avoir le code en local sur son PC | Code visualisable sur PC |  |  |
+| 2 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli |  |  |
+| 3 | Obtenir l'accès / habilitation EntraID Recette pour cette appli | Pré-requis difficile à prouver avant raccordement. La preuve est donc le message informant que c'est effectué. |  |  |
 | 4 | Obtenir un compte utilisateur habilité pour l'appli sur URL de test | En s'identifiant, l'utilisateur se retrouve à l'intérieur de l'appli |  |  |
 
 ----
@@ -84,6 +84,7 @@ h2. 4. Glossaire (termes clés)
 | *Paramètre* | Élément d'une requête HTTP (URL d'autorisation, query string de callback, corps POST /token). Exemples : client_id, code, state, redirect_uri. |
 | *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : aud, exp, iss, nonce, amr. |
 | *Scopes OIDC de base* | openid : scope obligatoire pour OIDC ; profile : infos de profil (nom, prénom, etc.) ; email : adresse email ; offline_access : permet d'obtenir un refresh_token pour maintenir la session sans réauthentification. |
+| *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent `main`). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
 | *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. `<CLIENT_ID>`, `<CODE>`, `<REDIRECT_URI>`). |
 | *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
 | *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |

@@ -31,15 +31,17 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ### Changed files
 - `.cursor/pr-draft.md`
 - `docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence`
+- `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 
 ### Last commits
+- 8d7bce3 chore: update composer dependencies
+- c4ea785 docs(synthesis): simplify wording and streamline migration steps
 - 884c138 docs(synthesis): restructure heading hierarchy and intro sections
 - 6f329fd docs(synthesis): restructure heading hierarchy and intro sections
 - eb77b15 docs(synthesis): replace redundant intro with quick path bullets
-- c850b31 docs(oidc-managed-guide): clarify node typescript sample as backend-only
-- b307ca7 docs(oidc-managed-guide): refine suivi flow, intro and pitfalls wording
 
 ### Diff summary
- .cursor/pr-draft.md                            |   7 +-
- docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence | 108 ++++++-------------------
- 2 files changed, 27 insertions(+), 88 deletions(-)
+ .cursor/pr-draft.md                                |  8 ++---
+ docs/0_GUIDE_MIGRATION_SSO_SYNTHESE.confluence     |  7 ++--
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 42 +++++++++++-----------
+ 3 files changed, 28 insertions(+), 29 deletions(-)
