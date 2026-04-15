@@ -3,12 +3,12 @@ h1. 1. Guide migration OIDC - Gestion managée
 En gestion managée :
 * L’équipe *Gestion managée* sollicite l’équipe IAM pour configurer Entra ID (client, secrets, redirect URIs, claims émis)
 * L’équipe *Gestion managée* gère la mécanique OIDC.
-* L'équipe applicative et/ou l'équipe raccordement adapte la lecture des *claims* dans le code applicatif.
+* L'équipe applicative et/ou l'équipe de raccordement adapte la lecture des *claims* dans le code applicatif.
 NB : Selon la stack OIDC, ces claims peuvent provenir de l’*ID Token*, de l’endpoint *UserInfo* et/ou d’un *access token* validé (ce que le code reçoit dépend du middleware ou de la bibliothèque).
 
 h2. Mode opératoire (lecture)
 
-* Repère rapide : *1–9 = préparation & raccordement préprod*, *10–15 = code & validation préprod*, *16–20 = bascule & validation production*.
+* Repère rapide : *1–9 = préparer & raccorder la préprod*, *10–15 = coder & valider la préprod*, *16–20 = basculer & valider la production*.
 * Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *20*.
 * Pass 2 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou il faut un modèle de lecture.
 
@@ -23,11 +23,11 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 2 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée dans le formulaire ArchiFactory. | [ ] |
 | 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès au portail de l'appli possible via l'URL de test avant raccordement. | [ ] |
 | 4 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de confirmation d'accès. | [ ] |
-| 5 | Demander à l'équipe IAM de configurer Entra ID (transmettre la liste des claims attendus, l'URL du site et l'URL de redirection après authentification) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
-| 6 | Configurer Entra ID avec la liste des claims attendus, l'URL du site et l'URL de redirection | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
-| 7 | Réaliser le raccordement pour l'environnement de préprod/dév | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 5 | Demander à l'équipe IAM de configurer Entra ID (claims utiles + URL du site + URL de redirection) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
+| 6 | Configurer Entra ID avec les éléments transmis (claims, URL du site, URL de redirection) | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
+| 7 | Réaliser le raccordement pour l'environnement de préprod/dev | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
 | 8 | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
-| 9 | Aller sur l'URL de test et se connecter avec email + mdp  | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 9 | Aller sur l'URL de test et se connecter avec email + mdp | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
 | 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur GitLab. | [ ] |
 | 11 | Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement (pas sur la logique métier des claims) | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code et tests ajoutés dans la Merge Request GitLab. | [ ] |
 | 12 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs en dev/préprod dans la Merge Request GitLab. | [ ] |
@@ -60,9 +60,9 @@ h2. Pièges courants
 h2. Checklist de validation avant livraison
 
 || Critère à vérifier avant livraison || Validé ||
-| Cas 1 (succès) : les claims nécessaires au fonctionnement de l’application sont bien reçus et exploitables côté code. Le tableau *Claims (Legacy → Entra ID)* sert de repère de correspondance, pas de liste exhaustive à valider. | [ ] |
-| Cas 2 (absence) : un claim nécessaire manque ; l’application ne crash pas et journalise clairement le problème sans données sensibles. | [ ] |
-| Cas 3 (valeur invalide) : un claim nécessaire est présent mais incohérent ; l’application ne crash pas, bloque l’accès ou affiche un message clair, et ne journalise pas de données sensibles. | [ ] |
+| Cas 1 (succès) : les claims nécessaires au fonctionnement sont reçus et exploitables côté code. | [ ] |
+| Cas 2 (absence) : un claim nécessaire manque ; l’application ne crash pas et journalise un message clair sans données sensibles. | [ ] |
+| Cas 3 (valeur invalide) : un claim nécessaire est incohérent ; l’application ne crash pas, bloque l’accès ou affiche un message clair, sans données sensibles dans les logs. | [ ] |
 | Logs exploitables en dev/preprod et sécurisés en production (sans données sensibles). | [ ] |
 | PV de recette fonctionnelle préprod/dev validé. | [ ] |
 | PV de recette fonctionnelle production validé. | [ ] |
