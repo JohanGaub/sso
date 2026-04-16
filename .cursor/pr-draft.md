@@ -30,17 +30,15 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 - `docs/test.txt`
 
 ### Last commits
+- 6fb9932 docs(oidc-managed-guide): add task grouping and streamline follow-up table
 - 6260237 docs(oidc-managed-guide): align step ranges and add task grouping column
 - 04f0728 docs(oidc-managed-guide): reorder follow-up steps
 - 4115229 docs(oidc): add generic claims mapping and update managed guide checklist
 - d27aae4 docs(oidc-managed-guide): improve readability and validation checklists
-- cb69355 docs(synthesis): align terminology with oidc managed guide
 
 ### Diff summary
- .cursor/pr-draft.md                                |  5 +--
- ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 36 +++++++++++-----------
- 2 files changed, 19 insertions(+), 22 deletions(-)
+ .cursor/pr-draft.md | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
