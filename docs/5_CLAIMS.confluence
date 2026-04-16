@@ -1,0 +1,29 @@
+h2. Mapping générique des claims OIDC exposés dans \$_SERVER
+
+Selon l’application, le claim est disponible sous *OIDC_CLAIM_*… (souvent) et/ou *REDIRECT_OIDC_CLAIM_*… (cas des applis avec redirection).
+
+|| Ancien claim || Nouveau claim (préfixe: OIDC_CLAIM_ ou REDIRECT_OIDC_CLAIM_) || Exemple || Description ||
+| sub | sub | 7pQm9sKx2L3nV4aBcDeFgHiJkLmNoPqRsTuVwXyZ123 | Identifiant *stable* et unique du sujet (utilisateur) dans l’IdP. Sert d’identifiant technique pour corréler un utilisateur côté application. |
+| name | name | DOE JOHN | Nom d’affichage (full name) fourni par l’IdP. Sert à afficher l’identité dans l’UI / logs (non unique). |
+| family_name | family_name | DOE | Nom de famille. Sert à l’affichage et éventuellement au tri/recherche. |
+| given_name | given_name | JOHN | Prénom. Sert à l’affichage et éventuellement au tri/recherche. |
+| picture | picture | https://example.invalid/photos/john-doe.jpg | URL (ou endpoint) de récupération de la photo de profil. Sert à afficher l’avatar utilisateur. |
+| email | email | john.doe@example.invalid | Adresse e-mail *déclarée* dans le jeton. Sert au contact/identification; peut être non vérifiée selon configuration (à ne pas confondre avec *email_verified*). |
+| aud | aud | 11111111-2222-3333-4444-555555555555 | Audience du jeton (identifie le client/app destinataire). Sert à vérifier que le jeton est bien émis pour cette application. |
+| iss | iss | https://login.microsoftonline.com/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/v2.0 | Issuer (émetteur du jeton). Sert à valider la provenance (tenant / fournisseur) lors de la vérification du jeton. |
+| iat | iat | 1700000000 | “Issued At” : date/heure d’émission (timestamp). Sert au contrôle de fraîcheur et au debugging. |
+| nbf | nbf | 1700000000 | “Not Before” : le jeton n’est valide qu’à partir de ce timestamp. Sert à empêcher l’utilisation avant une date donnée. |
+| exp | exp | 1700003600 | Expiration du jeton (timestamp). Sert à refuser les jetons expirés et à déclencher un renouvellement/ré-auth. |
+| nonce | nonce | R4nD0mN0nC3-For-Example-Only-1234567890 | Nonce lié au flow OIDC (anti-rejeu, corrélation requête/réponse). Sert à sécuriser l’authentification interactive. |
+| oid | oid | 99999999-8888-7777-6666-555555555555 | Identifiant objet (Microsoft Entra ID) du compte. Sert d’identifiant unique côté Entra (souvent préféré à *email*). |
+| preferred_username | preferred_username | john.doe@example.invalid | Identifiant “préféré” (souvent UPN/email) pour l’affichage et la saisie utilisateur. Ne doit pas être utilisé comme identifiant technique unique sans garanties. |
+| rh | rh | 1.AAAA.BBBBCCCCDDDDEEEEFFFFGGGGHHHHIIII.JJJJ | “Resource Hint” (spécifique Microsoft) utilisé dans des scénarios de renouvellement/échange de tokens. Sert au debugging et au support, pas à l’identification fonctionnelle. |
+| sid | sid | 12345678-90ab-cdef-1234-567890abcdef | Identifiant de session. Sert à gérer l’invalidation de session / logout côté IdP. |
+| tid | tid | aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee | Tenant ID (Microsoft Entra ID). Sert à identifier le tenant et à appliquer des règles multi-tenant. |
+| upn | upn | john.doe@example.invalid | “User Principal Name” (Microsoft). Sert souvent d’identifiant de connexion côté organisation; peut changer (renommage), donc prudence si utilisé comme clé. |
+| uti | uti | FakeTokenIdForTracingOnly0001 | Identifiant de token (Microsoft). Sert au diagnostic/traçage de jetons. |
+| ver | ver | 2.0 | Version du jeton (ex: v2.0). Sert au diagnostic et à adapter certains traitements spécifiques. |
+| uid | employee_id | JD000001 | Identifiant interne employé (claim custom/organisation). Sert à la corrélation avec un référentiel RH/annuaire métier. |
+| mail | mail | john.doe@example.invalid | Adresse mail “directory” (Microsoft). Peut différer de *email*; sert à l’affichage et au rapprochement annuaire. |
+
+

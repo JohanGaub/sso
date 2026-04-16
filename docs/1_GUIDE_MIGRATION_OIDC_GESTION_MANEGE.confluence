@@ -25,14 +25,15 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 4 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de confirmation d'accès. | [ ] |
 | 5 | Demander à l'équipe IAM de configurer Entra ID (claims utiles + URL du site + URL de redirection) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
 | 6 | Configurer Entra ID avec les éléments transmis (claims, URL du site, URL de redirection) | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
-| 7 | Réaliser le raccordement pour l'environnement de préprod/dev | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 7 | Réaliser le raccordement pour l'environnement de préprod/dev et informer l'équipe applicative et l'équipe de raccordement | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
 | 8 | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
 | 9 | Aller sur l'URL de test et se connecter avec email + mot de passe | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
 | 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur GitLab. | [ ] |
-| 11 | Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement (pas sur la logique métier des claims) | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code et tests ajoutés dans la Merge Request GitLab. | [ ] |
-| 12 | Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs en dev/préprod dans la Merge Request GitLab. | [ ] |
-| 13 | Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs production (sans données sensibles) dans la Merge Request GitLab. | [ ] |
+| 11 | OUT Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement (pas sur la logique métier des claims) | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code et tests ajoutés dans la Merge Request GitLab. | [ ] |
+| 12 | OUT Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs en dev/préprod dans la Merge Request GitLab. | [ ] |
+| 13 | OUT Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs production (sans données sensibles) dans la Merge Request GitLab. | [ ] |
 | 14 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 14 | Informer l'équipe applicative que l'appli corrigée est déployée en dév | Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
 | 15 | Réaliser la recette fonctionnelle préprod, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
 | 16 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaires Eagles précisant la date de raccordement en production. | [ ] |
 | 17 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
@@ -55,15 +56,15 @@ h2. Claims (Legacy → Entra ID)
 h2. Pièges courants
 
 * Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
-* En production, vérifier que les logs ne contiennent pas de données sensibles (token brut, claims complets, données personnelles identifiantes).
+* OUT - En production, vérifier que les logs ne contiennent pas de données sensibles (token brut, claims complets, données personnelles identifiantes).
 
 h2. Checklist de validation avant bascule en production
 
 || Critère || Validé ||
 | Claims nécessaires au fonctionnement reçus et exploitables côté code. | [ ] |
-| Si un claim nécessaire manque : pas de crash, message explicite, sans données sensibles dans les logs. | [ ] |
-| Si un claim nécessaire est invalide : pas de crash, accès bloqué ou message explicite, sans données sensibles dans les logs. | [ ] |
-| Logs de production configurés sans données sensibles. | [ ] |
+| OUT - Si un claim nécessaire manque : pas de crash, message explicite, sans données sensibles dans les logs. | [ ] |
+| OUT - Si un claim nécessaire est invalide : pas de crash, accès bloqué ou message explicite, sans données sensibles dans les logs. | [ ] |
+| OUT - Logs de production configurés sans données sensibles. | [ ] |
 | PV de recette préprod/dev validé et transmis au CAM Eagles. | [ ] |
 
 h2. Checklist de validation de production
