@@ -29,18 +29,15 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 8 | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
 | 9 | Aller sur l'URL de test et se connecter avec email + mot de passe | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
 | 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur GitLab. | [ ] |
-| 11 | OUT Créer les tests unitaires ciblés sur le *flux de connexion OIDC* uniquement (pas sur la logique métier des claims) | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code et tests ajoutés dans la Merge Request GitLab. | [ ] |
-| 12 | OUT Mettre en place des logs de développement/préproduction | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs en dev/préprod dans la Merge Request GitLab. | [ ] |
-| 13 | OUT Mettre en place des logs de production sans données sensibles | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de logs production (sans données sensibles) dans la Merge Request GitLab. | [ ] |
-| 14 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
-| 14 | Informer l'équipe applicative que l'appli corrigée est déployée en dév | Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
-| 15 | Réaliser la recette fonctionnelle préprod, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
-| 16 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaires Eagles précisant la date de raccordement en production. | [ ] |
-| 17 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
-| 18 | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (production prête à tester). | [ ] |
-| 19 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (tag ou release de production créé(e)). | [ ] |
-| 20 | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV production validé et transmis au chargé d'affaires Eagles. | [ ] |
-| Total | Durée totale (somme des étapes 1 à 20) | — | À estimer | — | [ ] |
+| 11 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 12 | Informer l'équipe applicative que l'appli corrigée est déployée en dév | Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 13 | Réaliser la recette fonctionnelle préprod, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
+| 14 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaires Eagles précisant la date de raccordement en production. | [ ] |
+| 15 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 16 | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (production prête à tester). | [ ] |
+| 17 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (tag ou release de production créé(e)). | [ ] |
+| 18 | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV production validé et transmis au chargé d'affaires Eagles. | [ ] |
+| Total | Durée totale (somme des étapes 1 à 18) | — | À estimer | — | [ ] |
 
 ----
 
@@ -62,9 +59,6 @@ h2. Checklist de validation avant bascule en production
 
 || Critère || Validé ||
 | Claims nécessaires au fonctionnement reçus et exploitables côté code. | [ ] |
-| OUT - Si un claim nécessaire manque : pas de crash, message explicite, sans données sensibles dans les logs. | [ ] |
-| OUT - Si un claim nécessaire est invalide : pas de crash, accès bloqué ou message explicite, sans données sensibles dans les logs. | [ ] |
-| OUT - Logs de production configurés sans données sensibles. | [ ] |
 | PV de recette préprod/dev validé et transmis au CAM Eagles. | [ ] |
 
 h2. Checklist de validation de production
