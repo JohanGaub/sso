@@ -34,13 +34,13 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `docs/test.txt`
 
 ### Last commits
+- 04f0728 docs(oidc-managed-guide): reorder follow-up steps
 - 4115229 docs(oidc): add generic claims mapping and update managed guide checklist
 - d27aae4 docs(oidc-managed-guide): improve readability and validation checklists
 - cb69355 docs(synthesis): align terminology with oidc managed guide
 - 5f06ca6 docs(oidc-managed-guide): simplify follow-up and delivery validation checklist
-- 2545a91 docs(sso-guides): simplify validation checklist and glossary wording
 
 ### Diff summary
- .cursor/pr-draft.md                                |  6 +-----
- ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 24 ++++++++--------------
- 2 files changed, 10 insertions(+), 20 deletions(-)
+ .cursor/pr-draft.md                                |  5 +--
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 46 +++++++++++-----------
+ 2 files changed, 24 insertions(+), 27 deletions(-)

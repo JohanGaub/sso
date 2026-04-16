@@ -8,8 +8,8 @@ NB : Selon la stack OIDC, ces claims peuvent provenir de l’*ID Token*, de l’
 
 h2. Mode opératoire (lecture)
 
-* Repère rapide : *1–9 = préparer & raccorder la préprod*, *10–15 = coder & valider la préprod*, *16–20 = basculer & valider la production*.
-* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *20*.
+* Repère rapide : *1–9 = préparer & raccorder la préprod*, *10–13 = adapter & valider la préprod*, *14–18 = basculer & valider la production*.
+* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *18*.
 * Pass 2 : ouvrez *Pièges courants* ou *Exemples de code* seulement si un claim manque, une erreur bloque ou s'il faut un modèle de lecture ; terminez avec les deux checklists de validation.
 
 Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
@@ -18,26 +18,26 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 
 h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
-|| Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Code visualisable en local sur le poste de travail. | [ ] |
-| 2 | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée dans le formulaire ArchiFactory. | [ ] |
-| 3 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès au portail de l'appli possible via l'URL de test avant raccordement. | [ ] |
-| 4 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de confirmation d'accès. | [ ] |
-| 5 | Demander à l'équipe IAM de configurer Entra ID (claims utiles + URL du site + URL de redirection) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
-| 6 | Configurer Entra ID avec les éléments transmis (claims, URL du site, URL de redirection) | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
-| 7 | Réaliser le raccordement pour l'environnement de préprod/dev et informer l'équipe applicative et l'équipe de raccordement | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
-| 8 | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
-| 9 | Aller sur l'URL de test et se connecter avec email + mot de passe | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
-| 10 | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur GitLab. | [ ] |
-| 11 | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
-| 12 | Informer l'équipe applicative que l'appli corrigée est déployée en dév | Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
-| 13 | Réaliser la recette fonctionnelle préprod, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
-| 14 | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaires Eagles précisant la date de raccordement en production. | [ ] |
-| 15 | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
-| 16 | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (production prête à tester). | [ ] |
-| 17 | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (tag ou release de production créé(e)). | [ ] |
-| 18 | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV production validé et transmis au chargé d'affaires Eagles. | [ ] |
-| Total | Durée totale (somme des étapes 1 à 18) | — | À estimer | — | [ ] |
+|| Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Réalisée ||
+| 1 | Tâche A — Préparer préprod (accès + URL + code local) | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Code visualisable en local sur le poste de travail. | [ ] |
+| 2 | Tâche A — Préparer préprod (accès + URL + code local) | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL notée dans le formulaire ArchiFactory. | [ ] |
+| 3 | Tâche A — Préparer préprod (accès + URL + code local) | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès au portail de l'appli possible via l'URL de test avant raccordement. | [ ] |
+| 4 | Tâche A — Préparer préprod (accès + URL + code local) | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de confirmation d'accès. | [ ] |
+| 5 | Tâche B — Faire configurer préprod (Entra ID) | Demander à l'équipe IAM de configurer Entra ID (claims utiles + URL du site + URL de redirection) | Équipe Gestion managée | À estimer | Message de demande d'intervention envoyé à l'équipe IAM. | [ ] |
+| 6 | Tâche B — Faire configurer préprod (Entra ID) | Configurer Entra ID avec les éléments transmis (claims, URL du site, URL de redirection) | Équipe IAM | À estimer | Message reçu par l'équipe Gestion managée confirmant la configuration IAM. | [ ] |
+| 7 | Tâche C — Raccorder préprod (flux OIDC) | Réaliser le raccordement pour l'environnement de préprod/dev et informer l'équipe applicative et l'équipe de raccordement | Équipe Gestion managée | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 8 | Tâche C — Raccorder préprod (flux OIDC) | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (raccordement prêt à tester). | [ ] |
+| 9 | Tâche C — Raccorder préprod (flux OIDC) | Aller sur l'URL de test et se connecter avec email + mot de passe | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 10 | Tâche D — Adapter dev (code + déploiement + info) | Adapter le code avec les claims nécessaires au fonctionnement de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Modifications de code dans la Merge Request sur GitLab. | [ ] |
+| 11 | Tâche D — Adapter dev (code + déploiement + info) | Déployer en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 12 | Tâche D — Adapter dev (code + déploiement + info) | Informer l'équipe applicative que l'appli corrigée est déployée en dév | Équipe de raccordement | À estimer | Déploiement dev effectué (build/pipeline OK). | [ ] |
+| 13 | Tâche E — Valider préprod (PV + transmission) | Réaliser la recette fonctionnelle préprod, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV préprod validé et transmis au chargé d'affaires Eagles. | [ ] |
+| 14 | Tâche F — Planifier prod (créneau) | Planifier le raccordement Entra ID en production | CAM Eagles | À estimer | Message reçu du chargé d'affaires Eagles précisant la date de raccordement en production. | [ ] |
+| 15 | Tâche G — Raccorder prod (flux OIDC) | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production OK : mire Microsoft, authentification, redirection vers la page attendue. | [ ] |
+| 16 | Tâche G — Raccorder prod (flux OIDC) | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'équipe Gestion managée (production prête à tester). | [ ] |
+| 17 | Tâche H — Valider prod (PV + transmission) | Déployer en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (tag ou release de production créé(e)). | [ ] |
+| 18 | Tâche H — Valider prod (PV + transmission) | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | Message avec PV production validé et transmis au chargé d'affaires Eagles. | [ ] |
+| Total | Durée totale (somme des étapes 1 à 18) | — | — | — | À estimer | — | [ ] |
 
 ----
 
@@ -53,7 +53,6 @@ h2. Claims (Legacy → Entra ID)
 h2. Pièges courants
 
 * Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
-* OUT - En production, vérifier que les logs ne contiennent pas de données sensibles (token brut, claims complets, données personnelles identifiantes).
 
 h2. Checklist de validation avant bascule en production
 
