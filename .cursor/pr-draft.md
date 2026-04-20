@@ -34,13 +34,13 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `docs/test.txt`
 
 ### Last commits
+- 0edc81d docs(oidc-managed-guide): clarify follow-up outputs and production deploy step
 - 615bfef docs(oidc-guides): centralize claims validation and align private guide references
 - 5a7d18a docs(oidc-private-guide): harmonize headings and restore detailed follow-up actions
 - 66d6dee docs(oidc-managed-guide): improve follow-up table coherence and readability
 - 145eae8 docs(oidc-guides): add claims mapping references and rename claims file
-- cba5d55 chore(cursor): update pr draft
 
 ### Diff summary
- .cursor/pr-draft.md                                |  9 ++----
- ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 35 +++++++++++-----------
- 2 files changed, 19 insertions(+), 25 deletions(-)
+ .cursor/pr-draft.md                                   |  5 +----
+ docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
