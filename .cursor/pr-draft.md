@@ -30,19 +30,17 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence`
-- `docs/5_CORRESPONDANCE_DES_CLAIMS_OIDC.confluence`
+- `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 - `docs/test.txt`
 
 ### Last commits
+- 615bfef docs(oidc-guides): centralize claims validation and align private guide references
 - 5a7d18a docs(oidc-private-guide): harmonize headings and restore detailed follow-up actions
 - 66d6dee docs(oidc-managed-guide): improve follow-up table coherence and readability
 - 145eae8 docs(oidc-guides): add claims mapping references and rename claims file
 - cba5d55 chore(cursor): update pr draft
-- 6fb9932 docs(oidc-managed-guide): add task grouping and streamline follow-up table
 
 ### Diff summary
- .cursor/pr-draft.md                                |  6 +--
- ..._GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence | 49 +++++++---------------
- docs/5_CORRESPONDANCE_DES_CLAIMS_OIDC.confluence   | 42 ++++++++++++++-----
- 3 files changed, 47 insertions(+), 50 deletions(-)
+ .cursor/pr-draft.md                                |  9 ++----
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 35 +++++++++++-----------
+ 2 files changed, 19 insertions(+), 25 deletions(-)
