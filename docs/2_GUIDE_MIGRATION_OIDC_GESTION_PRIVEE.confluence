@@ -1,15 +1,20 @@
 h1. 2. Guide migration OIDC - Gestion privée
 
-Reconfigurer le flux OIDC dans l'application.
+En gestion privée :
+* L’équipe applicative et/ou l’équipe de raccordement pilote l’implémentation OIDC dans le code.
+* Le CAM Eagles fournit la configuration Entra ID (client, secret, redirect URIs, claims émis).
+* L’équipe applicative adapte la lecture des *claims* nécessaires au fonctionnement de l’application.
+NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
 
 h2. Mode opératoire (lecture)
 
-Ce guide s’utilise comme une référence « par étapes » pour implémenter puis diagnostiquer le flux Authorization Code.
-
 * Repère rapide : *1–3 = préparer le cadrage OIDC privé*, *4–5 = implémenter et tester le flux*, *6–7 = valider par PV (préprod puis production)*.
-* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1* à *7*.
-* Pass 2 : en cas de blocage, ouvrez uniquement la section utile : *Détail technique* (a à h), *Paramètres OIDC* (tenant, client_id, redirect_uri, etc.), *5. Correspondance des claims OIDC* (mapping Legacy ↔ Entra ID), ou *Pièges courants*.
-* Pour éviter les divergences, la correspondance des claims n'est pas dupliquée ici : utilisez toujours *5. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
+* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1 à 7*.
+* Pass 2 : ouvrez uniquement la section utile si vous bloquez : *Détail technique* (a à h), *Pièges courants* ou *Exemples de code*.
+* Terminez avec les checklists de validation.
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez *5. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
+
+Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
 
 ----
 
@@ -248,7 +253,7 @@ Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemple
 h3. h) Tester et diagnostiquer
 
 Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
-Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert de contrôle immédiat, et la *Checklist de validation finale* sert de validation avant livraison.
+Cette section décrit les scénarios à exécuter.
 *Entrée attendue :* étapes a) à g) implémentées et exécutables dans l’environnement de test.
 
 * Login OK :
@@ -271,7 +276,7 @@ Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert 
 * (Optionnel) Refresh / UserInfo si demandés :
 ** si `offline_access` est utilisé : vérifier que le refresh (f) remplace bien les tokens,
 ** si UserInfo est utilisé : vérifier que g) renvoie les claims attendus.
-* En cas d’échec : revenir à l’étape concernée (c, d, e, f ou g), corriger, puis rejouer le scénario avant de passer au suivant.
+* En cas d’échec : revenir à l’étape concernée (c, d, e, f ou g), corriger, puis rejouer le scénario.
 
 || Symptôme observé || Étape à vérifier d’abord ||
 | `redirect_uri_mismatch` ou callback refusé | c) Callback puis d) Token |
