@@ -1,6 +1,6 @@
-h2. Mapping générique des claims OIDC exposés dans \$_SERVER
+h2. Correspondance des claims OIDC
 
-Selon l’application, le claim est disponible sous *OIDC_CLAIM_*… (souvent) et/ou *REDIRECT_OIDC_CLAIM_*… (cas des applis avec redirection).
+Selon l’application, le claim est disponible avec le préfixe *OIDC_CLAIM_*… (souvent) et/ou *REDIRECT_OIDC_CLAIM_*… (cas des applis avec redirection).
 
 || Ancien claim || Nouveau claim (préfixe: OIDC_CLAIM_ ou REDIRECT_OIDC_CLAIM_) || Exemple || Description ||
 | sub | sub | 7pQm9sKx2L3nV4aBcDeFgHiJkLmNoPqRsTuVwXyZ123 | Identifiant *stable* et unique du sujet (utilisateur) dans l’IdP. Sert d’identifiant technique pour corréler un utilisateur côté application. |
