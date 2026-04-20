@@ -156,30 +156,20 @@ grant_type=authorization_code&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET
 
 h3. e) Valider l'ID Token
 
-L'application doit vérifier la signature du JWT puis les claims. Les applications confidentielles (avec backend) doivent valider l'ID Token. Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens#validate-tokens), [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
+L'application doit vérifier la signature du JWT puis les claims. Les applications confidentielles (avec backend) doivent valider l'ID Token.
+Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens#validate-tokens), [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
 
-*Ordre recommandé :* 1) Vérifier la signature avec la clé publique ({{jwks_uri}}, {{kid}}) ; 2) Vérifier les claims ci-dessous.
+*Ordre recommandé :* 1) vérifier la signature avec la clé publique ({{jwks_uri}}, {{kid}}), 2) vérifier les claims nécessaires.
 
-*Claims du payload à valider*
+|| Contrôle minimal || Vérification attendue ||
+| Signature | Signature JWS valide avec la clé publique correspondant au {{kid}} ; algorithme attendu (RS256). |
+| Issuer | `iss` correspond à l'émetteur attendu (tenant). |
+| Audience | `aud` (et `azp` si présent) correspond à `client_id`. |
+| Temporalité | `exp` non expiré ; `nbf` valide ; tolérance d'horloge maîtrisée. |
+| Anti-rejeu | `nonce` correspond à la valeur envoyée en b) (si flow interactif). |
+| Contexte tenant | `ver` attendu (`2.0`) ; `tid` vérifié si application mono-tenant. |
 
-|| Claim || Valeur / type || Définition et utilité ||
-| aud | tableau ou chaîne | *Audience* : doit contenir client_id (celui enregistré auprès de l'IdP) |
-| azp | chaîne | *Authorized Party* : doit correspondre à client_id |
-| iss | chaîne | *Issuer* : doit correspondre à l'émetteur attendu (ex. `https://login.microsoftonline.com/<TENANT_ID>/v2.0`) |
-| exp | nombre (timestamp) | Date/heure d'expiration. La date courante doit être strictement inférieure à exp |
-| iat | nombre (timestamp) | Date d'émission ; utilisée avec exp pour la durée de validité |
-| nbf | nombre (timestamp) | *Not Before* : le token ne doit pas être accepté avant cette date. Vérifier que la date courante est >= nbf |
-| nonce | chaîne | Doit correspondre au paramètre nonce envoyé à l'étape b). Limite les attaques par rejeu |
-| amr | tableau (optionnel) | *Authentication Methods References* : modes d'authentification (ex. pwd = par mot de passe, mfa = par multifacteur) |
-
-*En-tête JWT et signature*
-
-|| Élément || Valeur / type || Définition et utilité ||
-| alg (en-tête) | RS256 | Algorithme de signature. Vérifier qu'il correspond à celui publié par l'IdP (RS256) |
-| kid (en-tête) | chaîne | Identifiant de la clé. Utiliser la clé correspondante (récupérée via jwks_uri) pour vérifier la signature |
-| Signature | JWS | Signature calculée avec la clé privée de l'IdP. Validation avec la clé publique (kid). Tenir compte du [signing key rollover](https://learn.microsoft.com/en-us/entra/identity-platform/signing-key-rollover) |
-
-*À faire absolument :* valider `iss` et `aud` avec les valeurs attendues, et vérifier `ver` (`2.0` dans ce guide) ; si l’application est mono-tenant, vérifier aussi `tid` contre le tenant autorisé.
+Pour le détail des claims (sens, exemples, usages), utilisez *5. Correspondance des claims OIDC*.
 
 h3. Choisir le type de client (confidentiel vs public)
 
@@ -244,7 +234,7 @@ La réponse a la même structure qu'en d) : nouveaux access_token et id_token (e
 
 h3. g) Récupérer les informations utilisateur (UserInfo)
 
-Certaines informations d'identité sont directement présentes dans l'id_token (email, nom, oid, tid, etc.). Pour des claims supplémentaires ou pour centraliser la lecture des claims, l'application peut appeler l'endpoint UserInfo avec l'access_token.
+Certaines informations d'identité sont directement présentes dans l'id_token. Pour des claims supplémentaires ou pour centraliser la lecture des claims, l'application peut appeler l'endpoint UserInfo avec l'access_token.
 
 *Appel UserInfo*
 
@@ -253,18 +243,7 @@ Certaines informations d'identité sont directement présentes dans l'id_token (
 | Méthode | GET | Récupération des informations utilisateur. |
 | Authorization | `Authorization: Bearer <ACCESS_TOKEN>` | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
 
-*Exemple de réponse JSON (UserInfo simplifié)* :
-
-{code:json}
-{
-  "sub": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-  "name": "Alice Dupont",
-  "preferred_username": "alice@contoso.com",
-  "email": "alice@contoso.com",
-  "oid": "00000000-1111-2222-3333-444444444444",
-  "tid": "55555555-6666-7777-8888-999999999999"
-}
-{code}
+Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez *5. Correspondance des claims OIDC*.
 
 h3. h) Tester et diagnostiquer
 
@@ -356,7 +335,7 @@ h3. Schéma de flux (rappel)
 h2. Pièges courants
 
 * *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre l'IdP et l'application.
-* *Scopes* : oublier openid rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou des claims mapping côté IdP.
+* *Scopes* : oublier openid rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou un mapping de claims côté IdP.
 * *Secret* : ne jamais exposer le {{client_secret}} (variables d'environnement côté serveur, pas de commit, pas dans le front ou l'app mobile).
 * *Token endpoint – authentification du client* : privilégier {{client_secret_basic}} (en-tête {{Authorization}}) ; n'utiliser {{client_secret_post}} (envoi dans le corps POST) que si la stack (bibliothèque, proxy) ne permet pas d'utiliser correctement l'en-tête {{Authorization}}.
 * *Avec PKCE* : {{code_verifier}} entre 43 et 128 caractères ; {{code_challenge_method}} = {{S256}} ; envoyer {{code_challenge}} à l'authorization et {{code_verifier}} au token. Sans backend sécurisé, utiliser PKCE. Le code d'autorisation est à usage unique et de courte durée ; seul le détenteur du {{code_verifier}} peut échanger le code contre des tokens.
