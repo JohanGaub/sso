@@ -30,18 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `.gitignore`
 - `docs/5_CORRESPONDANCE_DES_CLAIMS_OIDC.confluence`
 
 ### Last commits
+- a307309 chore(docs): restrict tracked docs formats and clarify legacy claims mapping
 - 314ba08 docs(oidc): clarify step 12 request details in managed guide
 - 8b2d67e docs(oidc): harmonize private migration guide structure and readability
 - 34ef3b7 docs(oidc): simplify managed migration guide wording and clean code example formatting
 - 4942d85 docs(oidc-managed-guide): improve follow-up table coherence and readability
-- 2035463 docs(oidc-managed-guide): improve follow-up table coherence and readability
 
 ### Diff summary
- .cursor/pr-draft.md                              |  9 +++----
- .gitignore                                       |  8 ++++++
- docs/5_CORRESPONDANCE_DES_CLAIMS_OIDC.confluence | 32 ++++++++++++++++--------
- 3 files changed, 32 insertions(+), 17 deletions(-)
+ .cursor/pr-draft.md                              | 7 +------
+ docs/5_CORRESPONDANCE_DES_CLAIMS_OIDC.confluence | 2 +-
+ 2 files changed, 2 insertions(+), 7 deletions(-)

@@ -25,7 +25,7 @@ Ce comportement est normal : ces valeurs sont souvent identiques, mais ce n’es
 Pour éviter les ambiguïtés côté application, définir une règle de priorité explicite (ex. `email` puis `mail` *(fallback de cette valeur)*, et `preferred_username` puis `upn` *(fallback de cette valeur)*).
 
 *Interprétation de la colonne "Ancien claim (Legacy)" :* la mention *Legacy non documenté* signifie que la documentation historique ne précise pas ce claim.
-Cela ne veut pas dire que le claim était absent techniquement dans l'ancien SSO.
+Cela signifie simplement que la documentation n'est pas actualisée ou reste incomplète sur ce point.
 
 h3. Claims de validation technique (token et sécurité)
 
