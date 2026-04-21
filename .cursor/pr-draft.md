@@ -30,17 +30,17 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence`
+- `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 - `docs/test.txt`
 
 ### Last commits
+- 8b2d67e docs(oidc): harmonize private migration guide structure and readability
 - 34ef3b7 docs(oidc): simplify managed migration guide wording and clean code example formatting
 - 4942d85 docs(oidc-managed-guide): improve follow-up table coherence and readability
 - 2035463 docs(oidc-managed-guide): improve follow-up table coherence and readability
 - 0edc81d docs(oidc-managed-guide): clarify follow-up outputs and production deploy step
-- 615bfef docs(oidc-guides): centralize claims validation and align private guide references
 
 ### Diff summary
- .cursor/pr-draft.md                                 |  7 ++-----
- ...2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence | 21 +++++++++++++--------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ .cursor/pr-draft.md                                   | 7 ++-----
+ docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 2 +-
+ 2 files changed, 3 insertions(+), 6 deletions(-)
