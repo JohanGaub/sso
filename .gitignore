@@ -83,3 +83,11 @@ var/cache/rector/
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> docs formats policy ###
+# Dans docs/, on versionne uniquement .md et .confluence
+/docs/**
+!/docs/**/
+!/docs/**/*.md
+!/docs/**/*.confluence
+###< docs formats policy ###

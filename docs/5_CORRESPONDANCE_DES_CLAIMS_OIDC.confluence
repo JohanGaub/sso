@@ -4,18 +4,28 @@ Selon l’application, le claim est disponible avec le préfixe *OIDC_CLAIM_*…
 
 h3. Claims métier (utilisés par l'application)
 
-|| Ancien claim || Nouveau claim (préfixe: OIDC_CLAIM_ ou REDIRECT_OIDC_CLAIM_) || Exemple || Description ||
-| sub | sub | 7pQm9sKx2L3nV4aBcDeFgHiJkLmNoPqRsTuVwXyZ123 | Identifiant *stable* et unique du sujet (utilisateur) dans l’IdP. Sert d’identifiant technique pour corréler un utilisateur côté application. |
-| name | name | DOE JOHN | Nom d’affichage (full name) fourni par l’IdP. Sert à afficher l’identité dans l’UI / logs (non unique). |
-| family_name | family_name | DOE | Nom de famille. Sert à l’affichage et éventuellement au tri/recherche. |
-| given_name | given_name | JOHN | Prénom. Sert à l’affichage et éventuellement au tri/recherche. |
-| picture | picture | https://example.invalid/photos/john-doe.jpg | URL (ou endpoint) de récupération de la photo de profil. Sert à afficher l’avatar utilisateur. |
-| email | email | john.doe@example.invalid | Adresse e-mail *déclarée* dans le jeton. Sert au contact/identification; peut être non vérifiée selon configuration (à ne pas confondre avec *email_verified*). |
-| oid | oid | 99999999-8888-7777-6666-555555555555 | Identifiant objet (Microsoft Entra ID) du compte. Sert d’identifiant unique côté Entra (souvent préféré à *email*). |
-| preferred_username | preferred_username | john.doe@example.invalid | Identifiant “préféré” (souvent UPN/email) pour l’affichage et la saisie utilisateur. Ne doit pas être utilisé comme identifiant technique unique sans garanties. |
-| upn | upn | john.doe@example.invalid | “User Principal Name” (Microsoft). Sert souvent d’identifiant de connexion côté organisation; peut changer (renommage), donc prudence si utilisé comme clé. |
+|| Ancien claim (Legacy) || Nouveau claim (préfixe: OIDC_CLAIM_ ou REDIRECT_OIDC_CLAIM_) || Exemple || Description ||
+| Legacy non documenté | sub | 7pQm9sKx2L3nV4aBcDeFgHiJkLmNoPqRsTuVwXyZ123 | Identifiant *stable* et unique du sujet (utilisateur) dans l’IdP. Sert d’identifiant technique pour corréler un utilisateur côté application. |
+| cn | name | DOE JOHN | Nom d’affichage (full name) fourni par l’IdP. Sert à afficher l’identité dans l’UI / logs (non unique). |
+| sn | family_name | DOE | Nom de famille. Sert à l’affichage et éventuellement au tri/recherche. |
+| givenname | given_name | JOHN | Prénom. Sert à l’affichage et éventuellement au tri/recherche. |
+| Legacy non documenté | picture | https://graph.microsoft.com/v1.0/me/photo/$value | URL (ou endpoint) de récupération de la photo de profil. Sert à afficher l’avatar utilisateur. |
+| mail | email | john.doe@example.com | E-mail renvoyé au format OIDC. Souvent utilisé par l'application pour afficher l'utilisateur ou l'identifier côté métier. |
+| Legacy non documenté | mail | john.doe@example.com | E-mail issu de l'annuaire Entra ID. Peut être identique à *email*... ou différent selon la configuration du tenant. |
+| Legacy non documenté | oid | 99999999-8888-7777-6666-555555555555 | Identifiant objet (Microsoft Entra ID) du compte. Sert d’identifiant unique côté Entra (souvent préféré à *email*). |
+| Legacy non documenté | preferred_username | john.doe@example.com | Identifiant “préféré” (souvent UPN/email). En pratique, il peut être identique à *email* selon la configuration IdP. |
+| Legacy non documenté | upn | john.doe@example.com | “User Principal Name” (Microsoft). En pratique, il peut être identique à *email*/*preferred_username* selon la configuration tenant. |
 | uid | employee_id | JD000001 | Identifiant interne employé (claim custom/organisation). Sert à la corrélation avec un référentiel RH/annuaire métier. |
-| mail | mail | john.doe@example.invalid | Adresse mail “directory” (Microsoft). Peut différer de *email*; sert à l’affichage et au rapprochement annuaire. |
+| org | department_number | DPT-001 | Organisation (entité de rattachement métier). Peut être absent si non émis par le tenant ou non mappé dans l'application Entra ID. |
+| department | department_hierarchy | Groupe/Direction/Sous-direction | Hiérarchie organisationnelle (niveau(x) métier). Peut être absent selon la configuration des claims émis. |
+| SesamProfil ou IsmemberOf | roles | ["APP_USER","APP_ADMIN"] | Rôle(s) de l'utilisateur pour l'autorisation applicative. Peut provenir d'un mapping de groupes/profils côté IdP. |
+
+*Nota bene :* selon la configuration Entra ID du tenant, il est possible de recevoir simultanément *email* et *mail*, ainsi que *preferred_username* et *upn*.
+Ce comportement est normal : ces valeurs sont souvent identiques, mais ce n’est pas garanti.
+Pour éviter les ambiguïtés côté application, définir une règle de priorité explicite (ex. `email` puis `mail` *(fallback de cette valeur)*, et `preferred_username` puis `upn` *(fallback de cette valeur)*).
+
+*Interprétation de la colonne "Ancien claim (Legacy)" :* la mention *Legacy non documenté* signifie que la documentation historique ne précise pas ce claim.
+Cela ne veut pas dire que le claim était absent techniquement dans l'ancien SSO.
 
 h3. Claims de validation technique (token et sécurité)
 
