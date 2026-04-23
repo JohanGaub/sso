@@ -7,9 +7,11 @@ Ce guide s’utilise comme une référence « par étapes » pour déployer le f
 
 h3. Mode opératoire (lecture)
 
-* Pass 1 : dans *Suivi à réaliser*, faites l’*étape 4*, puis exécutez *a)* à *g)* dans *Détail technique*.
-* Pass 2 : dans *Suivi à réaliser*, faites l’*étape 5*, puis suivez *h) Tester et diagnostiquer*.
-* Pass 3 : ouvrez *Attributs (Legacy → IdP)*, *Pièges courants* ou *Exemples de code* seulement si une erreur précise bloque.
+* Pass 1 : renseignez *4.1 Checklist de demande IAM - Raccordement SAML* puis validez les *étapes 1 à 3* du suivi.
+* Pass 2 : exécutez l’*étape 4* du suivi, puis déroulez *a)* à *g)* dans *Détail technique*.
+* Pass 3 : exécutez l’*étape 5* du suivi, puis suivez *h) Tester et diagnostiquer*.
+* Pass 4 : terminez avec les *étapes 6 et 7* (PV préprod/dev puis production).
+* En cas de blocage : ouvrez *Attributs (Legacy → IdP)*, *Pièges courants* ou *Exemples de code*.
 
 h3. Ressources
 
@@ -24,7 +26,7 @@ h3. Ressources
 h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 
 || Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux cible documenté (initiation + bindings). | [ ] |
+| 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect), en s'appuyant sur *4.1 Checklist de demande IAM - Raccordement SAML*. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux cible documenté (initiation + bindings). | [ ] |
 | 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Métadonnées SP prêtes et exploitables. | [ ] |
 | 3 | Enregistrer les métadonnées SP chez l'IdP et récupérer les métadonnées IdP. | Équipe IAM | À estimer | Métadonnées SP/IdP alignées et disponibles côté projet. | [ ] |
 | 4 | Implémenter le flux SAML côté appli : a) config bibliothèque/métadonnées, b) NameID, c) signature, d) mode d’initiation, e) binding, f) callback ACS, g) déconnexion (voir *Détail technique*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | [ ] |

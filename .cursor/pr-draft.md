@@ -30,16 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/4_1_CHECKLIST_DEMANDE_IAM_RACCORDEMENT_SAML.confluence`
+- `docs/4_GUIDE_MIGRATION_SAML_GESTION_PRIVEE.confluence`
 
 ### Last commits
+- 5fbaf71 docs(saml): simplify IAM checklist wording for readability
 - 5ee8162 docs(saml): add IAM request checklist and link it from guide 4
 - c9be8bb chore(deps): bump phpstan phpunit rector and related lockfile packages
 - 6ebdd37 docs(claims): refine legacy mapping notes and neutral wording
 - a307309 chore(docs): restrict tracked docs formats and clarify legacy claims mapping
-- 314ba08 docs(oidc): clarify step 12 request details in managed guide
 
 ### Diff summary
- .cursor/pr-draft.md                                |  6 +-----
- ...CKLIST_DEMANDE_IAM_RACCORDEMENT_SAML.confluence | 22 ++++++++++++++--------
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ .cursor/pr-draft.md                                   |  7 ++-----
+ docs/4_GUIDE_MIGRATION_SAML_GESTION_PRIVEE.confluence | 10 ++++++----
+ 2 files changed, 8 insertions(+), 9 deletions(-)
