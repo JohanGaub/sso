@@ -1,0 +1,68 @@
+h1. 4.1 Checklist de demande IAM - Raccordement SAML
+
+Cette checklist sert à transmettre à l'équipe IAM toutes les informations nécessaires pour configurer un service SAML.
+
+*Rappel vocabulaire :*
+* *SP (Service Provider)* = notre application.
+* *IdP (Identity Provider)* = plateforme IAM.
+* *ACS (Assertion Consumer Service)* = URL de retour vers l'application après authentification.
+* *SLO (Single Logout)* = mécanisme de déconnexion SAML.
+
+----
+
+h2. Informations projet
+
+|| Champ || Valeur ||
+| Application |  |
+| Environnement (dev / préprod / prod) |  |
+| Date |  |
+| Contact technique |  |
+| Contact métier |  |
+
+----
+
+h2. Checklist de demande IAM
+
+|| Section || Item || Valeur / Choix || Statut ||
+| 1. Paramètres de base | SP (Service Provider) = notre application | Oui / Non | [ ] |
+| 1. Paramètres de base | EntityID (identifiant SAML de l'application) | À renseigner | [ ] |
+| 1. Paramètres de base | ACS URL (retour login) | À renseigner | [ ] |
+| 1. Paramètres de base | Mode d'initiation retenu (choix obligatoire) | SP-initiated / IdP-initiated / Les deux | [ ] |
+| 1. Paramètres de base | Règle par défaut sans besoin spécifique | SP-initiated | [ ] |
+| 2. Déconnexion (SLO) | SLO utilisé | Oui / Non | [ ] |
+| 2. Déconnexion (SLO) | SLO URL (si SLO activé) | À renseigner | [ ] |
+| 3. Bindings SAML | AuthnRequest | HTTP-Redirect | [ ] |
+| 3. Bindings SAML | Response SAML | HTTP-POST | [ ] |
+| 3. Bindings SAML | SLO (si activé) | HTTP-Redirect | [ ] |
+| 3. Bindings SAML | Écart au standard documenté | Oui / Non + détails | [ ] |
+| 4. Sécurité | Signature des réponses SAML exigée côté application | Oui / Non | [ ] |
+| 4. Sécurité | Niveau de signature attendu | Assertion / Response / Les deux | [ ] |
+| 4. Sécurité | Vérification de signature activée côté application | Oui / Non | [ ] |
+| 4. Sécurité | Chiffrement de l'assertion | Oui / Non | [ ] |
+| 4. Sécurité | Certificat public SP fourni (si nécessaire) | Oui / Non | [ ] |
+| 4. Sécurité | Algorithmes attendus (ex : SHA-256) | À renseigner | [ ] |
+| 5. Identité et attributs | NameID attendu | emailAddress / persistent / unspecified / autre | [ ] |
+| 5. Identité et attributs | Attribut principal applicatif | employee_id / uid / mail / autre | [ ] |
+| 5. Identité et attributs | Attributs attendus (nom exact + obligatoire/optionnel) | Liste à renseigner | [ ] |
+| 5. Identité et attributs | Règles de fallback (ex : email puis mail) | À renseigner | [ ] |
+| 6. Attendus IAM (retour) | Métadonnées IdP XML reçues | Oui / Non | [ ] |
+| 6. Attendus IAM (retour) | EntityID IdP reçu | Oui / Non | [ ] |
+| 6. Attendus IAM (retour) | URL SSO reçue | Oui / Non | [ ] |
+| 6. Attendus IAM (retour) | URL SLO reçue (si activée) | Oui / Non | [ ] |
+| 6. Attendus IAM (retour) | Certificat(s) de signature IdP reçus | Oui / Non | [ ] |
+| 6. Attendus IAM (retour) | Liste finale des attributs émis reçue (nom + format) | Oui / Non | [ ] |
+| 7. Validation avant recette | Relecture config SP/IdP des deux côtés | OK / KO | [ ] |
+| 7. Validation avant recette | Test login nominal | OK / KO | [ ] |
+| 7. Validation avant recette | Test login en erreur (message clair, pas de crash) | OK / KO | [ ] |
+| 7. Validation avant recette | Test déconnexion (SLO ou fallback local) | OK / KO | [ ] |
+| 7. Validation avant recette | PV de recette prêt | Oui / Non | [ ] |
+
+----
+
+h2. Attributs attendus (détail à remplir)
+
+|| Attribut || Obligatoire || Exemple || Commentaire ||
+|  | Oui / Non |  |  |
+|  | Oui / Non |  |  |
+|  | Oui / Non |  |  |
+

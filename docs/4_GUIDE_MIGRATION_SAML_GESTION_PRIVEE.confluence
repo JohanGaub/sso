@@ -14,6 +14,7 @@ h3. Mode opératoire (lecture)
 h3. Ressources
 
 * Schéma de flux (SP-initiated, simplifié)
+* 4.1 Checklist de demande IAM - Raccordement SAML
 * Attributs (Legacy → IdP)
 * Pièges courants
 * Exemples de code

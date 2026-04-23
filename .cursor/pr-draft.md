@@ -30,18 +30,17 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `composer.json`
-- `composer.lock`
+- `docs/4_GUIDE_MIGRATION_SAML_GESTION_PRIVEE.confluence`
+- `docs/4_1_CHECKLIST_DEMANDE_IAM_RACCORDEMENT_SAML.confluence`
 
 ### Last commits
+- c9be8bb chore(deps): bump phpstan phpunit rector and related lockfile packages
 - 6ebdd37 docs(claims): refine legacy mapping notes and neutral wording
 - a307309 chore(docs): restrict tracked docs formats and clarify legacy claims mapping
 - 314ba08 docs(oidc): clarify step 12 request details in managed guide
 - 8b2d67e docs(oidc): harmonize private migration guide structure and readability
-- 34ef3b7 docs(oidc): simplify managed migration guide wording and clean code example formatting
 
 ### Diff summary
- .cursor/pr-draft.md |  8 ++---
- composer.json       |  8 ++---
- composer.lock       | 94 ++++++++++++++++++++++++++---------------------------
- 3 files changed, 54 insertions(+), 56 deletions(-)
+ .cursor/pr-draft.md                                   | 10 +++-------
+ docs/4_GUIDE_MIGRATION_SAML_GESTION_PRIVEE.confluence |  1 +
+ 2 files changed, 4 insertions(+), 7 deletions(-)
