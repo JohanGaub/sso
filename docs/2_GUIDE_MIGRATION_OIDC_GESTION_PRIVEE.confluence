@@ -1,8 +1,10 @@
 h1. 2. Guide migration OIDC - Gestion privée
 
 En gestion privée :
-* L’équipe applicative et/ou l’équipe de raccordement pilote l’implémentation OIDC dans le code.
-* Le CAM Eagles fournit la configuration Entra ID (client, secret, redirect URIs, claims émis).
+* Le CAM Eagles fournit la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
+* L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe applicative.
+* L'équipe applicative reçoit le Client ID / Client Secret.
+* L’équipe applicative et/ou l’équipe de raccordement configure l'environnement OIDC dans le code (images et conteneurs incluant les informations OIDC).
 * L’équipe applicative adapte la lecture des *claims* nécessaires au fonctionnement de l’application.
 NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
 
@@ -12,7 +14,7 @@ h2. Mode opératoire (lecture)
 * Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1 à 7*.
 * Pass 2 : ouvrez uniquement la section utile si vous bloquez : *Détail technique* (a à h), *Pièges courants* ou *Exemples de code*.
 * Terminez avec les checklists de validation.
-* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez *5. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
 
 Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
 
@@ -20,15 +22,15 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 
 h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
-|| Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | A — Cadrer le flux OIDC privé | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Décision PKCE formalisée et partagée avec l'IAM. | [ ] |
-| 2 | A — Cadrer le flux OIDC privé | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes openid, profile, email + personnalisés). | Équipe IAM | À estimer | Client IdP configuré et utilisable en environnement cible. | [ ] |
-| 3 | B — Basculer vers le SSO | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Accès local désactivé, parcours SSO unique documenté. | [ ] |
-| 4 | C — Implémenter le flux Authorization Code | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | [ ] |
-| 5 | C — Implémenter le flux Authorization Code | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés et diagnostics exploitables. | [ ] |
-| 6 | D — Valider en préprod | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
-| 7 | E — Valider en production | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 7) | — | À estimer | — | [ ] |
+|| Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
+| 1 | A — Cadrer le flux OIDC privé | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Décision PKCE formalisée et partagée avec l'IAM. | — | [ ] |
+| 2 | A — Cadrer le flux OIDC privé | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes openid, profile, email + personnalisés). | Équipe IAM | À estimer | Client IdP configuré et utilisable en environnement cible. | — | [ ] |
+| 3 | B — Basculer vers le SSO | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Accès local désactivé, parcours SSO unique documenté. | — | [ ] |
+| 4 | C — Implémenter le flux Authorization Code | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | — | [ ] |
+| 5 | C — Implémenter le flux Authorization Code | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés et diagnostics exploitables. | — | [ ] |
+| 6 | D — Valider en préprod | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | — | [ ] |
+| 7 | E — Valider en production | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | — | [ ] |
+| Total | — | Durée totale (somme des étapes 1 à 7) | — | À estimer | — | — | [ ] |
 
 ----
 
@@ -51,8 +53,6 @@ g) Récupérer les informations utilisateur (optionnel) — appel à l'endpoint 
 h) Tester et diagnostiquer — exécuter les cas d’échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
 {noformat}
 
-
-
 h3. a) Récupérer les clés publiques (JWKS)
 
 Ne codez pas les URLs des endpoints en dur : récupérez-les via le document de découverte (`.well-known/openid-configuration`) pour rester aligné avec l'IdP.
@@ -67,7 +67,7 @@ En pratique, le processus de récupération est le suivant :
 1. Appeler le document de découverte : `GET https://login.microsoftonline.com/<TENANT_ID>/v2.0/.well-known/openid-configuration`.
 2. Lire le champ {{jwks_uri}} dans la réponse.
 3. Appeler {{jwks_uri}} en {{GET}} pour télécharger les clés publiques (JWKS).
-4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l'en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
+4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l’en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
 
 h3. b) Rediriger l'utilisateur vers l'URL d'autorisation
 
@@ -156,7 +156,7 @@ grant_type=authorization_code&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET
 | expires_in | entier (secondes) | Durée de validité de l'Access Token (ex. 3599) |
 | ext_expires_in | entier (secondes) | Durée supplémentaire avant expiration forcée |
 | access_token | JWT (chaîne) | Jeton OAuth 2.0 pour appeler les APIs protégées |
-| id_token | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l'utilisateur |
+| id_token | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l’utilisateur |
 | refresh_token | chaîne opaque | Fourni uniquement si le scope offline_access a été demandé. Permet d'obtenir de nouveaux tokens sans ré-authentifier l'utilisateur. |
 
 h3. e) Valider l'ID Token
@@ -178,70 +178,28 @@ Pour le détail des claims (sens, exemples, usages), utilisez *5. Correspondance
 
 h3. Choisir le type de client (confidentiel vs public)
 
-Avant de configurer le flux, identifiez le type d'application côté OAuth2/OIDC :
-
-|| Type de client || Où tourne l'app ? || Secret possible ? || Flux à utiliser ||
-| Client confidentiel | Application avec backend sécurisé (serveur web, API) | OUI : on peut stocker un client_secret côté serveur | Authorization Code avec client_id + client_secret (PKCE recommandé) |
-| Client public | Application sans backend sécurisé (SPA JavaScript, app mobile, client lourd) | NON : impossible de protéger un client_secret dans le code envoyé à l'utilisateur | Authorization Code *avec PKCE*, sans client_secret (client public) |
-
-*À retenir :* « client public » n'est pas un état de l'utilisateur, mais un type d'application dans la configuration de l'IdP :
-* côté IdP, on déclare une application comme *confidentielle* (avec client_secret) ou *publique* (sans client_secret) ;
-* côté application, on utilise toujours le même client_id, mais :
-** un client *confidentiel* envoie aussi un client_secret au token endpoint (étapes d et f) ;
-** un client *public* n'a pas de client_secret et doit obligatoirement utiliser PKCE (code_verifier, code_challenge, code_challenge_method=S256) pour sécuriser l'échange du code.
-
-En pratique :
-* backend sécurisé disponible → client confidentiel → Authorization Code (avec client_secret, PKCE recommandé) ;
-* pas de backend sécurisé (SPA, mobile, client lourd) → client public → Authorization Code + PKCE, sans client_secret.
+Les applications avec backend (ex. Symfony, CodeIgniter, Python/Flask, Node.js) sont des **clients confidentiels** : elles peuvent stocker un `client_secret` en toute sécurité.
+Les applications front-only (SPA, mobile) sont des **clients publics** : elles ne peuvent pas stocker de secret et **doivent** utiliser le flux avec PKCE.
 
 h3. PKCE (complément)
 
-Pour les applications sans backend sécurisé ou en complément recommandé :
-
-|| Élément || Règle ||
-| {{code_verifier}} | Chaîne de 43 à 128 caractères (générée par l'application, stockée temporairement jusqu'à l'échange) |
-| {{code_challenge}} | Dérivé du {{code_verifier}} : Base64URL(SHA-256({{code_verifier}})) |
-| {{code_challenge_method}} | {{S256}} (obligatoire dans notre contexte) |
-| Envoi au SSO | À l'authorization : {{code_challenge}} + {{code_challenge_method}} ; au token : {{code_verifier}} + {{code}} |
+Le mécanisme PKCE (Proof Key for Code Exchange) ajoute une couche de sécurité en générant un secret temporaire (`code_verifier`) et son empreinte (`code_challenge`).
+* L'application envoie le `code_challenge` lors de la redirection vers l'IdP.
+* L'application envoie le `code_verifier` lors de l'échange du code contre les tokens.
+* L'IdP vérifie que le challenge correspond au verifier.
 
 h3. f) Rafraîchir l'Access Token (Refresh Token)
 
-Si le scope offline_access est demandé et accordé, l'IdP peut renvoyer un refresh_token en plus de l'access_token et de l'id_token. Le refresh_token permet d'obtenir de nouveaux Access Tokens sans ré-authentifier l'utilisateur.
+Si le scope `offline_access` a été demandé et accordé, l'application reçoit un `refresh_token`. Il permet d'obtenir un nouvel `access_token` sans intervention de l'utilisateur.
 
-*Conditions d'émission*
-
-|| Élément || Règle ||
-| offline_access | Le scope offline_access doit être demandé pour que l'IdP puisse renvoyer un refresh_token. |
-| refresh_token | Jeton opaque, longue durée ; à stocker de façon sécurisée côté backend uniquement. |
-
-*Requête de rafraîchissement (même endpoint /token que pour d))*
-
-Le backend appelle à nouveau l'endpoint {{token}} (même URL qu'en d)) en POST. Corps : {{application/x-www-form-urlencoded}}.
-
-Voir *Paramètres OIDC* pour client_id, client_secret, scope, refresh_token.
-
-|| Paramètre || Valeur spécifique à cette étape || Utilité ||
-| grant_type | refresh_token | Obligatoire : indique le rafraîchissement via un Refresh Token. |
-| refresh_token | refresh_token (reçu en d)) | Le Refresh Token renvoyé par l'IdP lors de la première authentification. |
-| scope | optionnel | Doivent être équivalents ou inclus dans les scopes initiaux. Si omis, reprend les scopes initiaux. |
-
-*Exemple de corps (x-www-form-urlencoded)* :
-
-{noformat}
-grant_type=refresh_token&
-refresh_token=<REFRESH_TOKEN>&
-client_id=<CLIENT_ID>&
-client_secret=<CLIENT_SECRET>&
-scope=openid profile offline_access
-{noformat}
-
-La réponse a la même structure qu'en d) : nouveaux access_token et id_token (et potentiellement un nouveau refresh_token). Le backend doit remplacer l'ancien refresh_token par le nouveau si un nouveau est renvoyé.
+|| Élément || Valeur || Utilité ||
+| Endpoint | Token endpoint | Identique à l'étape d. |
+| grant_type | refresh_token | Indique que l'on utilise un Refresh Token. |
+| refresh_token | valeur stockée | Le jeton de rafraîchissement obtenu précédemment. |
 
 h3. g) Récupérer les informations utilisateur (UserInfo)
 
-Certaines informations d'identité sont directement présentes dans l'id_token. Pour des claims supplémentaires ou pour centraliser la lecture des claims, l'application peut appeler l'endpoint UserInfo avec l'access_token.
-
-*Appel UserInfo*
+Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut appeler l'endpoint UserInfo.
 
 || Élément || Exemple || Rôle ||
 | Endpoint UserInfo | Valeur de `userinfo_endpoint` (discovery OIDC) | Utiliser l’endpoint publié par le document de découverte, plutôt qu’une URL codée en dur. |
@@ -374,56 +332,61 @@ $role = $user->getAttribute('role');
 TypeScript (Node, express + openid-client)
 
 {code:javascript}
-import { Issuer, Strategy } from 'openid-client';
+const { Issuer, Strategy } = require('openid-client');
 
-const issuer = await Issuer.discover(process.env.OIDC_ISSUER!);
-const client = new issuer.Client({
-  client_id: process.env.OIDC_CLIENT_ID!,
-  client_secret: process.env.OIDC_CLIENT_SECRET!,
-  redirect_uris: [process.env.OIDC_REDIRECT_URI!],
+// Découverte des endpoints (Discovery)
+const entraIssuer = await Issuer.discover('https://login.microsoftonline.com/<TENANT_ID>/v2.0');
+const client = new entraIssuer.Client({
+  client_id: process.env.OIDC_CLIENT_ID,
+  client_secret: process.env.OIDC_CLIENT_SECRET,
+  redirect_uris: [process.env.OIDC_REDIRECT_URI],
+  response_types: ['code'],
 });
-// OIDC_ISSUER = https://login.microsoftonline.com/<TENANT_ID>/v2.0
-// Utiliser client.authorizationUrl(), client.callbackParams(), client.callback()
-// Puis lire les claims depuis id_token ou userinfo
+
+passport.use('oidc', new Strategy({ client }, (tokenset, userinfo, done) => {
+  // tokenset.id_token contient les claims d'identité
+  // userinfo contient les claims supplémentaires si demandés
+  return done(null, userinfo);
+}));
 {code}
 
-Python (Flask + authlib)
+Python (Flask-pyoidc)
 
 {code:python}
-from authlib.integrations.flask_client import OAuth
+from flask import Flask
+from flask_pyoidc import OIDCAuthentication
+from flask_pyoidc.provider_configuration import ProviderConfiguration, ClientMetadata
 
-oauth = OAuth(app)
-oauth.register(
-    name='oidc',
-    server_metadata_url=os.environ['OIDC_ISSUER'].rstrip('/') + '/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid profile email'},
+# Configuration IdP
+provider_config = ProviderConfiguration(
+    issuer='https://login.microsoftonline.com/<TENANT_ID>/v2.0',
+    client_metadata=ClientMetadata(
+        client_id='<CLIENT_ID>',
+        client_secret='<CLIENT_SECRET>'
+    )
 )
-# OIDC_ISSUER = https://login.microsoftonline.com/<TENANT_ID>/v2.0
-# Dans la route callback : token = oauth.oidc.authorize_access_token()
-# userinfo = token.get('userinfo') ou décoder id_token
+
+auth = OIDCAuthentication({'default': provider_config}, app)
+
+@app.route('/')
+@auth.oidc_auth('default')
+def index():
+    user_session = auth.get_userinfo()
+    return f"Hello, {user_session['name']}"
 {code}
 
-h3. Échange du code au token endpoint (PKCE + client_secret_basic)
+Échange du code au token endpoint (PKCE + client_secret_basic)
 
-Exemple minimal qui illustre ce qui est envoyé au token endpoint : {{code_verifier}} (si PKCE) et l'authentification client via l'en-tête {{Authorization: Basic}} ({{client_secret_basic}}).
+{code:bash}
+# 1. Générer code_verifier et code_challenge (S256)
+# 2. Rediriger vers /authorize avec code_challenge
+# 3. Échanger le code reçu au callback :
 
-{code:javascript}
-// 1. Construire l'en-tête Authorization (client_secret_basic)
-const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-const tokenResponse = await fetch(tokenEndpointUrl, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Authorization': `Basic ${credentials}`,
-  },
-  body: new URLSearchParams({
-    grant_type: 'authorization_code',
-    code: codeFromRedirect,
-    redirect_uri: redirectUri,
-    code_verifier: codeVerifier,  // si PKCE (généré côté app, 43–128 car.)
-  }),
-});
-const tokens = await tokenResponse.json(); // id_token, access_token
+curl -X POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "Authorization: Basic bXktYXBwOnNlY3JldDEyMw==" \
+  -d "grant_type=authorization_code" \
+  -d "code=<CODE_RECU>" \
+  -d "redirect_uri=<REDIRECT_URI>" \
+  -d "code_verifier=<CODE_VERIFIER_GENERE_AU_DEBUT>"
 {code}
-
-En pratique, les bibliothèques (openid-client, authlib, etc.) gèrent PKCE et l'en-tête {{Authorization}} ; il suffit de configurer {{client_secret}} et d'activer PKCE si besoin.

@@ -1,9 +1,9 @@
 h1. 1. Guide migration OIDC - Gestion managée
 
 En gestion managée :
-* Le CAM Eagles fourni la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
-* L'équipe IAM demande de configurer Entra ID, reçoit ClientID et ClientSecret et les transmets à l'équipe "Gestion managée"
-* L’équipe *Gestion managée* pilote la mécanique OIDC.
+* Le CAM Eagles fournit la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
+* L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe "Gestion managée"
+* L’équipe *Gestion managée* reçoit le Client ID / Client Secret et configure la mécanique OIDC.
 * L’équipe applicative et/ou l’équipe de raccordement adapte la lecture des *claims* dans le code.
 NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
 
