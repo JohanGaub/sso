@@ -2,17 +2,17 @@ h1. 2. Guide migration OIDC - Gestion privée
 
 En gestion privée :
 * Le CAM Eagles fournit la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
-* L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe applicative.
+* L'équipe IAM configure Entra ID chez Microsoft, puis transmet (via le CAM Eagles) le Client ID et le Client Secret à l'équipe applicative.
 * L'équipe applicative reçoit le Client ID / Client Secret.
-* L’équipe applicative et/ou l’équipe de raccordement configure l'environnement OIDC dans le code (images et conteneurs incluant les informations OIDC).
+* L’équipe applicative et/ou l’équipe de raccordement configurent l'environnement OIDC dans le code (images et conteneurs incluant les informations OIDC).
 * L’équipe applicative adapte la lecture des *claims* nécessaires au fonctionnement de l’application.
 NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
 
 h2. Mode opératoire (lecture)
 
-* Repère rapide : *1–3 = préparer le cadrage OIDC privé*, *4–5 = implémenter et tester le flux*, *6–7 = valider par PV (préprod puis production)*.
-* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1 à 7*.
-* Pass 2 : ouvrez uniquement la section utile si vous bloquez : *Détail technique* (a à h), *Pièges courants* ou *Exemples de code*.
+* Repère rapide : *1–9 = préparer et raccorder la préprod*, *10–13 = adapter et valider la préprod*, *14–17 = basculer et valider la production*.
+* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1 à 17*.
+* Pass 2 : ouvrez *Détail technique* (a à h), *Pièges courants* ou *Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les checklists de validation.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
 
@@ -23,22 +23,32 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 || Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
-| 1 | A — Cadrer le flux OIDC privé | Déterminer *avec* ou *sans* PKCE : si l'application n'a pas de backend sécurisé (SPA, mobile), la PKCE est obligatoire ; si elle a un backend sécurisé où un client_secret est stocké, la PKCE n'est pas obligatoire mais est recommandée. Documenter le flux retenu et transmettre à l'équipe IAM (URLs de redirection, scopes attendus). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Décision PKCE formalisée et partagée avec l'IAM. | — | [ ] |
-| 2 | A — Cadrer le flux OIDC privé | Créer ou actualiser le client auprès d'Entra ID (Client ID, Secret, Redirect URIs, scopes openid, profile, email + personnalisés). | Équipe IAM | À estimer | Client IdP configuré et utilisable en environnement cible. | — | [ ] |
-| 3 | B — Basculer vers le SSO | Débrancher l'authentification locale : l'application ne valide que les tokens du SSO ; désactiver l'ancienne page de connexion ; documenter que l'accès se fait uniquement via le SSO. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Accès local désactivé, parcours SSO unique documenté. | — | [ ] |
-| 4 | C — Implémenter le flux Authorization Code | Implémenter le flux Authorization Code côté appli : a) JWKS, b) authorize, c) callback (code), d) token, e) validation ID token, f) refresh (optionnel), g) UserInfo (optionnel). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | — | [ ] |
-| 5 | C — Implémenter le flux Authorization Code | Tester le flux complet : login OK / login échoué / déconnexion (et refresh/UserInfo seulement si utilisés) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés et diagnostics exploitables. | — | [ ] |
-| 6 | D — Valider en préprod | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | — | [ ] |
-| 7 | E — Valider en production | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | — | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 7) | — | À estimer | — | — | [ ] |
+| 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone <n° de dépôt>. Exemple : glab repo clone 7777 | [ ] |
+| 2 | A — Préparer la préprod | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignements. | — | [ ] |
+| 3 | A — Préparer la préprod | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette vérifié : portail accessible via l'URL de test avant raccordement OIDC. | — | [ ] |
+| 4 | A — Préparer la préprod | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation Entra ID Recette. | — | [ ] |
+| 5 | A — Préparer la préprod | Obtenir l'accès / habilitation à l'appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation à l'application. | — | [ ] |
+| 6 | A — Préparer la préprod | Obtenir le Client ID et le Client Secret | Équipe applicative et/ou Équipe de raccordement | À estimer | Client ID et Client Secret reçus et stockés de manière sécurisée. | — | [ ] |
+| 7 | B — Raccorder la préprod | Configurer l'environnement OIDC dans la préprod/dev | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
+| 8 | B — Raccorder la préprod | Confirmer que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "raccordement prêt à tester" partagé dans le ticket de suivi. | — | [ ] |
+| 9 | B — Raccorder la préprod | Tester la connexion sur l'URL de test (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC préprod validée (mire, authent, redirection). Avant adaptation du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | — | [ ] |
+| 10 | C — Adapter le dev | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge des modifications de code" envoyé à l'équipe applicative. | Enregistrer le mail de démarrage dans le ticket Jira de l'application. | [ ] |
+| 11 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *4. Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
+| 12 | C — Adapter le dev | Demander le déploiement en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Message envoyé à l'équipe applicative demandant : 1) la validation de la Merge Request, 2) la réalisation du PV de recette, 3) la planification d'une date de mise en production avec le CAM Eagles, 4) le retour de cette date à l'équipe de raccordement. | Enregistrer le mail de fin d'intervention dans le ticket Jira de l'application. | [ ] |
+| 13 | D — Valider la préprod (PV + transmission + planification mise en prod) | Réaliser la recette fonctionnelle préprod, valider le PV, le transmettre au CAM Eagles, puis planifier le raccordement Entra ID en production | Équipe applicative et CAM Eagles | À estimer | PV préprod validé et transmis au chargé d'affaires Eagles. Date de mise en prod communiquée par le CAM à l'équipe applicative et à l'équipe de raccordement. | — | [ ] |
+| 14 | E — Raccorder la prod | Réaliser le raccordement pour l'environnement de production | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
+| 15 | E — Raccorder la prod | Confirmer que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "production prête à tester" partagé dans le ticket de suivi. | — | [ ] |
+| 16 | F — Valider la prod (PV + transmission) | Déployer en production (souvent : créer un tag GitLab, lancer le pipeline, vérifier qu'il est au vert) | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (release ou tag créé, pipeline OK). | — | [ ] |
+| 17 | F — Valider la prod (PV + transmission) | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | PV production validé et transmis au chargé d'affaires Eagles. | — | [ ] |
+| Total | — | Durée totale (somme des étapes 1 à 17) | — | À estimer | — | — | [ ] |
 
 ----
 
 h2. Détail technique – Flux Authorization Code (Entra ID)
 
 *Les étapes a) à g)* ci-dessous sont le *parcours technique* une fois le client IdP disponible.
-Dans le *Suivi à réaliser*, elles correspondent à l’*étape 4* (préparée par les étapes *1* et *2*).
-Le *test et diagnostic* (h) correspond à l’*étape 5*.
+Dans le *Suivi à réaliser*, elles sont principalement utilisées pendant les *étapes 9 à 12* (tests préprod, adaptation code, déploiement dev).
+Le *test et diagnostic* (h) correspond au même bloc de travail (préprod) avant validation PV.
 
 Vue d'ensemble du processus :
 

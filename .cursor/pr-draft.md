@@ -30,16 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
+- `docs/2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence`
 
 ### Last commits
+- ff3fca3 docs(oidc): update claims reference to doc 4 in managed guide
 - 82a2438 docs(oidc): harmonize guide introductions and fix minor typos
 - 281e67e docs(sso): add information sheet to glossary and update managed guide actors
 - 28418d5 docs(oidc): add Jira mail traceability comments to follow-up table
 - f46c033 docs(saml): clarify guide 4 reading flow to remove pass overlap
-- 5fbaf71 docs(saml): simplify IAM checklist wording for readability
 
 ### Diff summary
- .cursor/pr-draft.md                                   | 7 +------
- docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 4 ++--
- 2 files changed, 3 insertions(+), 8 deletions(-)
+ .cursor/pr-draft.md                                |  7 ++--
+ ..._GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence | 40 ++++++++++++++--------
+ 2 files changed, 27 insertions(+), 20 deletions(-)
