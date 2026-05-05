@@ -137,50 +137,17 @@ Après réception du code, l'application appelle l'endpoint token de l'IdP en PO
 
 Pour échanger le code contre les tokens, l'application doit "prouver qui elle est" au token endpoint.
 
-Deux méthodes possibles :
-* *client_secret_basic* (*recommandé*) : on envoie `client_id:client_secret` en Base64 dans l'en-tête HTTP.
-* *client_secret_post* : on envoie `client_id` et `client_secret` dans le corps de la requête.
+|| Élément || *client_secret_basic* (*RECOMMANDÉ* OAuth 2.0 (RFC 6749 §2.3.1)) || *client_secret_post* (**NON RECOMMANDÉ**) ||
+| Endpoint (commun aux 2 méthodes) | `POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token` | idem |
+| Quand l'utiliser | Cas nominal : à privilégier si l'IdP et la bibliothèque supportent l'en-tête `Authorization`. | Cas dégradé : uniquement si la stack (bibliothèque, proxy, passerelle) ne permet pas d'utiliser correctement l'en-tête `Authorization`. |
+| Envoi des identifiants client | `client_id:client_secret` encodé en Base64 dans l'en-tête HTTP `Authorization`. | `client_id` et `client_secret` directement dans le corps de la requête POST. |
+| En-tête requis | `Content-Type: application/x-www-form-urlencoded` + `Authorization: Basic <base64(client_id:client_secret)>` | `Content-Type: application/x-www-form-urlencoded` |
+| Paramètres minimaux dans le body | `grant_type=authorization_code` + `code=<CODE>` + `redirect_uri=<REDIRECT_URI>` + `scope=<SCOPE>` *(seul `scope` est optionnel)* | `grant_type=authorization_code` + `client_id=<CLIENT_ID>` + `client_secret=<CLIENT_SECRET>` + `code=<CODE>` + `redirect_uri=<REDIRECT_URI>` + `scope=<SCOPE>` *(seul `scope` est optionnel)* |
+| Exemples | `Authorization: Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=` ; `Content-Type: application/x-www-form-urlencoded` ; body: `grant_type=authorization_code&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile` | `client_id=my-client-id&client_secret=my-client-secret` ; `Content-Type: application/x-www-form-urlencoded` ; body: `grant_type=authorization_code&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile` |
+| Points d'attention | `redirect_uri` doit être *exactement* celle utilisée à l'étape b). | Même contrainte sur `redirect_uri` ; si `scope` est omis, ce sont ceux de la requête d'autorisation qui s'appliquent. |
+| Sécurité | Ne jamais exposer le `client_secret` côté client (navigateur, mobile) ; backend uniquement. | Même contrainte : secret côté backend uniquement, jamais exposé côté client. |
 
-Exemples concrets :
-{noformat}
-# Méthode recommandée (client_secret_basic)
-Authorization: Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=
-# (cet exemple correspond à base64("my-client-id:my-client-secret"))
-
-# Alternative (client_secret_post)
-client_id=my-client-id&client_secret=my-client-secret
-{noformat}
-
-Le choix dépend de la configuration de l'IdP et de la bibliothèque utilisée. OAuth 2.0 (RFC 6749 §2.3.1) indique que l'envoi des secrets dans le corps est possible mais **NON RECOMMANDÉ** ; privilégiez l'en-tête `Authorization` quand c'est possible.
-
-{noformat}
-POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token
-Content-Type: application/x-www-form-urlencoded
-{noformat}
-
-Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#redeem-a-code-for-an-access-token).
-
-*Corps de la requête (application/x-www-form-urlencoded)*
-
-Voir *3.11 Paramètres OIDC* pour client_id, client_secret, code, redirect_uri, scope.
-
-|| Paramètre || Valeur spécifique à cette étape || Utilité ||
-| grant_type | authorization_code | Obligatoire : indique l'échange du code contre les tokens. |
-| redirect_uri | identique à celle envoyée en b) | Doit être *exactement* la même valeur qu'à l'étape b). |
-| scope | optionnel | Si omis, les scopes sont ceux de la requête d'autorisation. |
-
-Ne jamais exposer le client_secret côté client (navigateur, app mobile) ; réservé aux applications avec backend.
-
-*Exemple de corps :*
-{noformat}
-grant_type=authorization_code&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile
-{noformat}
-
-*En-têtes HTTP*
-
-|| En-tête || Valeur || Définition et utilité ||
-| Content-Type | application/x-www-form-urlencoded | Format du corps de la requête |
-| Authorization | Basic base64(client_id:client_secret) | Encodage Base64 de `client_id:client_secret`. Ex. : `my-app:secret123` → Base64 → `bXktYXBwOnNlY3JldDEyMw==`. |
+Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#redeem-a-code-for-an-access-token). Voir *3.11 Paramètres OIDC* pour le détail des paramètres.
 
 *Réponse en cas de succès*
 
