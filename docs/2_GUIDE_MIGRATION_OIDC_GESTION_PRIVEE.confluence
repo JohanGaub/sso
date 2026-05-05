@@ -12,7 +12,7 @@ h2. 1. Mode opératoire (lecture)
 
 * Repère rapide : *1–8 = préparer la préprod (A) et raccorder la préprod (B)*, *9–13 = adapter le dev (C) et valider la préprod (D)*, *14–20 = préparer et raccorder la prod (E)*, *21–22 = valider la prod (F)*.
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 22*.
-* Pass 2 : ouvrez *3. Détail technique* (3.1 à 3.10), *4. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
+* Pass 2 : ouvrez *3. Détail technique* (3.1 à 3.9), *4. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les checklists de validation.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
 
@@ -29,7 +29,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 4 | A — Préparer la préprod | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation Entra ID Recette. | — | [ ] |
 | 5 | A — Préparer la préprod | Obtenir l'accès / habilitation à l'appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation à l'application. | — | [ ] |
 | 6 | A — Préparer la préprod | Obtenir le Client ID et le Client Secret | Équipe applicative et/ou Équipe de raccordement | À estimer | Client ID et Client Secret reçus et stockés de manière sécurisée. | — | [ ] |
-| 7 | B — Raccorder la préprod | Configurer l'environnement OIDC dans la préprod/dev | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
+| 7 | B — Raccorder la préprod | Configurer l'environnement OIDC en préprod | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
 | 8 | B — Raccorder la préprod | Tester la connexion sur l'URL de test (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC préprod validée (mire, authent, redirection). Avant adaptation du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | — | [ ] |
 | 9 | C — Adapter le dev | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC et des modifications de code" envoyé à l'équipe applicative. | Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
 | 10 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *4. Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
@@ -53,7 +53,7 @@ h2. 3. Détail technique – Flux Authorization Code (Entra ID)
 
 h3. 3.0 Prérequis / choix de sécurité
 
-À valider *avant* de dérouler les sections 3.1 à 3.10 :
+À valider *avant* de dérouler les sections 3.1 à 3.9 :
 * Type de client :
 ** les applications avec backend (ex. Symfony, CodeIgniter, Python/Flask, Node.js) sont des **clients confidentiels** : elles peuvent stocker un `client_secret` en toute sécurité ;
 ** les applications front-only (SPA, mobile) sont des **clients publics** : elles ne peuvent pas stocker de secret.
@@ -76,7 +76,7 @@ h3. 3.0 Prérequis / choix de sécurité
 
 *Les sections 3.1 à 3.8* décrivent le *parcours technique principal* une fois le client IdP disponible.
 Dans la section *2. Suivi à réaliser*, cela correspond aux étapes :
-   * en préprod : *7 à 8 puis 10 à 11* (configuration OIDC, test accès mire d'authent, adaptation du code, déploiement dev)
+   * en préprod : *7 à 8 puis 10 à 11* (configuration OIDC, test accès mire d'authent, adaptation du code, déploiement en développement)
    * en prod : *17 à 18* (configuration OIDC, test accès mire d'authent).
 
 h3. 3.1 Récupérer les clés publiques (JWKS)
@@ -148,6 +148,7 @@ Après réception du code, l'application appelle l'endpoint token de l'IdP en PO
 *Authentification du client au token endpoint*
 
 Pour échanger le code contre les tokens, l'application doit "prouver qui elle est" au token endpoint.
+*Cheat sheet (décision rapide) :* ✅ backend sécurisé → suivez la colonne *client_secret_basic* (recommandé) ; ⚠️ *client_secret_post* uniquement si votre stack ne permet pas d'envoyer correctement l'en-tête `Authorization`.
 
 || Élément || *client_secret_basic* (*RECOMMANDÉ* OAuth 2.0 (RFC 6749 §2.3.1)) || *client_secret_post* (**NON RECOMMANDÉ**) ||
 | Endpoint (commun aux 2 méthodes) | `POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token` | idem |
@@ -212,7 +213,7 @@ Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemple
 
 h3. 3.8 Tester et diagnostiquer
 
-Tester ces scénarios dans l’ordre (dans votre environnement dev/preprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
+Tester ces scénarios dans l’ordre (dans votre environnement de préprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
 Cette section décrit les scénarios à exécuter.
 *Entrée attendue :* sections 3.1 à 3.7 implémentées et exécutables dans l’environnement de test.
 
@@ -259,7 +260,7 @@ h4. 3.8.2 Checklist de validation finale (avant livraison)
 * Claims attendus validés (id_token et/ou UserInfo selon architecture).
 * Déconnexion locale validée côté application.
 * Logs exploitables en cas d’échec, sans fuite de données sensibles.
-* PV de recette fonctionnelle préprod/dev validé.
+* PV de recette fonctionnelle préprod validé.
 * PV de recette fonctionnelle production validé.
 
 *Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).
@@ -283,17 +284,6 @@ Pour la définition des paramètres communs à plusieurs étapes, se référer a
 | response_mode | Méthode de renvoi du code : query, fragment ou form_post. Pour un flux Authorization Code standard, la valeur par défaut est query. | 3.2 authorize |
 | session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | 3.3 callback |
 | iss | Issuer : identifiant de l'émetteur (ex. `https://login.microsoftonline.com/<TENANT_ID>/v2.0`). | 3.3 callback, 3.5 validation ID Token |
-
-h3. 3.10 Schéma de flux (rappel)
-
-{noformat}
-[App] --> Redirection vers l'IdP (authorization endpoint ; inclut code_challenge si PKCE)
-[IdP] --> Authentification utilisateur
-[IdP] --> Redirection vers App (redirect_uri + code)
-[App] --> Échange code contre access_token et id_token (code_verifier si PKCE, ou client_secret si backend sécurisé)
-[App] --> (Optionnel) UserInfo endpoint pour claims supplémentaires
-[App] --> Création de session / utilisateur local
-{noformat}
 
 ----
 
