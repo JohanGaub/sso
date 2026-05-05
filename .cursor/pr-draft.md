@@ -33,13 +33,13 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `docs/2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence`
 
 ### Last commits
+- 70888d5 docs(guides): clarify and renumber private OIDC migration guide sections
 - 4e58ebd docs(guides): reorder private OIDC guide steps and update references
 - 3d7fc15 docs(guides): update OIDC migration Confluence guides
 - 77501d9 docs(oidc): realign private guide follow-up steps to 1-17 sequence
 - ff3fca3 docs(oidc): update claims reference to doc 4 in managed guide
-- 82a2438 docs(oidc): harmonize guide introductions and fix minor typos
 
 ### Diff summary
- .cursor/pr-draft.md                                |  5 +-
- ..._GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence | 69 ++++++++++++----------
- 2 files changed, 40 insertions(+), 34 deletions(-)
+ .cursor/pr-draft.md                                 |  5 +----
+ ...2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence | 21 ++++++++++++++++-----
+ 2 files changed, 17 insertions(+), 9 deletions(-)

@@ -135,11 +135,23 @@ Après réception du code, l'application appelle l'endpoint token de l'IdP en PO
 
 *Authentification du client au token endpoint*
 
-Pour échanger le code contre les tokens, le client doit s'authentifier auprès du token endpoint. Deux méthodes courantes :
-* client_secret_basic (recommandé) : le couple client_id:client_secret est encodé en Base64 et envoyé dans l'en-tête HTTP Authorization: Basic … ;
-* client_secret_post : le client_id et le client_secret sont envoyés dans le corps de la requête HTTP POST.
+Pour échanger le code contre les tokens, l'application doit "prouver qui elle est" au token endpoint.
 
-Le choix dépend de la configuration de l'IdP et de la bibliothèque utilisée.
+Deux méthodes possibles :
+* *client_secret_basic* (*recommandé*) : on envoie `client_id:client_secret` en Base64 dans l'en-tête HTTP.
+* *client_secret_post* : on envoie `client_id` et `client_secret` dans le corps de la requête.
+
+Exemples concrets :
+{noformat}
+# Méthode recommandée (client_secret_basic)
+Authorization: Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=
+# (cet exemple correspond à base64("my-client-id:my-client-secret"))
+
+# Alternative (client_secret_post)
+client_id=my-client-id&client_secret=my-client-secret
+{noformat}
+
+Le choix dépend de la configuration de l'IdP et de la bibliothèque utilisée. OAuth 2.0 (RFC 6749 §2.3.1) indique que l'envoi des secrets dans le corps est possible mais **NON RECOMMANDÉ** ; privilégiez l'en-tête `Authorization` quand c'est possible.
 
 {noformat}
 POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token
@@ -157,7 +169,6 @@ Voir *3.11 Paramètres OIDC* pour client_id, client_secret, code, redirect_uri, 
 | redirect_uri | identique à celle envoyée en b) | Doit être *exactement* la même valeur qu'à l'étape b). |
 | scope | optionnel | Si omis, les scopes sont ceux de la requête d'autorisation. |
 
-L'authentification du client peut se faire soit par client_secret dans le corps, soit par en-tête `Authorization: Basic base64(client_id:client_secret)` (RFC 6749 section 2.3.1).
 Ne jamais exposer le client_secret côté client (navigateur, app mobile) ; réservé aux applications avec backend.
 
 *Exemple de corps :*
