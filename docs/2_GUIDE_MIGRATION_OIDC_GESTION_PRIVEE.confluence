@@ -10,7 +10,7 @@ NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID To
 
 h2. 1. Mode opératoire (lecture)
 
-* Repère rapide : *1–8 = préparer la préprod (A) et raccorder la préprod (B)*, *9–13 = adapter le dev (C) et valider la préprod (D)*, *14–20 = préparer et raccorder la prod (E)*, *21–22 = valider la prod (F)*.
+* Repère rapide : *1–6 = préparer la préprod (A)*, *7–9 = raccorder la préprod (B)*, *10–13 = adapter le dev (C) et valider la préprod (D)*, *14–20 = préparer et raccorder la prod (E)*, *21–22 = valider la prod (F)*.
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 22*.
 * Pass 2 : ouvrez *3. Détail technique* (3.1 à 3.9), *4. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les checklists de validation.
@@ -77,8 +77,8 @@ h3. 3.0 Prérequis / choix de sécurité
 *Les sections 3.1 à 3.8* décrivent le *parcours technique principal* une fois le client IdP disponible.
 *Référence paramètres (lecture rapide) :* section *3.9 Paramètres OIDC*.
 Dans la section *2. Suivi à réaliser*, cela correspond aux étapes :
-   * en préprod : *7 à 11* (configuration OIDC, test accès mire d'authent, adaptation du code, déploiement en développement)
-   * en prod : *14 à 18* (configuration OIDC, test accès mire d'authent).
+   * en préprod : *8 à 11* (configuration OIDC, test accès mire d'authent, adaptation du code, déploiement en développement)
+   * en prod : *15 à 18* (configuration OIDC, test accès mire d'authent).
 
 h3. 3.1 Récupérer les clés publiques (JWKS)
 
