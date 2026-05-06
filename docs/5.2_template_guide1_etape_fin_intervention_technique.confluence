@@ -1,14 +1,14 @@
 h1. 5.2 Template guide 1 - étape Fin d'intervention technique
 
 
-Objet :  [Migration SSO] Validation MR + PV recette + date de mise en production – [Nom application]
+Objet : [Migration SSO] Validation MR + PV recette + date de mise en production – [Nom application]
 
 
 Bonjour [Équipe applicative],
 
 Dans le cadre de la migration SSO, nous avons réalisé les opérations techniques sur l’application. Aucune autre modification côté application n’est prévue de notre part.
 
-Nous vous remercions par avance de  :
+Nous vous remercions par avance de :
 1) valider la Merge Request [lien MR] ;
 2) tester l'application et rédiger le PV de recette ;
 3) définir une date de mise en production avec le CAM Eagles ;
