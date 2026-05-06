@@ -30,16 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/2_GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence`
+- `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
 
 ### Last commits
+- 16010e2 docs(guides): promote prerequisites section and renumber private OIDC flow
 - 0a2da90 docs(guides): align private OIDC guide tracking steps and quick reference
 - 9ab4ab7 docs(guides): reorder private guide steps and update references
 - 939868c docs(guides): refine private OIDC migration guide checklist and Confluence markup
 - 59f5a34 docs(guides): clarify confidential client scope and OIDC parameter reference
-- 1c423f7 docs(guides): optimize private OIDC migration guide for Confluence compatibility
 
 ### Diff summary
- .cursor/pr-draft.md                                |   5 +-
- ..._GUIDE_MIGRATION_OIDC_GESTION_PRIVEE.confluence | 138 ++++++++++-----------
- 2 files changed, 70 insertions(+), 73 deletions(-)
+ .cursor/pr-draft.md                                |  7 ++-----
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 22 +++++++++++-----------
+ 2 files changed, 13 insertions(+), 16 deletions(-)

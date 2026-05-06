@@ -7,11 +7,11 @@ En gestion managée :
 * L’équipe applicative et/ou l’équipe de raccordement adapte la lecture des *claims* dans le code.
 NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
 
-h2. Mode opératoire (lecture)
+h2. 1. Mode opératoire (lecture)
 
 * Repère rapide : *1–9 = préparer et raccorder la préprod*, *10–13 = adapter et valider la préprod*, *14–17 = basculer et valider la production*.
-* Pass 1 : dans *Suivi à réaliser*, enchaînez les *étapes 1 à 17*.
-* Pass 2 : ouvrez *Pièges courants* ou *Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
+* Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 17*.
+* Pass 2 : ouvrez *3. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les deux checklists de validation.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
 
@@ -19,7 +19,7 @@ Pour les définitions transverses (OIDC, claims, conventions), utilisez la synth
 
 ----
 
-h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
+h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 || Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
 | 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone <n° de dépôt>. Exemple : glab repo clone 7777 | [ ] |
@@ -32,9 +32,9 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 8 | B — Raccorder la préprod | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "raccordement prêt à tester" reçu de l'équipe Gestion managée. | — | [ ] |
 | 9 | B — Raccorder la préprod | Tester la connexion sur l'URL de test (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC préprod validée (mire, authent, redirection). Avant adaptation du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | — | [ ] |
 | 10 | C — Adapter le dev | En cas de délégation technique, informer l'équipe applicative de la prise en charge des modifications | Équipe de raccordement | À estimer | Message "prise en charge des modifications de code" envoyé à l'équipe applicative. | Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 11 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *5. Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
-| 12 | C — Adapter le dev | Demander le déploiement en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Message envoyé à l'équipe applicative précisant la *fin de l'intervention* et demandant : 1) la validation de la Merge Request, 2) la réalisation du PV de recette, 3) la planification d'une date de mise en production avec le CAM Eagles, 4) le retour de cette date à l'équipe de raccordement. | Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 13 | D — Valider la préprod | Réaliser la recette fonctionnelle préprod, valider le PV, le transmettre au CAM Eagles, puis planifier le raccordement Entra ID en production | Équipe applicative et CAM Eagles | À estimer | PV préprod validé et transmis au chargé d'affaires Eagles. Date de mise en prod communiquée par le CAM à l'équipe applicative et à l'équipe de raccordement. | — | [ ] |
+| 11 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *4. Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
+| 12 | C — Adapter le dev | Demander le déploiement en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Email de fin d’intervention envoyé (déploiement dev + actions attendues). | Actions à demander : 1) valider la Merge Request, 2) réaliser le PV de recette, 3) planifier une date de mise en production avec le CAM Eagles, 4) communiquer cette date à l'équipe de raccordement. Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
+| 13 | D — Valider la préprod | Réaliser la recette fonctionnelle préprod, valider le PV, le transmettre au CAM Eagles, puis planifier le raccordement Entra ID en production | Équipe applicative et CAM Eagles | À estimer | PV préprod validé et transmis au chargé d'affaires Eagles ; date de mise en prod communiquée. | — | [ ] |
 | 14 | E — Raccorder la prod | Réaliser le raccordement pour l'environnement de production | Équipe Gestion managée | À estimer | Flux OIDC production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
 | 15 | E — Raccorder la prod | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "production prête à tester" reçu de l'équipe Gestion managée. | — | [ ] |
 | 16 | F — Valider la prod | Déployer en production (souvent : créer un tag GitLab, lancer le pipeline, vérifier qu'il est au vert) | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (release ou tag créé, pipeline OK). | — | [ ] |
@@ -43,24 +43,24 @@ h2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 ----
 
-h2. Pièges courants
+h2. 3. Pièges courants
 
 * Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
 
-h2. Checklist de validation avant bascule en production
+h2. 4. Checklist de validation avant bascule en production
 
 || Critère || Validé ||
 | Claims nécessaires au fonctionnement reçus et exploitables côté code. | [ ] |
 | PV de recette préprod/dev validé et transmis au CAM Eagles. | [ ] |
 
-h2. Checklist de validation de production
+h2. 5. Checklist de validation de production
 
 || Critère || Validé ||
 | PV de recette production validé et transmis au CAM Eagles. | [ ] |
 
 ----
 
-h2. Exemples de code
+h2. 6. Exemples de code
 
 Symfony (PHP)
 
