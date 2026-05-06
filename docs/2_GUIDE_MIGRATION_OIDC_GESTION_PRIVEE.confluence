@@ -12,7 +12,7 @@ h2. 1. Mode opératoire (lecture)
 
 * Repère rapide : *1–6 = préparer la préprod (A)*, *7–9 = raccorder la préprod (B)*, *10–13 = adapter le dev (C) et valider la préprod (D)*, *14–20 = préparer et raccorder la prod (E)*, *21–22 = valider la prod (F)*.
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 22*.
-* Pass 2 : ouvrez *3. Détail technique* (3.1 à 3.9), *4. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
+* Pass 2 : ouvrez *3. Prérequis / choix de sécurité*, puis *4. Détail technique* (4.1 à 4.9), *5. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les checklists de validation.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
 
@@ -49,38 +49,38 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 ----
 
-h2. 3. Détail technique – Flux Authorization Code (Entra ID)
+h2. 3. Prérequis / choix de sécurité
 
-h3. 3.0 Prérequis / choix de sécurité
-
-À valider *avant* de dérouler les sections 3.1 à 3.9 :
+À valider *avant* de dérouler les sections 4.1 à 4.9 :
 * Type de client :
 ** les applications avec backend (ex. Symfony, CodeIgniter, Python/Flask, Node.js) sont des *clients confidentiels* : elles peuvent stocker un {{client_secret}} en toute sécurité ;
 ** les applications front-only (SPA, mobile) sont des *clients publics* : elles ne peuvent pas stocker de secret.
 * PKCE :
 ** le mécanisme PKCE (Proof Key for Code Exchange) ajoute une couche de sécurité avec {{code_verifier}} et {{code_challenge}} ;
-** l'application envoie le {{code_challenge}} lors de la redirection vers l'IdP (section 3.2) ;
-** l'application envoie le {{code_verifier}} lors de l'échange du code contre les tokens (section 3.4) ;
+** l'application envoie le {{code_challenge}} lors de la redirection vers l'IdP (section 4.2) ;
+** l'application envoie le {{code_verifier}} lors de l'échange du code contre les tokens (section 4.4) ;
 ** l'IdP vérifie que le challenge correspond au verifier.
 
-{noformat}
-3.1 Récupérer les clés publiques (JWKS) — avant la première authentification
-3.2 Rediriger l'utilisateur vers l'IdP — requête GET vers l'URL d'autorisation
-3.3 Recevoir le code d'autorisation — l'IdP redirige vers l'application avec un code et d'autres paramètres
-3.4 Échanger le code contre les tokens — requête POST vers l'endpoint token
-3.5 Valider l'ID Token — vérifier signature, audience, expiration et intégrité
-3.6 Rafraîchir l'Access Token (optionnel) — requête POST vers l'endpoint token avec un refresh_token
-3.7 Récupérer les informations utilisateur (optionnel) — appel à l'endpoint UserInfo avec l'Access Token
-3.8 Tester et diagnostiquer — exécuter les cas d’échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
-{noformat}
+h2. 4. Détail technique – Flux Authorization Code (Entra ID)
 
-*Les sections 3.1 à 3.8* décrivent le *parcours technique principal* une fois le client IdP disponible.
-*Référence paramètres (lecture rapide) :* section *3.9 Paramètres OIDC*.
+*Sommaire (vue d'ensemble du flux)*
+
+* *4.1* Récupérer les clés publiques (JWKS) — avant la première authentification
+* *4.2* Rediriger l'utilisateur vers l'IdP — requête GET vers l'URL d'autorisation
+* *4.3* Recevoir le code d'autorisation — l'IdP redirige vers l'application avec un code et d'autres paramètres
+* *4.4* Échanger le code contre les tokens — requête POST vers l'endpoint token
+* *4.5* Valider l'ID Token — vérifier signature, audience, expiration et intégrité
+* *4.6* Rafraîchir l'Access Token (optionnel) — requête POST vers l'endpoint token avec un refresh_token
+* *4.7* Récupérer les informations utilisateur (optionnel) — appel à l'endpoint UserInfo avec l'Access Token
+* *4.8* Tester et diagnostiquer — exécuter les cas d’échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
+
+*Les sections 4.1 à 4.8* décrivent le *parcours technique principal* une fois le client IdP disponible.
+*Référence paramètres (lecture rapide) :* section *4.9 Paramètres OIDC*.
 Dans la section *2. Suivi à réaliser*, cela correspond aux étapes :
    * en préprod : *8 à 11* (configuration OIDC, test accès mire d'authent, adaptation du code, déploiement en développement)
    * en prod : *15 à 18* (configuration OIDC, test accès mire d'authent).
 
-h3. 3.1 Récupérer les clés publiques (JWKS)
+h3. 4.1 Récupérer les clés publiques (JWKS)
 
 Ne codez pas les URLs des endpoints en dur : récupérez-les via le document de découverte ({{.well-known/openid-configuration}}) pour rester aligné avec l'IdP.
 
@@ -96,7 +96,7 @@ En pratique, le processus de récupération est le suivant :
 3. Appeler {{jwks_uri}} en {{GET}} pour télécharger les clés publiques (JWKS).
 4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l’en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
 
-h3. 3.2 Rediriger l'utilisateur vers l'URL d'autorisation
+h3. 4.2 Rediriger l'utilisateur vers l'URL d'autorisation
 
 L'application envoie l'utilisateur vers l'endpoint d'autorisation de l'IdP via une requête HTTP GET.
 
@@ -117,13 +117,13 @@ GET https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/authorize?client_i
 - response_mode=query (par défaut pour ce flux)
 {noformat}
 
-Voir *3.9 Paramètres OIDC* pour le détail de chaque paramètre.
+Voir *4.9 Paramètres OIDC* pour le détail de chaque paramètre.
 
 *Note :* Microsoft recommande aussi la PKCE ({{code_challenge}}, {{code_challenge_method}}) pour tous les types d'applications ; pour une app avec backend, le {{client_secret}} reste la méthode d'authentification au token endpoint.
 
 Réf. [Request an authorization code](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code).
 
-h3. 3.3 Recevoir le code d'autorisation (callback)
+h3. 4.3 Recevoir le code d'autorisation (callback)
 
 Après authentification, l'IdP redirige le navigateur vers redirect_uri. L'URL contient les paramètres du flux (ex. dans la query string).
 Les paramètres scope et client_id ne sont pas renvoyés ; l'application les gère lors de l'échange du code contre les tokens.
@@ -133,16 +133,16 @@ Les paramètres scope et client_id ne sont pas renvoyés ; l'application les gè
 https://redirect.example.com/callback?code=<CODE>&state=<STATE>&session_state=<SESSION_STATE>&iss=https%3A%2F%2Flogin.microsoftonline.com%2F<TENANT_ID>%2Fv2.0
 {noformat}
 
-Voir *3.9 Paramètres OIDC* pour code, state, session_state, iss.
+Voir *4.9 Paramètres OIDC* pour code, state, session_state, iss.
 
 || Paramètre || Valeur spécifique à cette étape || Utilité ||
-| code | code (reçu de l'IdP) | À échanger rapidement en POST vers /token (section 3.4). Usage unique, courte durée. |
-| state | state (identique à celui envoyé en 3.2) | Comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF). |
-| session_state, iss | (Si présents) | Optionnels ; voir *3.9 Paramètres OIDC*. |
+| code | code (reçu de l'IdP) | À échanger rapidement en POST vers /token (section 4.4). Usage unique, courte durée. |
+| state | state (identique à celui envoyé en 4.2) | Comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF). |
+| session_state, iss | (Si présents) | Optionnels ; voir *4.9 Paramètres OIDC*. |
 
-*À faire absolument :* vérifier que {{state}} reçu en callback est strictement identique à la valeur stockée avant de lancer l’échange du code (3.4).
+*À faire absolument :* vérifier que {{state}} reçu en callback est strictement identique à la valeur stockée avant de lancer l’échange du code (4.4).
 
-h3. 3.4 Échanger le code contre les tokens
+h3. 4.4 Échanger le code contre les tokens
 
 Après réception du code, l'application appelle l'endpoint token de l'IdP en POST.
 
@@ -161,10 +161,10 @@ Pour échanger le code contre les tokens, l'application doit "prouver qui elle e
 | Paramètres minimaux dans le body | {{grant_type=authorization_code}} + {{code=<CODE>}} + {{redirect_uri=<REDIRECT_URI>}} + {{scope=<SCOPE>}} *(seul {{scope}} est optionnel)* | {{grant_type=authorization_code}} + {{client_id=<CLIENT_ID>}} + {{client_secret=<CLIENT_SECRET>}} + {{code=<CODE>}} + {{redirect_uri=<REDIRECT_URI>}} + {{scope=<SCOPE>}} *(seul {{scope}} est optionnel)* |
 | Exemple en-têtes | {{Authorization: Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=}} ; {{Content-Type: application/x-www-form-urlencoded}} | {{Content-Type: application/x-www-form-urlencoded}} |
 | Exemple body | {{grant_type=authorization_code&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile}} | {{grant_type=authorization_code&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile}} |
-| Points d'attention | {{redirect_uri}} doit être *exactement* celle utilisée en 3.2. | Même contrainte sur {{redirect_uri}} ; si {{scope}} est omis, ce sont ceux de la requête d'autorisation qui s'appliquent. |
+| Points d'attention | {{redirect_uri}} doit être *exactement* celle utilisée en 4.2. | Même contrainte sur {{redirect_uri}} ; si {{scope}} est omis, ce sont ceux de la requête d'autorisation qui s'appliquent. |
 | Sécurité | Ne jamais exposer le {{client_secret}} côté client (navigateur, mobile) ; backend uniquement. | Même contrainte : secret côté backend uniquement, jamais exposé côté client. |
 
-Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#redeem-a-code-for-an-access-token). Voir *3.9 Paramètres OIDC* pour le détail des paramètres.
+Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#redeem-a-code-for-an-access-token). Voir *4.9 Paramètres OIDC* pour le détail des paramètres.
 
 *Réponse en cas de succès*
 
@@ -177,7 +177,7 @@ Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entr
 | id_token | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l’utilisateur |
 | refresh_token | chaîne opaque | Fourni uniquement si le scope offline_access a été demandé. Permet d'obtenir de nouveaux tokens sans ré-authentifier l'utilisateur. |
 
-h3. 3.5 Valider l'ID Token
+h3. 4.5 Valider l'ID Token
 
 L'application doit vérifier la signature du JWT puis les claims. Les applications confidentielles (avec backend) doivent valider l'ID Token.
 Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens#validate-tokens), [ID token claims reference](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
@@ -189,21 +189,21 @@ Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platfor
 | Issuer | {{iss}} correspond à l'émetteur attendu (tenant). |
 | Audience | {{aud}} (et {{azp}} si présent) correspond à {{client_id}}. |
 | Temporalité | {{exp}} non expiré ; {{nbf}} valide ; tolérance d'horloge maîtrisée. |
-| Anti-rejeu | {{nonce}} correspond à la valeur envoyée en 3.2 (si flow interactif). |
+| Anti-rejeu | {{nonce}} correspond à la valeur envoyée en 4.2 (si flow interactif). |
 | Contexte tenant | {{ver}} attendu ({{2.0}}) ; {{tid}} vérifié si application mono-tenant. |
 
 Pour le détail des claims (sens, exemples, usages), utilisez *4. Correspondance des claims OIDC*.
 
-h3. 3.6 Rafraîchir l'Access Token (Refresh Token)
+h3. 4.6 Rafraîchir l'Access Token (Refresh Token)
 
 Si le scope {{offline_access}} a été demandé et accordé, l'application reçoit un {{refresh_token}}. Il permet d'obtenir un nouvel {{access_token}} sans intervention de l'utilisateur.
 
 || Élément || Valeur || Utilité ||
-| Endpoint | Token endpoint | Identique à la section 3.4. |
+| Endpoint | Token endpoint | Identique à la section 4.4. |
 | grant_type | refresh_token | Indique que l'on utilise un Refresh Token. |
 | refresh_token | valeur stockée | Le jeton de rafraîchissement obtenu précédemment. |
 
-h3. 3.7 Récupérer les informations utilisateur (UserInfo)
+h3. 4.7 Récupérer les informations utilisateur (UserInfo)
 
 Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut appeler l'endpoint UserInfo.
 
@@ -214,22 +214,22 @@ Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut a
 
 Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez *4. Correspondance des claims OIDC*.
 
-h3. 3.8 Tester et diagnostiquer
+h3. 4.8 Tester et diagnostiquer
 
 Tester ces scénarios dans l’ordre (dans votre environnement de préprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
 Cette section décrit les scénarios à exécuter.
-*Entrée attendue :* sections 3.1 à 3.7 implémentées et exécutables dans l’environnement de test.
+*Entrée attendue :* sections 4.1 à 4.7 implémentées et exécutables dans l’environnement de test.
 
 * Login OK :
-** l’app reçoit le *code* (3.3),
-** obtient *id_token*/*access_token* au token endpoint (3.4),
-** et valide l’*ID Token* (3.5) avant de marquer l’utilisateur “connecté”.
+** l’app reçoit le *code* (4.3),
+** obtient *id_token*/*access_token* au token endpoint (4.4),
+** et valide l’*ID Token* (4.5) avant de marquer l’utilisateur “connecté”.
 * Login échoué – {{redirect_uri}} :
 ** un {{redirect_uri}} non conforme provoque un échec côté redirection/callback,
 ** l’app affiche un message clair et ne tente pas d’échanger un code invalide.
 * Login échoué – {{invalid_grant}} :
 ** le code est expiré / déjà utilisé / PKCE mal apparié,
-** l’échange au token endpoint (3.4) échoue,
+** l’échange au token endpoint (4.4) échoue,
 ** l’app gère correctement l’erreur (pas de crash) et propose une nouvelle authentification.
 * Login échoué – {{consent}} :
 ** l’utilisateur refuse ou ne valide pas,
@@ -238,25 +238,25 @@ Cette section décrit les scénarios à exécuter.
 ** l’app détruit la session locale (cookies/tokens/session serveur),
 ** l’utilisateur n’est plus considéré comme connecté côté application.
 * (Optionnel) Refresh / UserInfo si demandés :
-** si {{offline_access}} est utilisé : vérifier que le refresh (3.6) remplace bien les tokens,
-** si UserInfo est utilisé : vérifier que 3.7 renvoie les claims attendus.
-* En cas d’échec : revenir à la section concernée (3.3, 3.4, 3.5, 3.6 ou 3.7), corriger, puis rejouer le scénario.
+** si {{offline_access}} est utilisé : vérifier que le refresh (4.6) remplace bien les tokens,
+** si UserInfo est utilisé : vérifier que 4.7 renvoie les claims attendus.
+* En cas d’échec : revenir à la section concernée (4.3, 4.4, 4.5, 4.6 ou 4.7), corriger, puis rejouer le scénario.
 
 || Symptôme observé || Étape à vérifier d’abord ||
-| {{redirect_uri_mismatch}} ou callback refusé | 3.3 Callback puis 3.4 Token |
-| {{invalid_grant}} au token endpoint | 3.4 Échange du code puis 3.3 Callback (code/state) |
-| ID Token rejeté ({{iss}}/{{aud}}/{{nonce}}) | 3.5 Validation ID Token |
-| Claims manquants ou incomplets | 3.7 UserInfo (si utilisé), puis *4. Correspondance des claims OIDC* |
-| Erreur après expiration de session | 3.6 Refresh Token (si utilisé), sinon relancer le login |
+| {{redirect_uri_mismatch}} ou callback refusé | 4.3 Callback puis 4.4 Token |
+| {{invalid_grant}} au token endpoint | 4.4 Échange du code puis 4.3 Callback (code/state) |
+| ID Token rejeté ({{iss}}/{{aud}}/{{nonce}}) | 4.5 Validation ID Token |
+| Claims manquants ou incomplets | 4.7 UserInfo (si utilisé), puis *4. Correspondance des claims OIDC* |
+| Erreur après expiration de session | 4.6 Refresh Token (si utilisé), sinon relancer le login |
 
-h4. 3.8.1 Checklist rapide (dev-first)
+h4. 4.8.1 Checklist rapide (dev-first)
 
 * {{state}} callback validé avant appel {{/token}}.
 * {{iss}}/{{aud}}/{{ver}} validés (et {{tid}} si mono-tenant).
 * {{redirect_uri}} strictement identique entre authorize et token.
 * Gestion d’erreur stable ({{invalid_grant}}, consent refusé, callback invalide).
 
-h4. 3.8.2 Checklist de validation finale (avant livraison)
+h4. 4.8.2 Checklist de validation finale (avant livraison)
 
 * Login OK validé sur le parcours nominal.
 * Login KO correctement rejeté (sans crash, message clair).
@@ -268,29 +268,29 @@ h4. 3.8.2 Checklist de validation finale (avant livraison)
 
 *Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).
 
-h3. 3.9 Paramètres OIDC
+h3. 4.9 Paramètres OIDC
 
 Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.
 
 || Paramètre || Rôle || Utilisé dans ||
-| tenant | Identifiant du tenant IdP (common, organizations, consumers, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | 3.2 authorize, 3.4 token, 3.6 token (dans l'URL) |
-| client_id | Identifiant du client fourni par l'équipe raccordement applicatif. | 3.2 authorize, 3.4 token (code), 3.6 token (refresh) |
-| client_secret | Secret du client ; à garder côté backend uniquement. | 3.4 token (code), 3.6 token (refresh) |
-| redirect_uri | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre 3.2 et 3.4. | 3.2 authorize, 3.4 token (code) |
-| scope | Scopes demandés (ex. openid, profile, offline_access). Obligatoire : openid. | 3.2 authorize, 3.4 token (code), 3.6 token (refresh) |
-| state | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | 3.2 authorize, 3.3 callback |
-| nonce | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | 3.2 authorize, 3.5 validation ID Token |
-| code | Code d'autorisation à usage unique, courte durée. À échanger contre les tokens. | 3.3 callback (reçu), 3.4 token (envoyé) |
-| grant_type | Type de flux OAuth : authorization_code (échange du code) ou refresh_token (rafraîchissement). | 3.4 token (code), 3.6 token (refresh) |
-| refresh_token | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope offline_access. | 3.4 réponse token, 3.6 token (envoyé) |
-| response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | 3.2 authorize |
-| response_mode | Méthode de renvoi du code : query, fragment ou form_post. Pour un flux Authorization Code standard, la valeur par défaut est query. | 3.2 authorize |
-| session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | 3.3 callback |
-| iss | Issuer : identifiant de l'émetteur (ex. {{https://login.microsoftonline.com/<TENANT_ID>/v2.0}}). | 3.3 callback, 3.5 validation ID Token |
+| tenant | Identifiant du tenant IdP (common, organizations, consumers, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | 4.2 authorize, 4.4 token, 4.6 token (dans l'URL) |
+| client_id | Identifiant du client fourni par l'équipe raccordement applicatif. | 4.2 authorize, 4.4 token (code), 4.6 token (refresh) |
+| client_secret | Secret du client ; à garder côté backend uniquement. | 4.4 token (code), 4.6 token (refresh) |
+| redirect_uri | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre 4.2 et 4.4. | 4.2 authorize, 4.4 token (code) |
+| scope | Scopes demandés (ex. openid, profile, offline_access). Obligatoire : openid. | 4.2 authorize, 4.4 token (code), 4.6 token (refresh) |
+| state | Valeur unique générée par l'app, renvoyée telle quelle au callback. Protection CSRF (obligatoire). | 4.2 authorize, 4.3 callback |
+| nonce | Valeur unique générée par l'app, incluse dans l'ID Token. L'app doit la vérifier (anti-rejeu). | 4.2 authorize, 4.5 validation ID Token |
+| code | Code d'autorisation à usage unique, courte durée. À échanger contre les tokens. | 4.3 callback (reçu), 4.4 token (envoyé) |
+| grant_type | Type de flux OAuth : authorization_code (échange du code) ou refresh_token (rafraîchissement). | 4.4 token (code), 4.6 token (refresh) |
+| refresh_token | Jeton opaque longue durée ; permet d'obtenir de nouveaux tokens sans ré-auth. Fourni si scope offline_access. | 4.4 réponse token, 4.6 token (envoyé) |
+| response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | 4.2 authorize |
+| response_mode | Méthode de renvoi du code : query, fragment ou form_post. Pour un flux Authorization Code standard, la valeur par défaut est query. | 4.2 authorize |
+| session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | 4.3 callback |
+| iss | Issuer : identifiant de l'émetteur (ex. {{https://login.microsoftonline.com/<TENANT_ID>/v2.0}}). | 4.3 callback, 4.5 validation ID Token |
 
 ----
 
-h2. 4. Pièges courants
+h2. 5. Pièges courants
 
 * *Redirect URI* : doit être exactement identique (protocole, domaine, port, chemin) entre l'IdP et l'application.
 * *Scopes* : oublier openid rend le flux non conforme OIDC ; les claims personnalisés peuvent nécessiter des scopes ou un mapping de claims côté IdP.
@@ -301,7 +301,7 @@ h2. 4. Pièges courants
 
 ----
 
-h2. 5. Exemples de code
+h2. 6. Exemples de code
 
 Symfony (PHP) – configuration et récupération des claims après connexion OIDC
 
