@@ -2,8 +2,8 @@ h1. 1. Guide migration OIDC - Gestion managée
 
 En gestion managée :
 * Le CAM Eagles fournit la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
-* L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe "Gestion managée"
-* L’équipe *Gestion managée* reçoit le Client ID / Client Secret et configure la mécanique OIDC.
+* L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe Gestion managée.
+* L’équipe Gestion managée reçoit le Client ID / Client Secret et configure la mécanique OIDC.
 * L’équipe applicative et/ou l’équipe de raccordement adapte la lecture des *claims* dans le code.
 NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
 
@@ -11,11 +11,10 @@ h2. 1. Mode opératoire (lecture)
 
 * Repère rapide : *1–9 = préparer et raccorder la préprod*, *10–13 = adapter et valider la préprod*, *14–17 = basculer et valider la production*.
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 17*.
-* Pass 2 : ouvrez *3. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
+* Pass 2 : ouvrez *3. Pièges courants* ou *7. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les deux checklists de validation.
-* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
-
-Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*
+* Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
 
 ----
 
@@ -60,7 +59,24 @@ h2. 5. Checklist de validation de production
 
 ----
 
-h2. 6. Exemples de code
+h2. 6. Où lire les claims
+
+Après une authentification OIDC réussie, votre code doit récupérer des *claims* (email, nom, rôle, etc.). Selon la stack et la configuration amont, ces claims peuvent être exposés à *3 endroits* :
+
+* *1) Objet utilisateur / session applicative (cas le plus courant)* : la lib OIDC remplit l’utilisateur courant ou la session ; votre code lit des attributs (ex. {{getUser()->getAttribute('email')}}).
+* *2) Dans un token (souvent l’ID Token, JWT)* : votre stack peut exposer le token ; votre code lit les champs du payload *uniquement si le token est correctement validé* (signature, issuer, audience, expiration, etc.).
+* *3) Via UserInfo* : si certains claims ne sont pas dans le token, votre stack appelle (ou vous faites appeler) l’endpoint UserInfo avec l’{{access_token}} puis lit la réponse JSON.
+
+*Repère rapide :* en cas de doute, repartez toujours du *Discovery document* {{/.well-known/openid-configuration}}. Il liste les URL “source de vérité” :
+* {{authorization_endpoint}} : où rediriger l’utilisateur pour s’authentifier
+* {{token_endpoint}} : où échanger le code contre des tokens
+* {{userinfo_endpoint}} : où récupérer des infos utilisateur *si vos claims ne sont pas dans le token*
+* {{jwks_uri}} : où récupérer les clés publiques *si vous devez valider une signature JWT*
+* {{end_session_endpoint}} : où déclencher le logout *(si l’IdP le fournit)*
+
+*Règle simple :* commencez par *1)* (user/session) ; si un claim manque, vérifiez si votre stack utilise *3)* (UserInfo). Évitez de “bricoler” *2)* à la main si votre framework peut le faire.
+
+h2. 7. Exemples de code
 
 Symfony (PHP)
 

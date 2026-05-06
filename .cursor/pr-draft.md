@@ -31,15 +31,20 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ### Changed files
 - `.cursor/pr-draft.md`
 - `docs/1_GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence`
+- `"docs/5.0`
+- `docs/5.1_template_guide1_etape_prise_en_charge_technique.confluence`
+- `docs/5.2_template_guide1_etape_fin_intervention_technique.confluence`
 
 ### Last commits
+- 9407eae docs(guides): align managed OIDC guide headings and DoD outputs
 - 16010e2 docs(guides): promote prerequisites section and renumber private OIDC flow
 - 0a2da90 docs(guides): align private OIDC guide tracking steps and quick reference
 - 9ab4ab7 docs(guides): reorder private guide steps and update references
 - 939868c docs(guides): refine private OIDC migration guide checklist and Confluence markup
-- 59f5a34 docs(guides): clarify confidential client scope and OIDC parameter reference
 
 ### Diff summary
- .cursor/pr-draft.md                                |  7 ++-----
- ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 22 +++++++++++-----------
- 2 files changed, 13 insertions(+), 16 deletions(-)
+ .cursor/pr-draft.md                                |  8 +++---
+ ..._GUIDE_MIGRATION_OIDC_GESTION_MANEGE.confluence | 30 +++++++++++++++++-----
+ ...ide1_etape_prise_en_charge_technique.confluence |  2 +-
+ ...de1_etape_fin_intervention_technique.confluence |  2 +-
+ 4 files changed, 29 insertions(+), 13 deletions(-)
