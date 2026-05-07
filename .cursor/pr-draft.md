@@ -30,17 +30,20 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
+- `"docs/1.0_Guide_migration_OIDC_-_Gestion_manag\303\251e.confluence"`
 - `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
 - `"docs/5.4_template_guide_2_-_\303\251tape_information_utilisateurs_intervention.confluence"`
 
 ### Last commits
+- 620a504 docs(guides): add user notification email template for private guide
 - b71faa4 docs: align email template references after renames
 - 9ddc78a docs(guides): link managed guide steps to email templates
 - 26bfa9b docs: normalize confluence doc filenames and mail templates
 - 58bd20c docs(guides): clarify claims retrieval and align managed guide structure + add email templates
-- 9407eae docs(guides): align managed OIDC guide headings and DoD outputs
 
 ### Diff summary
- .cursor/pr-draft.md                                          | 12 ++----------
- ..._Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence" |  2 +-
- 2 files changed, 3 insertions(+), 11 deletions(-)
+ .cursor/pr-draft.md                                      |  6 ++----
+ ...e_migration_OIDC_-_Gestion_manag\303\251e.confluence" | 16 +++++++++-------
+ ...de_migration_OIDC_-_Gestion_priv\303\251e.confluence" |  2 +-
+ ...ape_information_utilisateurs_intervention.confluence" |  4 ++--
+ 4 files changed, 14 insertions(+), 14 deletions(-)
