@@ -1,39 +1,26 @@
 h1. 4. Guide migration SAML - Gestion privée
 
 Reconfigurer le flux SAML (métadonnées, endpoints, binding, attributs) dans l'application.
-h2. Mode d’emploi (développeur)
+h2. 1. Mode opératoire (lecture)
 
-Ce guide s’utilise comme une référence « par étapes » pour déployer le flux SAML côté SP et diagnostiquer les échecs.
-
-h3. Mode opératoire (lecture)
-
-* Pass 1 : renseignez *4.1 Checklist de demande IAM - Raccordement SAML* puis validez les *étapes 1 à 3* du suivi.
-* Pass 2 : exécutez l’*étape 4* du suivi, puis déroulez *a)* à *g)* dans *Détail technique*.
-* Pass 3 : exécutez l’*étape 5* du suivi, puis suivez *h) Tester et diagnostiquer*.
-* Pass 4 : terminez avec les *étapes 6 et 7* (PV préprod/dev puis production).
+* Repère rapide : *1–3 = préparer (métadonnées)*, *4 = implémenter (a→g)*, *5 = tester/diagnostiquer (h)*, *6–7 = PV préprod/dev puis production*.
+* Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 7*.
+* Pass 2 : ouvrez *Détail technique* (a à h) uniquement si vous bloquez sur l’implémentation ou le diagnostic.
 * En cas de blocage : ouvrez *Attributs (Legacy → IdP)*, *Pièges courants* ou *Exemples de code*.
-
-h3. Ressources
-
-* Schéma de flux (SP-initiated, simplifié)
-* 4.1 Checklist de demande IAM - Raccordement SAML
-* Attributs (Legacy → IdP)
-* Pièges courants
-* Exemples de code
 
 ----
 
-h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
+h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
-|| Étape || Action || Acteur || Durée || Sortie attendue || Réalisée ||
-| 1 | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect), en s'appuyant sur *4.1 Checklist de demande IAM - Raccordement SAML*. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux cible documenté (initiation + bindings). | [ ] |
-| 2 | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Métadonnées SP prêtes et exploitables. | [ ] |
-| 3 | Enregistrer les métadonnées SP chez l'IdP et récupérer les métadonnées IdP. | Équipe IAM | À estimer | Métadonnées SP/IdP alignées et disponibles côté projet. | [ ] |
-| 4 | Implémenter le flux SAML côté appli : a) config bibliothèque/métadonnées, b) NameID, c) signature, d) mode d’initiation, e) binding, f) callback ACS, g) déconnexion (voir *Détail technique*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | [ ] |
-| 5 | Tester le flux complet : login OK / login échoué / déconnexion (SLO si applicable, sinon fallback) (voir *h) Tester et diagnostiquer*). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés + diagnostic reproductible. | [ ] |
-| 6 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
-| 7 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
-| Total | Durée totale (somme des étapes 1 à 7) | — | À estimer | [ ] |
+|| Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
+| 1 | A — Préparer la préprod | Documenter le flux actuel (SP-initiated ou IdP-initiated, HTTP-POST/Redirect), en s'appuyant sur *4.1 Checklist de demande IAM - Raccordement SAML*. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux cible documenté (initiation + bindings). | — | [ ] |
+| 2 | A — Préparer la préprod | Générer ou actualiser les métadonnées SP (EntityID, ACS, SLO, certificats). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Métadonnées SP prêtes et exploitables. | — | [ ] |
+| 3 | A — Préparer la préprod | Enregistrer les métadonnées SP chez l'IdP et récupérer les métadonnées IdP. | Équipe IAM | À estimer | Métadonnées SP/IdP alignées et disponibles côté projet. | — | [ ] |
+| 4 | B — Implémenter le flux | Implémenter le flux SAML côté appli : a) config bibliothèque/métadonnées, b) NameID, c) signature, d) mode d’initiation, e) binding, f) callback ACS, g) déconnexion. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Flux a) à g) implémenté et exécutable de bout en bout. | Voir *Détail technique* (a à g). | [ ] |
+| 5 | C — Tester et diagnostiquer | Tester le flux complet : login OK / login KO / attributs / déconnexion (SLO si applicable, sinon fallback). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Cas de test validés + diagnostic reproductible. | Voir *h) Tester et diagnostiquer*. | [ ] |
+| 6 | D — PV préprod/dev | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV. | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | — | [ ] |
+| 7 | E — PV production | Réaliser la recette fonctionnelle (production) et produire un PV. | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | — | [ ] |
+| Total | — | Durée totale (somme des étapes 1 à 7) | — | À estimer | — | — | [ ] |
 
 ----
 
