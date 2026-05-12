@@ -14,7 +14,7 @@ h2. 1. Mode opératoire (lecture)
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 22*.
 * Pass 2 : ouvrez *3. Prérequis / choix de sécurité*, puis *4. Détail technique* (4.1 à 4.9), *5. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les checklists de validation.
-* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le *document externe* *4.0 Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
 * Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
 
 ----
@@ -30,8 +30,8 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 6 | A — Préparer la préprod | Obtenir le Client ID et le Client Secret | Équipe applicative et/ou Équipe de raccordement | À estimer | Client ID et Client Secret reçus et stockés de manière sécurisée. | — | [ ] |
 | 7 | B — Raccorder la préprod | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC et des modifications de code" envoyé à l'équipe applicative. | Utiliser le template *5.3 Template guide 2 - étape Prise en charge technique (gestion privée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
 | 8 | B — Raccorder la préprod | Configurer l'environnement OIDC en préprod | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
-| 9 | B — Raccorder la préprod | Tester la connexion sur l'URL de test (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC préprod validée (mire, authent, redirection). Avant adaptation du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | — | [ ] |
-| 10 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *4. Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
+| 9 | B — Raccorder la préprod | Tester la connexion sur l'URL de test (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC préprod validée (mire, authent, redirection). L'étape *10* adapte le code aux claims ; tant qu'elle n'est pas réalisée, des écrans ou fonctionnalités métier peuvent rester incomplets ou en erreur — c'est attendu. | — | [ ] |
+| 10 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur le *document externe* *4.0 Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
 | 11 | C — Adapter le dev | Demander le déploiement en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Email de fin d’intervention envoyé (déploiement dev + actions attendues). | Utiliser le template *5.2 Template guide 1 et 2 - étape Fin d'intervention technique* (cf. *5. Templates de mail*). Actions à demander : 1) valider la Merge Request, 2) réaliser le PV de recette, 3) planifier une date de mise en production avec le CAM Eagles, 4) communiquer cette date à l'équipe de raccordement. Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
 | 12 | D — Valider la préprod | Réaliser la recette fonctionnelle préprod, valider le PV, le transmettre au CAM Eagles | Équipe applicative | À estimer | PV préprod validé et transmis au chargé d'affaires Eagles. | — | [ ] |
 | 13 | D — Valider la préprod | Planifier le raccordement Entra ID en production | Équipe applicative et CAM Eagles | À estimer | Date de mise en prod communiquée par le CAM à l'équipe applicative et à l'équipe de raccordement. | — | [ ] |
@@ -191,7 +191,7 @@ Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platfor
 | Anti-rejeu | {{nonce}} correspond à la valeur envoyée en 4.2 (si flow interactif). |
 | Contexte tenant | {{ver}} attendu ({{2.0}}) ; {{tid}} vérifié si application mono-tenant. |
 
-Pour le détail des claims (sens, exemples, usages), utilisez *4. Correspondance des claims OIDC*.
+Pour le détail des claims (sens, exemples, usages), utilisez le *document externe* *4.0 Correspondance des claims OIDC*.
 
 h3. 4.6 Rafraîchir l'Access Token (Refresh Token)
 
@@ -211,7 +211,7 @@ Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut a
 | Méthode | GET | Récupération des informations utilisateur. |
 | Authorization | {{Authorization: Bearer <ACCESS_TOKEN>}} | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
 
-Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez *4. Correspondance des claims OIDC*.
+Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez le *document externe* *4.0 Correspondance des claims OIDC*.
 
 h3. 4.8 Tester et diagnostiquer
 
@@ -245,7 +245,7 @@ Cette section décrit les scénarios à exécuter.
 | {{redirect_uri_mismatch}} ou callback refusé | 4.3 Callback puis 4.4 Token |
 | {{invalid_grant}} au token endpoint | 4.4 Échange du code puis 4.3 Callback (code/state) |
 | ID Token rejeté ({{iss}}/{{aud}}/{{nonce}}) | 4.5 Validation ID Token |
-| Claims manquants ou incomplets | 4.7 UserInfo (si utilisé), puis *4. Correspondance des claims OIDC* |
+| Claims manquants ou incomplets | 4.7 UserInfo (si utilisé), puis le *document externe* *4.0 Correspondance des claims OIDC* |
 | Erreur après expiration de session | 4.6 Refresh Token (si utilisé), sinon relancer le login |
 
 h4. 4.8.1 Checklist rapide (dev-first)
