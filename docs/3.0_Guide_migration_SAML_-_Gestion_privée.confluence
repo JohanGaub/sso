@@ -23,7 +23,6 @@ h2. 1. Mode opératoire (lecture)
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 27* dans l’ordre ; en production, enchaînez *17 → 27* sans sauter *25* entre *24* et *26* (si pas de délégation : voir les commentaires des étapes *17* et *25*).
 * Pass 2 : ouvrez *Détail technique* (3.1 à 3.8) uniquement si vous bloquez sur l'implémentation ou le diagnostic.
 * Pass 3 : terminez en validant la *Definition of Done* en fin de *3.8 Tester et diagnostiquer* (préprod puis production) et en relisant *Pièges courants*.
-* Pour la correspondance des attributs (Legacy → IdP), utilisez la section *Attributs (Legacy → IdP)* plus bas dans ce guide.
 * Pour les définitions transverses (SAML, attributs, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*.
 
 ----
@@ -256,12 +255,11 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 
 ----
 
-h2. Attributs (Legacy → IdP)
+h2. 4. Attributs (Legacy → IdP)
 
-En gestion privée, le livrable côté dev est souvent la table de correspondance entre vos attributs existants (legacy) et les attributs SAML envoyés par l'IdP. Cette table sert :
-* à l’équipe IAM pour configurer correctement les mappings côté IdP ;
-* au code applicatif pour lire les bons attributs dans l’Assertion.
-
+Les attributs SAML varient d’une application à l’autre : cette table est à remplir pour chaque migration. Elle sert de référence à deux acteurs :
+* à l’équipe IAM pour configurer les mappings côté Entra ID (qui envoie quoi, sous quel nom) ;
+* au code applicatif pour lire les bons attributs dans l’Assertion (cf. étape *12* et section *3.6*).
 || Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
 |  |  |  |
 |  |  |  |
@@ -269,7 +267,7 @@ En gestion privée, le livrable côté dev est souvent la table de correspondanc
 
 ----
 
-h2. Pièges courants
+h2. 5. Pièges courants
 
 * Métadonnées : EntityID et ACS doivent être cohérents entre SP et IdP ; attention aux environnements (dev/preprod/prod).
 * Certificats : expiration, bon certificat (signature vs chiffrement) selon la config IdP.
@@ -277,7 +275,7 @@ h2. Pièges courants
 
 ----
 
-h2. Exemples de code
+h2. 6. Exemples de code
 
 PHP (Symfony avec onelogin/php-saml)
 
