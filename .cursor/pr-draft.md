@@ -30,18 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
 - `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
 
 ### Last commits
+- 67f85ab docs(saml-private-guide): clarify sp contract vs mapping and trim suivi
 - 84b70d3 docs(guides): align saml private guide structure with oidc guides
 - 26433d4 docs(guides): add user notification steps to managed guide
 - 620a504 docs(guides): add user notification email template for private guide
 - b71faa4 docs: align email template references after renames
-- 9ddc78a docs(guides): link managed guide steps to email templates
 
 ### Diff summary
- .cursor/pr-draft.md                                |  6 +-
- ...ration_OIDC_-_Gestion_priv\303\251e.confluence" |  3 +-
- ...ration_SAML_-_Gestion_priv\303\251e.confluence" | 70 ++++++++++++++++------
- 3 files changed, 56 insertions(+), 23 deletions(-)
+ .cursor/pr-draft.md                                |  7 +-----
+ ...ration_SAML_-_Gestion_priv\303\251e.confluence" | 28 +++++++++++-----------
+ 2 files changed, 15 insertions(+), 20 deletions(-)
