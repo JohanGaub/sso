@@ -54,8 +54,9 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu'elle est réalisée)
 
 h2. 3. Prérequis : deux notions que tout le monde mélange
 
-* *Contrat SP/IdP (ce que la fiche engage avec l'IAM)* — ce n'est *pas* du remplacement de clés dans le code. À valider tôt : *URL publique* réellement atteinte (y compris reverse-proxy), *ACS*, *EntityID*, *SLO* si concerné, *bindings* (Redirect/POST), mode *SP-initiated* vs *IdP-initiated*, *certificats* et *signature* (Response/Assertion). Si une ligne de ce bloc ne correspond pas à ce qui tourne vraiment en préprod, le SAML casse *avant* que ton nouveau mapping d'attributs ne serve à quoi que ce soit.
-* *Mapping applicatif (vieux → neuf)* — c'est bien le remplacement des anciennes clés/valeurs par ce que tu lis dans l'*Assertion* (NameID + attributs). C'est surtout les *étapes 5* (tableau) et *12* (code) du *Suivi à réaliser*.
+* *Contrat SP/IdP (ce que la fiche engage avec l'IAM)* — ce n'est *pas* du remplacement de clés dans le code. À valider tôt : *URL publique* réellement atteinte (y compris reverse-proxy), *ACS*, *EntityID*, *SLO* si concerné, *bindings* (Redirect/POST), mode *SP-initiated* vs *IdP-initiated*, *certificats* et *signature* (Response/Assertion).
+Si une ligne de ce bloc ne correspond pas à ce qui tourne vraiment en préprod, le SAML casse *avant* que votre nouveau mapping d'attributs ne serve à quoi que ce soit.
+* *Mapping applicatif (ancien → nouveau)* — c'est bien le remplacement des anciennes clés/valeurs par ce que vous lisez dans l'*Assertion* (NameID + attributs). C'est surtout les *étapes 5* (tableau) et *12* (code) du *Suivi à réaliser*.
 
 *L'étape 4* du tableau de suivi = une *passe courte* sur le *contrat SP/IdP* uniquement : la fiche dit la même chose que l'infra/l'appli va exposer ? Dans Jira : *lien ou référence* vers la fiche ; *mémo court seulement si écart* (pas de duplication de la fiche).
 
@@ -74,7 +75,7 @@ h2. 4. Détail technique – Flux SAML 2.0 (Entra ID)
 * *4.7* Gérer la déconnexion — SAML SLO ou déconnexion locale (fallback)
 * *4.8* Tester et diagnostiquer — scénarios OK/KO, checklist, Definition of Done
 
-*Les sections 4.1 à 3.7* décrivent le *déploiement côté SP* étape par étape.
+*Les sections 4.1 à 4.7* décrivent le *déploiement côté SP* étape par étape.
 *Référence complète pour les tests :* section *4.8 Tester et diagnostiquer*.
 Dans la section *2. Suivi à réaliser*, cela correspond aux étapes :
 * en préprod : *10 à 12* (configuration SP, premier test login, adaptation du code)
