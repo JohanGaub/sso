@@ -33,13 +33,13 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
 
 ### Last commits
+- a1488d1 docs(saml-private-guide): restructure guide for consistency and readability
 - 01d6957 docs(saml-private-guide): align détail technique structure with oidc guide (numbered sections, sommaire)
 - 996972d docs(saml-private-guide): clarify post-pv handoff between cam and prod phase
 - 67f85ab docs(saml-private-guide): clarify sp contract vs mapping and trim suivi
 - 84b70d3 docs(guides): align saml private guide structure with oidc guides
-- 26433d4 docs(guides): add user notification steps to managed guide
 
 ### Diff summary
- .cursor/pr-draft.md                                        |  5 +----
- ...uide_migration_SAML_-_Gestion_priv\303\251e.confluence" | 14 ++++++--------
- 2 files changed, 7 insertions(+), 12 deletions(-)
+ .cursor/pr-draft.md                                |   5 +-
+ ...ration_SAML_-_Gestion_priv\303\251e.confluence" | 112 ++++++++++-----------
+ 2 files changed, 57 insertions(+), 60 deletions(-)

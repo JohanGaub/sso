@@ -6,23 +6,14 @@ En gestion privée SAML :
 * L'équipe applicative reçoit les métadonnées IdP.
 * L'équipe applicative et/ou l'équipe de raccordement configurent l'application côté SP (bibliothèque SAML, métadonnées, bindings, certificats).
 * L'équipe applicative adapte la lecture des *attributs* nécessaires au fonctionnement de l'application (NameID + attributs de l'Assertion).
-NB : le flux SAML (SP-initiated ou IdP-initiated, HTTP-POST/Redirect) et le mapping d'attributs sont définis en amont dans la *fiche de renseignement* — ce guide couvre uniquement leur mise en œuvre, qui recouvre *deux chantiers distincts* : lisez la section suivante avant de commencer.
-
-h2. Avant de commencer : deux notions que tout le monde mélange
-
-* *Contrat SP/IdP (ce que la fiche engage avec l'IAM)* — ce n'est *pas* du remplacement de clés dans le code. À valider tôt : *URL publique* réellement atteinte (y compris reverse-proxy), *ACS*, *EntityID*, *SLO* si concerné, *bindings* (Redirect/POST), mode *SP-initiated* vs *IdP-initiated*, *certificats* et *signature* (Response/Assertion). Si une ligne de ce bloc ne correspond pas à ce qui tourne vraiment en préprod, le SAML casse *avant* que ton nouveau mapping d'attributs ne serve à quoi que ce soit.
-* *Mapping applicatif (vieux → neuf)* — c'est bien le remplacement des anciennes clés/valeurs par ce que tu lis dans l'*Assertion* (NameID + attributs). C'est surtout les *étapes 5* (tableau) et *12* (code) du *Suivi à réaliser*.
-
-*L'étape 4* du tableau de suivi = une *passe courte* sur le *contrat SP/IdP* uniquement : la fiche dit la même chose que l'infra/l'appli va exposer ? Dans Jira : *lien ou référence* vers la fiche ; *mémo court seulement si écart* (pas de duplication de la fiche).
-
-----
+NB : le flux SAML (SP-initiated ou IdP-initiated, HTTP-POST/Redirect) et le mapping d'attributs sont définis en amont dans la *fiche de renseignement* — ce guide couvre uniquement leur mise en œuvre, qui recouvre *deux chantiers distincts* : lisez *3. Prérequis* avant de commencer.
 
 h2. 1. Mode opératoire (lecture)
 
 * Repère rapide : *1–6 = préparer la préprod (A)*, *7–11 = raccorder la préprod (B)*, *12–13 = adapter le dev (C)*, *14–16 = valider la préprod (D)*, *17–25 = raccorder la prod (E)*, *26–27 = valider la prod (F)*.
 * Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 27* dans l’ordre ; en production, enchaînez *17 → 27* sans sauter *25* entre *24* et *26* (si pas de délégation : voir les commentaires des étapes *17* et *25*).
-* Pass 2 : ouvrez *Détail technique* (3.1 à 3.8) uniquement si vous bloquez sur l'implémentation ou le diagnostic.
-* Pass 3 : terminez en validant la *Definition of Done* en fin de *3.8 Tester et diagnostiquer* (préprod puis production) et en relisant *Pièges courants*.
+* Pass 2 : ouvrez *Détail technique* (4.1 à 4.8) uniquement si vous bloquez sur l'implémentation ou le diagnostic.
+* Pass 3 : terminez en validant la *4.8.2 Definition of Done* en fin de *4.8 Tester et diagnostiquer* (préprod puis production) et en relisant *Pièges courants*.
 * Pour les définitions transverses (SAML, attributs, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*.
 
 ----
@@ -33,17 +24,17 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu'elle est réalisée)
 | 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone <n° de dépôt>. Exemple : glab repo clone 7777 | [ ] |
 | 2 | A — Préparer la préprod | Obtenir l'URL de test/préprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignements. | — | [ ] |
 | 3 | A — Préparer la préprod | Obtenir l'accès / habilitation à l'application (préprod/dev) | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès applicatif confirmé : portail accessible via l'URL de test avant raccordement SAML. | — | [ ] |
-| 4 | A — Préparer la préprod | Vérifier le *contrat SP/IdP* : *fiche* ↔ *réalité exposée* (URL publique, ACS, EntityID, mode flux, bindings, SLO si concerné) — *pas* le mapping des attributs applicatifs | Équipe applicative et/ou Équipe de raccordement | À estimer | Contrôle fait ; dans le ticket : *uniquement* un lien ou une référence vers la fiche, et *seulement si écart* un court mémo. | Voir la section *Contrat SP/IdP et mapping applicatif* (plus haut). Référence : *4.1 Checklist de demande IAM - Raccordement SAML*. | [ ] |
+| 4 | A — Préparer la préprod | Vérifier le *contrat SP/IdP* : *fiche* ↔ *réalité exposée* (URL publique, ACS, EntityID, mode flux, bindings, SLO si concerné) — *pas* le mapping des attributs applicatifs | Équipe applicative et/ou Équipe de raccordement | À estimer | Contrôle fait ; dans le ticket : *uniquement* un lien ou une référence vers la fiche, et *seulement si écart* un court mémo. | Voir *3. Prérequis* (plus bas dans ce guide). Référence : *4.1 Checklist de demande IAM - Raccordement SAML*. | [ ] |
 | 5 | A — Préparer la préprod | Préparer la table de mapping des attributs (Legacy → IdP) à partir des besoins applicatifs | Équipe applicative | À estimer | Tableau *Attributs (Legacy → IdP)* rempli (Name/NameFormat, obligatoire/optionnel). | Sert à l'équipe IAM (mapping IdP) et au code (lecture dans l'Assertion). | [ ] |
 | 6 | A — Préparer la préprod | Générer ou actualiser les métadonnées SP préprod (EntityID, ACS, SLO, certificats) | Équipe applicative et/ou Équipe de raccordement | À estimer | Métadonnées SP préprod prêtes et exploitables (fichier/URL), versionnées dans le ticket. | Les valeurs *EntityID / ACS / SLO / certificats* ne sont pas « inventées » ici : elles découlent de la *fiche* + du contrôle *étape 4* ; cette étape les *fige* dans le fichier de métadonnées envoyé à l'IAM. | [ ] |
 | 7 | B — Raccorder la préprod | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration SAML et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge de la configuration SAML et des modifications de code" envoyé à l'équipe applicative. | *Si pas de délégation* : marquer N/A et passer à l'étape *8*. Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
 | 8 | B — Raccorder la préprod | Transmettre à l'équipe IAM la demande de raccordement SAML préprod : métadonnées SP + choix de flux/bindings + mapping d'attributs | Équipe applicative et/ou Équipe de raccordement | À estimer | Demande IAM complète envoyée ; confirmation de prise en charge reçue. | *Prérequis* : *5* (tableau attributs) et *6* (métadonnées SP préprod) terminés. Référentiel : *4.1 Checklist de demande IAM - Raccordement SAML*. | [ ] |
 | 9 | B — Raccorder la préprod | Réceptionner les métadonnées IdP préprod (SSO URL, certificat x509, SLO si fourni) transmises par l'IAM | Équipe applicative et/ou Équipe de raccordement | À estimer | Métadonnées IdP préprod disponibles et tracées dans le ticket. | L'IAM a configuré Entra ID ; attendre leur confirmation avant de passer à l'étape suivante. À stocker dans le ticket et le repo si applicable. | [ ] |
-| 10 | B — Raccorder la préprod | Configurer l'application (SP) préprod/dev avec les métadonnées IdP : endpoint SSO, certificat, bindings, vérification signature | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux SAML préprod exécutable jusqu'à l'ACS (réception Response). | Voir *Détail technique* 3.1, 3.3, 3.5, 3.6. | [ ] |
+| 10 | B — Raccorder la préprod | Configurer l'application (SP) préprod/dev avec les métadonnées IdP : endpoint SSO, certificat, bindings, vérification signature | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux SAML préprod exécutable jusqu'à l'ACS (réception Response). | Voir *Détail technique* 4.1, 4.3, 4.5, 4.6. | [ ] |
 | 11 | B — Raccorder la préprod | Tester la connexion SAML en préprod : login OK + premier contrôle NameID/attributs attendus | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion SAML préprod validée (login + session). | Avant adaptation complète du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | [ ] |
 | 12 | C — Adapter le dev | Adapter le code : lire NameID/attributs depuis l'Assertion, appliquer le mapping, créer la session applicative, gérer attribut manquant/invalide (message clair, pas de crash) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec le mapping et la gestion d'erreur. | Voir *Attributs (Legacy → IdP)* + *Pièges courants*. | [ ] |
 | 13 | C — Adapter le dev | Demander le déploiement en développement (ou préprod/dev selon votre chaîne) et tracer la demande | Équipe applicative et/ou Équipe de raccordement | À estimer | Email de fin d'intervention envoyé (déploiement + actions attendues). | *Suite logique* : *14* = tests techniques complets ; *15* = PV métier (souvent *équipe applicative seule*). Actions à demander : 1) valider la Merge Request, 2) réaliser le PV de recette, 3) planifier une date de mise en production avec le CAM Eagles, 4) communiquer cette date à l'équipe de raccordement. Enregistrer le mail dans le ticket Jira. | [ ] |
-| 14 | D — Valider la préprod | Tester et diagnostiquer en préprod : login OK / login KO (signature, issuer, audience, binding) / attributs complets / logout | Équipe applicative et/ou Équipe de raccordement | À estimer | Cas de test validés + diagnostic reproductible. | *Bloqueur technique* : voir *3.8 Tester et diagnostiquer*. *Bloqueur attributs* : section *Attributs (Legacy → IdP)* puis *étape 12* si le code doit évoluer. | [ ] |
+| 14 | D — Valider la préprod | Tester et diagnostiquer en préprod : login OK / login KO (signature, issuer, audience, binding) / attributs complets / logout | Équipe applicative et/ou Équipe de raccordement | À estimer | Cas de test validés + diagnostic reproductible. | *Bloqueur technique* : voir *4.8 Tester et diagnostiquer*. *Bloqueur attributs* : section *Attributs (Legacy → IdP)* puis *étape 12* si le code doit évoluer. | [ ] |
 | 15 | D — Valider la préprod | Réaliser la recette fonctionnelle préprod/dev, valider le PV, le transmettre au CAM Eagles | Équipe applicative | À estimer | PV préprod validé et transmis au chargé d'affaires Eagles. | *Suite* : avec le *CAM Eagles*, enchaîner *16* (planification de la bascule prod), puis la phase *E* (étapes *17–27* — rôles applicatif / raccordement selon ce qui a été arbitré en amont). | [ ] |
 | 16 | D — Valider la préprod | Planifier le raccordement SAML en production (date de bascule) | Équipe applicative et CAM Eagles | À estimer | Date de mise en prod communiquée à l'équipe applicative et à l'équipe de raccordement. | — | [ ] |
 | 17 | E — Raccorder la prod | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration SAML prod | Équipe de raccordement | À estimer | Message "prise en charge de la configuration SAML prod" envoyé à l'équipe applicative. | *Si pas de délégation* : marquer N/A et passer à l'étape *18*. Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
@@ -61,26 +52,35 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu'elle est réalisée)
 
 ----
 
-h2. 3. Détail technique – Flux SAML 2.0 (Entra ID)
+h2. 3. Prérequis : deux notions que tout le monde mélange
+
+* *Contrat SP/IdP (ce que la fiche engage avec l'IAM)* — ce n'est *pas* du remplacement de clés dans le code. À valider tôt : *URL publique* réellement atteinte (y compris reverse-proxy), *ACS*, *EntityID*, *SLO* si concerné, *bindings* (Redirect/POST), mode *SP-initiated* vs *IdP-initiated*, *certificats* et *signature* (Response/Assertion). Si une ligne de ce bloc ne correspond pas à ce qui tourne vraiment en préprod, le SAML casse *avant* que ton nouveau mapping d'attributs ne serve à quoi que ce soit.
+* *Mapping applicatif (vieux → neuf)* — c'est bien le remplacement des anciennes clés/valeurs par ce que tu lis dans l'*Assertion* (NameID + attributs). C'est surtout les *étapes 5* (tableau) et *12* (code) du *Suivi à réaliser*.
+
+*L'étape 4* du tableau de suivi = une *passe courte* sur le *contrat SP/IdP* uniquement : la fiche dit la même chose que l'infra/l'appli va exposer ? Dans Jira : *lien ou référence* vers la fiche ; *mémo court seulement si écart* (pas de duplication de la fiche).
+
+----
+
+h2. 4. Détail technique – Flux SAML 2.0 (Entra ID)
 
 *Sommaire (vue d’ensemble du flux)*
 
-* *3.1* Configurer la bibliothèque SAML — métadonnées IdP, EntityID du SP, endpoint ACS, certificats
-* *3.2* Définir le NameID — format et comportement Entra ID
-* *3.3* Vérifier la signature SAML — périmètre (Response/Assertion) et checklist dev-first
-* *3.4* Choisir le mode d’initiation — SP-initiated (recommandé) vs IdP-initiated
-* *3.5* Choisir le binding — HTTP-Redirect pour l’AuthnRequest, HTTP-POST pour la Response
-* *3.6* Implémenter le callback ACS — réception Response, validation, extraction, session
-* *3.7* Gérer la déconnexion — SAML SLO ou déconnexion locale (fallback)
-* *3.8* Tester et diagnostiquer — scénarios OK/KO, checklist, Definition of Done
+* *4.1* Configurer la bibliothèque SAML — métadonnées IdP, EntityID du SP, endpoint ACS, certificats
+* *4.2* Définir le NameID — format et comportement Entra ID
+* *4.3* Vérifier la signature SAML — périmètre (Response/Assertion) et checklist dev-first
+* *4.4* Choisir le mode d’initiation — SP-initiated (recommandé) vs IdP-initiated
+* *4.5* Choisir le binding — HTTP-Redirect pour l’AuthnRequest, HTTP-POST pour la Response
+* *4.6* Implémenter le callback ACS — réception Response, validation, extraction, session
+* *4.7* Gérer la déconnexion — SAML SLO ou déconnexion locale (fallback)
+* *4.8* Tester et diagnostiquer — scénarios OK/KO, checklist, Definition of Done
 
-*Les sections 3.1 à 3.7* décrivent le *déploiement côté SP* étape par étape.
-*Référence complète pour les tests :* section *3.8 Tester et diagnostiquer*.
+*Les sections 4.1 à 3.7* décrivent le *déploiement côté SP* étape par étape.
+*Référence complète pour les tests :* section *4.8 Tester et diagnostiquer*.
 Dans la section *2. Suivi à réaliser*, cela correspond aux étapes :
 * en préprod : *10 à 12* (configuration SP, premier test login, adaptation du code)
 * en prod : *22 à 23* (configuration SP prod, test de connexion)
 
-h3. 3.1 Configurer la bibliothèque SAML avec les métadonnées/certificats
+h3. 4.1 Configurer la bibliothèque SAML avec les métadonnées/certificats
 
 Avec les métadonnées produites/échangées (étapes *6* et *9* du *Suivi à réaliser*), configurez votre bibliothèque SAML :
 * EntityID du SP et endpoint ACS (URL de callback).
@@ -88,7 +88,7 @@ Avec les métadonnées produites/échangées (étapes *6* et *9* du *Suivi à r�
 * Paramètres attendus côté SP (issuer/EntityID, et audience si applicable) + activation de la vérification de signature.
 * Requête AuthnRequest côté SP : `Issuer` doit correspondre exactement à l’identifiant déclaré côté Entra ID, et `ID` doit être unique (et ne pas commencer par un chiffre) pour sécuriser le contrôle `InResponseTo`.
 
-h3. 3.2 Définir le NameID
+h3. 4.2 Définir le NameID
 
 Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 
@@ -103,7 +103,7 @@ Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 ** si aucun format n’est demandé, Entra ID applique le format configuré côté application (par défaut : `unspecified`) ;
 ** pour `transient`, si le SP le demande, Entra ID renvoie une valeur aléatoire unique à l’opération SSO (valeur temporaire, non réutilisable).
 
-h3. 3.3 Vérifier la signature SAML
+h3. 4.3 Vérifier la signature SAML
 
 *À faire absolument :* activer la vérification de signature côté SP et refuser toute réponse non conforme.
 
@@ -134,9 +134,9 @@ h4. Checklist de validation minimale (dev-first)
 * Fenêtre de validité : `NotBefore` / `NotOnOrAfter` cohérents (horloge serveur à l’heure).
 * Correlation : `InResponseTo` correspond à l’AuthnRequest envoyée (en SP-initiated).
 
-h3. 3.4 Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
+h3. 4.4 Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
 
-* *SP-initiated SSO* (mode recommandé et illustré dans le schéma) :
+* *SP-initiated SSO* (mode recommandé) :
 ** l’utilisateur commence par accéder à l’appli (SP) ;
 ** le SP génère une AuthnRequest et redirige le navigateur vers l’IdP (HTTP-Redirect) ;
 ** après authentification, l’IdP renvoie une Response SAML signée vers l’ACS du SP (HTTP-POST).
@@ -150,7 +150,7 @@ Ce mode est supporté par Entra ID mais n’est pas le scénario recommandé par
 * exposer une URL ACS cohérente avec la configuration Entra ID ;
 * accepter la Response SAML reçue, quel que soit le mode d’initiation.
 
-h3. 3.5 Choisir le binding (HTTP-POST vs HTTP-Redirect)
+h3. 4.5 Choisir le binding (HTTP-POST vs HTTP-Redirect)
 
 Deux bindings SAML sont utilisés dans Entra ID :
 
@@ -168,7 +168,7 @@ Comportement attendu côté application (SP) :
 Ces bindings suivent le profil SAML 2.0 “Web Browser SSO” et constituent le mode de fonctionnement par défaut avec Entra ID.
 Pour le *single logout* SAML avec Entra ID, le binding utilisé est HTTP-Redirect (GET), pas HTTP-POST.
 
-h3. 3.6 Implémenter le callback ACS (Response + NameID/attributs + création de session)
+h3. 4.6 Implémenter le callback ACS (Response + NameID/attributs + création de session)
 
 Déclenchez votre logique d’authentification à l’URL ACS :
 * Réception : récupérer la Response SAML soumise en POST.
@@ -176,7 +176,7 @@ Déclenchez votre logique d’authentification à l’URL ACS :
 * Extraction : lire le NameID et les attributs depuis l’Assertion, puis appliquer le mapping de la section *Attributs (Legacy → IdP)*.
 * Session : créer la session applicative (et stocker ce qui est nécessaire côté app), puis finaliser la redirection/retour.
 
-h3. 3.7 Gérer la déconnexion (SAML SLO vs déconnexion locale)
+h3. 4.7 Gérer la déconnexion (SAML SLO vs déconnexion locale)
 
 *À faire absolument :* choisir explicitement une stratégie de déconnexion (SLO ou locale) et la tester.
 
@@ -210,11 +210,11 @@ Il est possible de déconnecter un utilisateur d’une appli sans mettre en œuv
 ** elle est plus simple à mettre en œuvre ;
 ** si une URL de retour est utilisée, elle doit être déclarée dans la configuration de l’appli dans Entra ID.
 
-h3. 3.8 Tester et diagnostiquer
+h3. 4.8 Tester et diagnostiquer
 
-Objectif : valider que l’enchaînement 3.1 → 3.7 produit une connexion correcte et robuste.
+Objectif : valider que l’enchaînement 4.1 → 4.7 produit une connexion correcte et robuste.
 Cette section décrit *les scénarios à exécuter*. La *Checklist rapide* sert de contrôle immédiat, et la *DoD* sert de validation finale avant livraison.
-*Entrée attendue :* sections 3.1 à 3.7 implémentées et exécutables dans l’environnement de test.
+*Entrée attendue :* sections 4.1 à 4.7 implémentées et exécutables dans l’environnement de test.
 
 Cas à tester :
 * login OK (SP-initiated et/ou IdP-initiated selon votre scénario)
@@ -223,25 +223,25 @@ Cas à tester :
 * déconnexion : SLO si activé, sinon déconnexion locale (fallback)
 
 Checklist rapide (ce que vérifier en priorité) :
-* *3.1* métadonnées/certificats : bon ACS/EntityID + bon certificat de signature
-* *3.3* signature : niveau Response/Assertion conforme à la config IdP
-* *3.4* mode d’initiation : le SP accepte bien le type de réponse attendu
-* *3.5* binding : Response reçue en POST sur l’ACS attendu
-* *3.6* callback : extraction correcte et mapping appliqué
-* *3.7* déconnexion : stratégie validée (SLO si activé, sinon locale)
+* *4.1* métadonnées/certificats : bon ACS/EntityID + bon certificat de signature
+* *4.3* signature : niveau Response/Assertion conforme à la config IdP
+* *4.4* mode d’initiation : le SP accepte bien le type de réponse attendu
+* *4.5* binding : Response reçue en POST sur l’ACS attendu
+* *4.6* callback : extraction correcte et mapping appliqué
+* *4.7* déconnexion : stratégie validée (SLO si activé, sinon locale)
 
 En cas de doute, activez des logs détaillés en dev/preprod (sans données sensibles), et gardez des messages clairs en production (attribut manquant/invalide, signature refusée, etc.).
-Si le blocage concerne la validation de signature, revenez d’abord à *3.3 Vérifier la signature SAML* puis à *Checklist de validation minimale (dev-first)*.
-En cas d’échec sur un scénario, corrigez la section concernée (3.3, 3.5, 3.6 ou 3.7), puis rejouez le scénario avant de passer au suivant.
+Si le blocage concerne la validation de signature, revenez d’abord à *4.3 Vérifier la signature SAML* puis à *Checklist de validation minimale (dev-first)*.
+En cas d’échec sur un scénario, corrigez la section concernée (3.3, 3.5, 4.6 ou 3.7), puis rejouez le scénario avant de passer au suivant.
 
 || Symptôme observé || Étape à vérifier d’abord ||
-| Signature invalide ou assertion refusée | 3.3 Vérifier la signature SAML |
-| Response non reçue au callback ACS | 3.5 Binding puis 3.6 Callback ACS |
-| Attributs manquants dans la session applicative | 3.6 Callback ACS, puis *Attributs (Legacy → IdP)* |
-| Login OK mais logout incomplet | 3.7 Déconnexion (SLO vs locale) |
-| Erreurs intermittentes selon environnement | 3.1 Métadonnées/certificats puis 3.3 Signature |
+| Signature invalide ou assertion refusée | 4.3 Vérifier la signature SAML |
+| Response non reçue au callback ACS | 4.5 Binding puis 4.6 Callback ACS |
+| Attributs manquants dans la session applicative | 4.6 Callback ACS, puis *Attributs (Legacy → IdP)* |
+| Login OK mais logout incomplet | 4.7 Déconnexion (SLO vs locale) |
+| Erreurs intermittentes selon environnement | 4.1 Métadonnées/certificats puis 4.3 Signature |
 
-h4. Definition of Done (DoD) — validation minimale avant livraison
+h4. 4.8.2 Definition of Done (DoD) — validation minimale avant livraison
 
 * Login OK validé sur le parcours nominal.
 * Login KO correctement rejeté (signature/certificat/issuer/binding incohérent).
@@ -255,11 +255,11 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 
 ----
 
-h2. 4. Attributs (Legacy → IdP)
+h2. 5. Attributs (Legacy → IdP)
 
 Les attributs SAML varient d’une application à l’autre : cette table est à remplir pour chaque migration. Elle sert de référence à deux acteurs :
 * à l’équipe IAM pour configurer les mappings côté Entra ID (qui envoie quoi, sous quel nom) ;
-* au code applicatif pour lire les bons attributs dans l’Assertion (cf. étape *12* et section *3.6*).
+* au code applicatif pour lire les bons attributs dans l’Assertion (cf. étape *12* et section *4.6*).
 || Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
 |  |  |  |
 |  |  |  |
@@ -267,7 +267,7 @@ Les attributs SAML varient d’une application à l’autre : cette table est à
 
 ----
 
-h2. 5. Pièges courants
+h2. 6. Pièges courants
 
 * Métadonnées : EntityID et ACS doivent être cohérents entre SP et IdP ; attention aux environnements (dev/preprod/prod).
 * Certificats : expiration, bon certificat (signature vs chiffrement) selon la config IdP.
@@ -275,7 +275,7 @@ h2. 5. Pièges courants
 
 ----
 
-h2. 6. Exemples de code
+h2. 7. Exemples de code
 
 PHP (Symfony avec onelogin/php-saml)
 
