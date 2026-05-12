@@ -15,8 +15,7 @@ h2. 1. Mode opératoire (lecture)
 * Pass 2 : ouvrez *3. Prérequis / choix de sécurité*, puis *4. Détail technique* (4.1 à 4.9), *5. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Terminez avec les checklists de validation.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC* (référence commune aux guides 1 et 2).
-
-Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
+* Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
 
 ----
 
