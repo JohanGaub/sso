@@ -30,18 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
-- `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
+- `"docs/0.0_Migration_SSO_-_Synth\303\250se.confluence"`
 
 ### Last commits
+- 4087ff0 docs(guides): clarify checklist pointers and saml prereq step 4
 - 094c77b docs(guides): refine oidc and saml private migration guides
 - c0c4fac docs(saml-private-guide): align structure with oidc guide and fix narrative flow
 - a1488d1 docs(saml-private-guide): restructure guide for consistency and readability
 - 01d6957 docs(saml-private-guide): align détail technique structure with oidc guide (numbered sections, sommaire)
-- 996972d docs(saml-private-guide): clarify post-pv handoff between cam and prod phase
 
 ### Diff summary
- .cursor/pr-draft.md                                                | 6 +-----
- "docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence" | 2 +-
- "docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence" | 7 ++++---
- 3 files changed, 6 insertions(+), 9 deletions(-)
+ .cursor/pr-draft.md                                |  9 +--
+ ...0.0_Migration_SSO_-_Synth\303\250se.confluence" | 78 ++++++++++++++--------
+ 2 files changed, 53 insertions(+), 34 deletions(-)

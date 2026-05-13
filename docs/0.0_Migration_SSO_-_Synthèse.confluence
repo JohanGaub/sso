@@ -20,11 +20,11 @@ h2. 1. Pré‑requis
 Règle simple : une ligne est considérée comme acquise uniquement quand la date est renseignée.
 Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1 à 4.
 
-|| # || Prérequis local || Résultat attendu (preuve) || Date obtenue || Commentaire / blocage ||
-| 1 | Tirer la branche "main" de l'application à partir de GitLab pour avoir le code en local sur son PC | Code visualisable sur PC |  |  |
-| 2 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli |  |  |
-| 3 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Pré-requis difficile à prouver avant raccordement. La preuve est donc le message informant que c'est effectué. |  |  |
-| 4 | Obtenir un compte utilisateur habilité pour l'appli sur URL de test | En s'identifiant, l'utilisateur se retrouve à l'intérieur de l'appli |  |  |
+|| # || Prérequis local || Acteur || Résultat attendu (preuve) || Date obtenue || Commentaire / blocage ||
+| 1 | Tirer la branche "main" de l'application à partir de GitLab pour avoir le code en local sur son PC | Équipe applicative et/ou équipe de raccordement | Code visualisable sur PC |  |  |
+| 2 | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou équipe de raccordement | Avant raccordement, en utilisant l'URL de test, on a accès au portail de l'appli |  |  |
+| 3 | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou équipe de raccordement | Pré-requis difficile à prouver avant raccordement. La preuve est donc le message informant que c'est effectué. |  |  |
+| 4 | Obtenir un compte utilisateur habilité pour l'appli sur URL de test | Équipe applicative et/ou équipe de raccordement | En s'identifiant, l'utilisateur se retrouve à l'intérieur de l'appli |  |  |
 
 ----
 
@@ -35,8 +35,8 @@ h3. Tableau synthétique
 || Étape || Objectif || Acteurs || Sortie attendue ||
 | 1 | Choisir le parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative ou équipe raccordement | Guide cible identifié (1, 2, 3 ou 4). |
 | 2 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative et/ou équipe raccordement | Stratégie de flux validée. |
-| 3 | Lister les claims (OIDC) / attributs (SAML) utilisés (id, email, nom, rôle, etc.) par l'application + URL d'appli et de redirection | Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur formulaire ArchiFactory. |
-| 4 | Fournir ces informations à l'équipe IAM ou à l'équipe Gestion managée, selon l'organisation | Équipe Gestion managée ou Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur formulaire ArchiFactory. |
+| 3 | Lister les claims (OIDC) / attributs (SAML) utilisés (id, email, nom, rôle, etc.) par l'application + URL d'appli et de redirection | Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur fiche de renseignement. |
+| 4 | Fournir ces informations à l'équipe IAM ou à l'équipe Gestion managée, selon l'organisation | Équipe Gestion managée ou Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur fiche de renseignement. |
 | 5 | Configurer Entra ID avec ces informations | Équipe IAM | Accès à la mire d'authentification + à l'application après authentification. |
 | 6 | Ajuster le code de l'application : claims (OIDC) / attributs (SAML), URLs, clients, certificats. | Équipe applicative et/ou équipe raccordement | Configuration applicative réalisée. |
 | 7 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev validé. |
@@ -69,27 +69,51 @@ Pour l'OIDC en gestion privée (guide 2), une décision « avec ou sans PKCE » 
 
 h2. 4. Glossaire (termes clés)
 
+h3. 4.1 Protocoles OIDC / OAuth 2.0
+
 || Terme || Définition ||
-|| *OIDC* | OpenID Connect – couche d'identité au‑dessus d'OAuth 2.0 (id_token, userinfo, scopes openid). |
-|| *Discovery OIDC* | Document exposé par le SSO à l'URL {{/.well-known/openid-configuration}}. Il décrit les endpoints (authorization, token, userinfo, end_session) et l'URL des clés publiques ({{jwks_uri}}) pour vérifier les JWT. Les bibliothèques OIDC s'en servent pour configurer les URLs. |
-|| *PKCE* | Proof Key for Code Exchange – mécanisme qui renforce le flux Authorization Code (code_verifier / code_challenge) pour éviter l'interception du code ; recommandé dès qu'il n'y a pas de backend sécurisé. |
-|| *Authorization Code (avec/sans PKCE)* | Flux OIDC : redirection vers le SSO → code → échange contre id_token + access_token. *Avec PKCE* : renforcement par code_verifier/code_challenge (recommandé). *Sans PKCE* : uniquement si backend sécurisé avec {{client_secret}}. Détail dans le guide 2 (OIDC gestion privée). |
-|| *ID Token* | Jeton OIDC qui contient les informations d'identité de l'utilisateur (claims) et permet à l'application de vérifier qu'il est authentifié. |
-|| *Access Token* | Jeton OAuth2 utilisé pour accéder à des ressources protégées (API, Graph, backend applicatif…) ; envoyé en {{Authorization: Bearer …}}. |
-|| *Refresh Token* | Jeton long terme qui permet d'obtenir de nouveaux Access Tokens sans redemander l'authentification à l'utilisateur (si scope offline_access accordé). |
-|| *Authorization Code* | Code à usage unique et courte durée renvoyé à l'application, qui est échangé contre les tokens (ID/Access/Refresh) au token endpoint. |
-|| *SAML v2* | Security Assertion Markup Language 2.0 – protocole d'échange d'assertions d'identité (XML). |
-|| *IAM* | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
-|| *IdP* | Identity Provider – fournisseur d'identité (service SSO). |
-|| *Paramètre* | Élément d'une requête HTTP (URL d'autorisation, query string de callback, corps POST /token). Exemples : client_id, code, state, redirect_uri. |
-|| *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l’émetteur, le destinataire ou l’utilisateur. Exemples : aud, exp, iss, nonce, amr. |
-|| *Scopes OIDC de base* | openid : scope obligatoire pour OIDC ; profile : infos de profil (nom, prénom, etc.) ; email : adresse email ; offline_access : permet d'obtenir un refresh_token pour maintenir la session sans réauthentification. |
-|| *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent `main`). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
-|| *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. `<CLIENT_ID>`, `<CODE>`, `<REDIRECT_URI>`). |
-|| *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
-|| *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
-|| *SLO* | Single Logout – déconnexion unique : fermeture de session côté IdP et SP. |
-|| *Fiche de renseignement* | Document de cadrage technique (souvent au format Excel) collectant les paramètres nécessaires au raccordement : URL de l'application, URL de redirection (callback), et liste des claims/attributs attendus en retour d'authentification. |
+| *Access Token* | Jeton OAuth2 utilisé pour accéder à des ressources protégées (API, Graph, backend applicatif…) ; envoyé en {{Authorization: Bearer …}}. |
+| *Authorization Code (avec/sans PKCE)* | Flux OIDC dans lequel le SSO renvoie d'abord un code à usage unique et de courte durée à l'application, qui l'échange ensuite contre les tokens (ID Token, Access Token, éventuellement Refresh Token) au token endpoint. *Avec PKCE* : renforcement par {{code_verifier}} / {{code_challenge}}, recommandé dès qu'il n'y a pas de backend sécurisé. *Sans PKCE* : uniquement si l'application dispose d'un backend sécurisé portant le {{client_secret}}. Détail dans le guide 2 (OIDC gestion privée). |
+| *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : aud, exp, iss, nonce, amr. |
+| *Discovery OIDC* | Document exposé par le SSO à l'URL {{/.well-known/openid-configuration}}. Il décrit les endpoints (authorization, token, userinfo, end_session) et l'URL des clés publiques ({{jwks_uri}}) pour vérifier les JWT. Les bibliothèques OIDC s'en servent pour configurer les URLs. |
+| *ID Token* | Jeton OIDC qui contient les informations d'identité de l'utilisateur (claims) et permet à l'application de vérifier qu'il est authentifié. |
+| *OIDC* | OpenID Connect – couche d'identité au-dessus d'OAuth 2.0 (id_token, userinfo, scopes openid). |
+| *PKCE* | Proof Key for Code Exchange – mécanisme qui renforce le flux Authorization Code ({{code_verifier}} / {{code_challenge}}) pour éviter l'interception du code ; recommandé dès qu'il n'y a pas de backend sécurisé. |
+| *Refresh Token* | Jeton long terme qui permet d'obtenir de nouveaux Access Tokens sans redemander l'authentification à l'utilisateur (si scope offline_access accordé). |
+| *Scopes OIDC de base* | openid : scope obligatoire pour OIDC ; profile : infos de profil (nom, prénom, etc.) ; email : adresse email ; offline_access : permet d'obtenir un refresh_token pour maintenir la session sans réauthentification. |
+
+h3. 4.2 Protocoles SAML 2.0
+
+|| Terme || Définition ||
+| *ACS* | Assertion Consumer Service – endpoint du SP qui reçoit la Response SAML (souvent appelé « callback ACS »). |
+| *SAML v2* | Security Assertion Markup Language 2.0 – protocole d'échange d'assertions d'identité (XML). |
+| *SLO* | Single Logout – déconnexion unique : fermeture de session côté IdP et SP. |
+| *SP* | Service Provider – application qui consomme l'authentification fournie par l'IdP. |
+
+h3. 4.3 Concepts transverses
+
+|| Terme || Définition ||
+| *IAM* | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
+| *IdP* | Identity Provider – fournisseur d'identité (service SSO). |
+| *Paramètre* | Élément d'une requête HTTP (URL d'autorisation, query string de callback, corps POST /token). Exemples : client_id, code, state, redirect_uri. |
+
+h3. 4.4 Acteurs, systèmes & plateformes internes
+
+|| Terme || Définition ||
+| *Cloud Place* | Plateforme cloud interne au SI, exploitée par le service de Gestion managée. Inclut nativement un module Apache permettant la gestion managée du SSO (claims/attributs uniquement, sans manipulation du flux côté application). |
+| *Cloud Public* | Hébergement sur cloud externe sans service de gestion managée interne. L'équipe applicative est autonome sur l'intégration SSO (gestion privée). |
+| *DataCenter ZCI* | Hébergement en datacenter interne (acronyme historique « ZCI ») pour les applications déployées en infrastructure dédiée. Implique une intégration SSO en gestion privée (l'équipe applicative gère le flux d'authentification). |
+| *Eagles* | Équipe projet en charge du suivi et du cadencement des étapes de migration SSO (planification, jalons, coordination inter-équipes). |
+| *Entra ID* | Service d'identité de Microsoft (anciennement Azure AD). IdP cible de la migration SSO. |
+| *Fiche de renseignement* | Document de cadrage technique (souvent au format Excel) collectant les paramètres nécessaires au raccordement : URL de l'application, URL de redirection (callback), et liste des claims/attributs attendus en retour d'authentification. |
+| *Gardian SSO* | Gestionnaire d'authentification historique (legacy) du SI, en cours de remplacement par Entra ID dans le cadre de la migration. |
+| *PV de recette* | Procès-Verbal de recette – document formalisant la validation fonctionnelle d'une étape (scénarios joués, résultats, anomalies, décision Go/No-Go). |
+
+h3. 4.5 Conventions documentaires & process
+
+|| Terme || Définition ||
+| *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. `<CLIENT_ID>`, `<CODE>`, `<REDIRECT_URI>`). |
+| *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent `main`). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
 
 ----
 
