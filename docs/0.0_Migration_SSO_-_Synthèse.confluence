@@ -95,6 +95,7 @@ h3. 4.3 Concepts transverses
 h3. 4.4 Acteurs, systèmes & plateformes internes
 
 || Terme || Définition ||
+| *CAM* | Chargé d'Affaires Migration – interlocuteur projet (souvent au sein de l'équipe Eagles) qui suit la migration d'une application, transmet les livrables (fiche de renseignement, PV de recette) et cadence les jalons avec les équipes. |
 | *Cloud Place* | Plateforme cloud interne au SI, exploitée par le service de Gestion managée. Inclut nativement un module Apache permettant la gestion managée du SSO (claims/attributs uniquement, sans manipulation du flux côté application). |
 | *Cloud Public* | Hébergement sur cloud externe sans service de gestion managée interne. L'équipe applicative est autonome sur l'intégration SSO (gestion privée). |
 | *DataCenter ZCI* | Hébergement en datacenter interne (acronyme historique « ZCI ») pour les applications déployées en infrastructure dédiée. Implique une intégration SSO en gestion privée (l'équipe applicative gère le flux d'authentification). |

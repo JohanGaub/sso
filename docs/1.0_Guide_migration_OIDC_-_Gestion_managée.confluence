@@ -5,24 +5,30 @@ En gestion managée :
 * L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe Gestion managée.
 * L’équipe Gestion managée reçoit le Client ID / Client Secret et configure la mécanique OIDC.
 * L’équipe applicative et/ou l’équipe de raccordement adapte la lecture des *claims* dans le code.
-NB : Selon la stack OIDC, les claims lus par le code peuvent venir de l’*ID Token*, de *UserInfo* et/ou d’un *access token* validé.
+*NB :* en gestion managée, les claims sont injectés par le module Apache (préfixe {{OIDC_CLAIM_*}}) — voir *4. Où lire les claims* et *5. Exemples de code*.
 
 h2. 1. Mode opératoire (lecture)
 
-* Repère rapide : *1–9 = préparer et raccorder la préprod*, *10–13 = adapter et valider la préprod*, *14–19 = basculer et valider la production*.
-* Pass 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 19*.
-* Pass 2 : ouvrez *3. Pièges courants* ou *7. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
-* Terminez avec les deux checklists de validation.
-* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*
-* Pour les définitions transverses (OIDC, claims, conventions), utilisez la synthèse : *0. Migration SSO – Synthèse*, *section 4. Glossaire (termes clés)*.
+* Passe 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 19* (cochez la colonne *Réalisée* ; le récapitulatif des phases A→F est en tête de cette section).
+* Passe 2 : ouvrez *3. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*.
+* Pour les définitions transverses (OIDC, claims, CAM, Eagles…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
 ----
 
 h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
+*Récapitulatif des phases :*
+* *A — Préparer la préprod* : étapes 1 à 6
+* *B — Raccorder la préprod* : étapes 7 à 9
+* *C — Adapter le dev* : étapes 10 à 12
+* *D — Valider la préprod* : étape 13
+* *E — Raccorder la prod* : étapes 14 à 17
+* *F — Valider la prod* : étapes 18 à 19
+
 || Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
 | 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone <n° de dépôt>. Exemple : glab repo clone 7777 | [ ] |
-| 2 | A — Préparer la préprod | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignements. | — | [ ] |
+| 2 | A — Préparer la préprod | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignement. | — | [ ] |
 | 3 | A — Préparer la préprod | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette vérifié : portail accessible via l'URL de test avant raccordement OIDC. | — | [ ] |
 | 4 | A — Préparer la préprod | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation Entra ID Recette. | — | [ ] |
 | 5 | A — Préparer la préprod | Obtenir l'accès / habilitation à l'appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation à l'application. | — | [ ] |
@@ -40,56 +46,48 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 17 | E — Raccorder la prod | Recevoir l'information que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "production prête à tester" reçu de l'équipe Gestion managée. | — | [ ] |
 | 18 | F — Valider la prod | Déployer en production (souvent : créer un tag GitLab, lancer le pipeline, vérifier qu'il est au vert) | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (release ou tag créé, pipeline OK). | — | [ ] |
 | 19 | F — Valider la prod | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | PV production validé et transmis au chargé d'affaires Eagles. | — | [ ] |
-| Total | — | Durée totale (somme des étapes 1 à 19) | — | À estimer | — | — | [ ] |
+
+*Durée totale du guide : à estimer (somme des étapes 1 à 19).*
 
 ----
 
 h2. 3. Pièges courants
 
-* Tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits.
-
-h2. 4. Checklist de validation avant bascule en production
-
-|| Critère || Validé ||
-| Claims nécessaires au fonctionnement reçus et exploitables côté code. | [ ] |
-| PV de recette préprod/dev validé et transmis au CAM Eagles. | [ ] |
-
-h2. 5. Checklist de validation de production
-
-|| Critère || Validé ||
-| PV de recette production validé et transmis au CAM Eagles. | [ ] |
+* *Compte non habilité* : tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits applicatifs.
+* *Préfixe {{OIDC_CLAIM_}} vs {{REDIRECT_OIDC_CLAIM_}}* : selon que l'application est appelée directement ou après redirection interne, le préfixe change. Si un claim attendu est vide, tester les deux préfixes (voir *4. Correspondance des claims OIDC*).
+* *Claim absent côté Apache* : le claim n'apparaît pas dans les variables d'environnement parce qu'il n'a pas été demandé dans la *fiche de renseignement* ou n'est pas exposé par Entra ID. Vérifier la liste transmise à l'équipe IAM avant de modifier le code.
+* *Cache navigateur / session legacy* : après la bascule, l'utilisateur reste connecté via un cookie Gardian résiduel. Forcer une suppression des cookies du domaine pour reproduire un parcours OIDC propre.
+* *Casse du nom de claim* : {{OIDC_CLAIM_email}} vs {{OIDC_CLAIM_Email}} — la casse peut varier selon la configuration Apache. Lister une fois les clés {{OIDC_CLAIM_*}} présentes dans l'environnement ({{$_SERVER}} en PHP) avant de coder.
 
 ----
 
-h2. 6. Où lire les claims
+h2. 4. Où lire les claims
 
-Après une authentification OIDC réussie, votre code doit récupérer des *claims* (email, nom, rôle, etc.). Selon la stack et la configuration amont, ces claims peuvent être exposés à *3 endroits* :
+En *gestion managée*, le module Apache ({{mod_auth_openidc}}) gère le flux OIDC : redirection, échange de tokens, validation. Votre application *ne code pas* le flux OIDC ; elle lit les *claims* que Apache injecte dans les *variables d'environnement* de la requête HTTP.
 
-* *1) Objet utilisateur / session applicative (cas le plus courant)* : la lib OIDC remplit l’utilisateur courant ou la session ; votre code lit des attributs (ex. {{getUser()->getAttribute('email')}}).
-* *2) Dans un token (souvent l’ID Token, JWT)* : votre stack peut exposer le token ; votre code lit les champs du payload *uniquement si le token est correctement validé* (signature, issuer, audience, expiration, etc.).
-* *3) Via UserInfo* : si certains claims ne sont pas dans le token, votre stack appelle (ou vous faites appeler) l’endpoint UserInfo avec l’{{access_token}} puis lit la réponse JSON.
+*Règle simple :*
+* Préfixe le plus courant : {{OIDC_CLAIM_<nom>}} (ex. {{OIDC_CLAIM_email}}, {{OIDC_CLAIM_nom}}, {{OIDC_CLAIM_role}}).
+* Si l'application passe par une redirection interne : préfixe {{REDIRECT_OIDC_CLAIM_<nom>}} (même logique, autre préfixe).
+* Correspondance Legacy ↔ Entra ID : document *4. Correspondance des claims OIDC*.
 
-*Repère rapide :* en cas de doute, repartez toujours du *Discovery document* {{/.well-known/openid-configuration}}. Il liste les URL “source de vérité” :
-* {{authorization_endpoint}} : où rediriger l’utilisateur pour s’authentifier
-* {{token_endpoint}} : où échanger le code contre des tokens
-* {{userinfo_endpoint}} : où récupérer des infos utilisateur *si vos claims ne sont pas dans le token*
-* {{jwks_uri}} : où récupérer les clés publiques *si vous devez valider une signature JWT*
-* {{end_session_endpoint}} : où déclencher le logout *(si l’IdP le fournit)*
+*En cas de claim manquant :*
+# Vérifier que le claim est listé dans la *fiche de renseignement* transmise à l'IAM.
+# Lister les variables {{OIDC_CLAIM_*}} effectivement présentes (log temporaire des clés d'environnement).
+# Consulter *3. Pièges courants* (préfixe, casse, cache).
 
-*Règle simple :* commencez par *1)* (user/session) ; si un claim manque, vérifiez si votre stack utilise *3)* (UserInfo). Évitez de “bricoler” *2)* à la main si votre framework peut le faire.
+h2. 5. Exemples de code
 
-h2. 7. Exemples de code
+Les exemples ci-dessous supposent que le claim {{email}} est exposé sous {{OIDC_CLAIM_email}}. Adaptez le nom du claim et le préfixe selon votre application (voir *4. Correspondance des claims OIDC*).
 
 Symfony (PHP)
 
 {code:php}
-// Dans votre contrôleur ou service
-$user = $this->getUser();
-$email = $user->getAttribute('email');
-$nom = $user->getAttribute('nom');
-$role = $user->getAttribute('role');
-// Validation optionnelle
-if (!in_array($role, ['admin', 'user'], true)) {
+// Claims injectés par Apache (mod_auth_openidc) — Request Symfony
+$email = $request->server->get('OIDC_CLAIM_email');
+$nom = $request->server->get('OIDC_CLAIM_nom');
+$role = $request->server->get('OIDC_CLAIM_role');
+// Équivalent PHP natif : $_SERVER['OIDC_CLAIM_email'], etc.
+if ($role !== null && !in_array($role, ['admin', 'user'], true)) {
     throw new AccessDeniedException('Rôle non autorisé');
 }
 {code}
@@ -97,29 +95,27 @@ if (!in_array($role, ['admin', 'user'], true)) {
 CodeIgniter (PHP)
 
 {code:php}
-// Après authentification OIDC, dans un helper ou le contrôleur
-$claims = $this->session->userdata('oidc_claims');
-$email = $claims['email'] ?? null;
-$nom = $claims['nom'] ?? null;
-$role = $claims['role'] ?? null;
+// Variables d'environnement injectées par Apache
+$email = $_SERVER['OIDC_CLAIM_email'] ?? null;
+$nom = $_SERVER['OIDC_CLAIM_nom'] ?? null;
+$role = $_SERVER['OIDC_CLAIM_role'] ?? null;
 {code}
 
 Python (ex. Flask / Django)
 
 {code:python}
-# Flask : après récupération du token / userinfo
-user_info = request.session.get('oidc_userinfo', {})
-email = user_info.get('email')
-nom = user_info.get('nom')
-role = user_info.get('role')
+# Flask : request.environ ; Django : request.META
+email = request.environ.get('OIDC_CLAIM_email')  # Flask
+# email = request.META.get('OIDC_CLAIM_email')  # Django
+nom = request.environ.get('OIDC_CLAIM_nom')
+role = request.environ.get('OIDC_CLAIM_role')
 {code}
 
 TypeScript (Node.js, backend — ex. Express / Nest)
 
 {code:javascript}
-// Après vérification du JWT (signature, issuer, audience), lecture du payload
-const payload = decodedToken as { email?: string; nom?: string; role?: string };
-const email = payload.email;
-const nom = payload.nom;
-const role = payload.role;
+// Apache transmet souvent les claims en en-têtes HTTP (casse normalisée)
+const email = req.headers['oidc-claim-email'];
+const nom = req.headers['oidc-claim-nom'];
+const role = req.headers['oidc-claim-role'];
 {code}
