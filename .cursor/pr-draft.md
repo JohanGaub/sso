@@ -30,18 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `"docs/0.0_Migration_SSO_-_Synth\303\250se.confluence"`
-- `"docs/1.0_Guide_migration_OIDC_-_Gestion_manag\303\251e.confluence"`
+- `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
 
 ### Last commits
+- f5eca46 docs(guides): refine oidc managed guide and add cam to glossary
 - 1fcb327 docs(synthesis): restructure glossary, routing table and prereq actors
 - 53351fc docs(synthesis): restructure glossary and clarify prereq actors
 - 4087ff0 docs(guides): clarify checklist pointers and saml prereq step 4
 - 094c77b docs(guides): refine oidc and saml private migration guides
-- c0c4fac docs(saml-private-guide): align structure with oidc guide and fix narrative flow
 
 ### Diff summary
- .cursor/pr-draft.md                                |   8 +-
- ...0.0_Migration_SSO_-_Synth\303\250se.confluence" |   1 +
- ...ation_OIDC_-_Gestion_manag\303\251e.confluence" | 108 ++++++++++-----------
- 3 files changed, 56 insertions(+), 61 deletions(-)
+ .cursor/pr-draft.md                                |  9 ++---
+ ...ration_OIDC_-_Gestion_priv\303\251e.confluence" | 41 +++++++++++++++-------
+ 2 files changed, 31 insertions(+), 19 deletions(-)
