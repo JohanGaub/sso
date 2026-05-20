@@ -212,6 +212,12 @@ Le template couvre :
 # Vérifier tout (PHPStan + Rector)
 task quality
 
+# Audit sécurité Composer (CVE) — en cas d'échec, la sortie indique la commande à lancer
+task audit
+
+# Correction manuelle des CVE (deps runtime via conteneur php) — jamais lancée automatiquement
+task audit:fix
+
 # PHPStan uniquement
 task phpstan
 

@@ -570,11 +570,14 @@ tasks:
         docker compose $FILES exec -T php vendor/bin/php-cs-fixer cache-clear || true
 
   audit:
-    desc: Vérifie les vulnérabilités de sécurité dans les dépendances Composer
+    desc: Vérifie les vulnérabilités de sécurité dans les dépendances Composer (affiche task audit:fix si CVE)
     cmds:
-      - |
-        FILES="{{.DOCKER_COMPOSE_FILES}}"
-        docker compose $FILES exec -T php composer audit
+      - bash scripts/composer-audit.sh
+
+  audit:fix:
+    desc: "[Manuel] Met à jour les deps runtime si composer audit signale des CVE, puis re-audite"
+    cmds:
+      - bash scripts/fix-composer-security.sh
 
   phpmd:
     desc: Analyse le code avec PHPMD pour détecter les code smells
