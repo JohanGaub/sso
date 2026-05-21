@@ -5,7 +5,7 @@ En gestion managée :
 * L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe Gestion managée.
 * L’équipe Gestion managée reçoit le Client ID / Client Secret et configure la mécanique OIDC.
 * L’équipe applicative et/ou l’équipe de raccordement adapte la lecture des *claims* dans le code.
-*NB :* en gestion managée, les claims sont injectés par le module Apache (préfixe {{OIDC_CLAIM_*}}) — voir *4. Où lire les claims* et *5. Exemples de code*.
+*NB :* en gestion managée, les claims sont injectés par le module Apache (préfixe {code}OIDC_CLAIM_*{code}) — voir *4. Où lire les claims* et *5. Exemples de code*.
 
 h2. 1. Mode opératoire (lecture)
 
@@ -57,7 +57,7 @@ h2. 3. Pièges courants
 * *Préfixe {{OIDC_CLAIM_}} vs {{REDIRECT_OIDC_CLAIM_}}* : selon que l'application est appelée directement ou après redirection interne, le préfixe change. Si un claim attendu est vide, tester les deux préfixes (voir *4. Correspondance des claims OIDC*).
 * *Claim absent côté Apache* : le claim n'apparaît pas dans les variables d'environnement parce qu'il n'a pas été demandé dans la *fiche de renseignement* ou n'est pas exposé par Entra ID. Vérifier la liste transmise à l'équipe IAM avant de modifier le code.
 * *Cache navigateur / session legacy* : après la bascule, l'utilisateur reste connecté via un cookie Gardian résiduel. Forcer une suppression des cookies du domaine pour reproduire un parcours OIDC propre.
-* *Casse du nom de claim* : {{OIDC_CLAIM_email}} vs {{OIDC_CLAIM_Email}} — la casse peut varier selon la configuration Apache. Lister une fois les clés {{OIDC_CLAIM_*}} présentes dans l'environnement ({{$_SERVER}} en PHP) avant de coder.
+* *Casse du nom de claim* : {{OIDC_CLAIM_email}} vs {{OIDC_CLAIM_Email}} — la casse peut varier selon la configuration Apache. Lister une fois les clés {code}OIDC_CLAIM_*{code} présentes dans l'environnement ({{$_SERVER}} en PHP) avant de coder.
 
 ----
 
@@ -72,7 +72,7 @@ En *gestion managée*, le module Apache ({{mod_auth_openidc}}) gère le flux OID
 
 *En cas de claim manquant :*
 # Vérifier que le claim est listé dans la *fiche de renseignement* transmise à l'IAM.
-# Lister les variables {{OIDC_CLAIM_*}} effectivement présentes (log temporaire des clés d'environnement).
+# Lister les variables {code}OIDC_CLAIM_*{code} effectivement présentes (log temporaire des clés d'environnement).
 # Consulter *3. Pièges courants* (préfixe, casse, cache).
 
 h2. 5. Exemples de code
@@ -113,7 +113,7 @@ role = request.environ.get('OIDC_CLAIM_role')
 
 TypeScript (Node.js, backend — ex. Express / Nest)
 
-{code:javascript}
+{code:js}
 // Apache transmet souvent les claims en en-têtes HTTP (casse normalisée)
 const email = req.headers['oidc-claim-email'];
 const nom = req.headers['oidc-claim-nom'];

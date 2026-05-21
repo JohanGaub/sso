@@ -292,7 +292,7 @@ h2. 6. Pièges courants
 
 h2. 7. Exemples de code
 
-En gestion privée, les attributs proviennent de l'*Assertion SAML* (NameID + attributs) après validation au callback ACS — pas des variables {{OIDC_CLAIM_*}} (réservées à l'OIDC en gestion managée, guide 1). Voir *4.6* et *5. Attributs (Legacy → IdP)*.
+En gestion privée, les attributs proviennent de l'*Assertion SAML* (NameID + attributs) après validation au callback ACS — pas des variables {code}OIDC_CLAIM_*{code} (réservées à l'OIDC en gestion managée, guide 1). Voir *4.6* et *5. Attributs (Legacy → IdP)*.
 
 PHP (Symfony avec onelogin/php-saml)
 
@@ -307,7 +307,7 @@ $role = $attributes['role'][0] ?? null;
 
 TypeScript (Node, passport-saml)
 
-{code:javascript}
+{code:js}
 // Strategy config : entryPoint, cert, callbackUrl, etc.
 // Dans la callback après validation :
 (req: Request, res: Response) => {

@@ -315,7 +315,7 @@ h2. 5. Pièges courants
 
 h2. 6. Exemples de code
 
-En gestion privée, les claims proviennent de l'*ID Token* (JWT validé), de *UserInfo* et/ou de la session remplie par votre lib OIDC — pas des variables {{OIDC_CLAIM_*}} (réservées à la gestion managée, guide 1). Voir *4.5* et *4.7*.
+En gestion privée, les claims proviennent de l'*ID Token* (JWT validé), de *UserInfo* et/ou de la session remplie par votre lib OIDC — pas des variables {code}OIDC_CLAIM_*{code} (réservées à la gestion managée, guide 1). Voir *4.5* et *4.7*.
 
 Symfony (PHP) – configuration et récupération des claims après connexion OIDC
 
@@ -342,7 +342,7 @@ $user = $this->getUser();
 
 TypeScript (Node, express + openid-client)
 
-{code:javascript}
+{code:js}
 const { Issuer, Strategy } = require('openid-client');
 
 // Découverte des endpoints (Discovery)
