@@ -29,7 +29,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu'elle est réalisée)
 * *F — Valider la prod* : étapes 26 à 27
 
 || Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
-| 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone <n° de dépôt>. Exemple : glab repo clone 7777 | [ ] |
+| 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone {{n° de dépôt}}. Exemple : glab repo clone 7777 | [ ] |
 | 2 | A — Préparer la préprod | Obtenir l'URL de test/préprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignement. | — | [ ] |
 | 3 | A — Préparer la préprod | Obtenir l'accès / habilitation à l'application (préprod/dev) | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès applicatif confirmé : portail accessible via l'URL de test avant raccordement SAML. | — | [ ] |
 | 4 | A — Préparer la préprod | Vérifier le *contrat SP/IdP* : *fiche* ↔ *réalité exposée* (URL publique, ACS, EntityID, mode flux, bindings, SLO si concerné) — *pas* le mapping des attributs applicatifs | Équipe applicative et/ou Équipe de raccordement | À estimer | Contrôle fait ; dans le ticket : *uniquement* un lien ou une référence vers la fiche, et *seulement si écart* un court mémo. | Voir *3. Prérequis* (plus bas dans ce guide). Référence : *4.1 Checklist de demande IAM - Raccordement SAML*. | [ ] |
@@ -98,29 +98,29 @@ Avec les métadonnées produites/échangées (étapes *6* et *9* du *Suivi à r�
 * EntityID du SP et endpoint ACS (URL de callback).
 * URL de SSO de l’IdP et certificat x509 de signature (issu des métadonnées IdP).
 * Paramètres attendus côté SP (issuer/EntityID, et audience si applicable) + activation de la vérification de signature.
-* Requête AuthnRequest côté SP : `Issuer` doit correspondre exactement à l’identifiant déclaré côté Entra ID, et `ID` doit être unique (et ne pas commencer par un chiffre) pour sécuriser le contrôle `InResponseTo`.
+* Requête AuthnRequest côté SP : {{Issuer}} doit correspondre exactement à l’identifiant déclaré côté Entra ID, et {{ID}} doit être unique (et ne pas commencer par un chiffre) pour sécuriser le contrôle {{InResponseTo}}.
 
 h3. 4.2 Définir le NameID
 
 Le NameID est l'identifiant de l'utilisateur dans l'Assertion SAML.
 
 * Formats de NameID supportés :
-** `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified`
-** `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`
-** `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent`
-** `urn:oasis:names:tc:SAML:2.0:nameid-format:transient`
+** {{urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified}}
+** {{urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress}}
+** {{urn:oasis:names:tc:SAML:2.0:nameid-format:persistent}}
+** {{urn:oasis:names:tc:SAML:2.0:nameid-format:transient}}
 
 * Comportement Entra ID :
-** si l’AuthnRequest contient une `NameIDPolicy` avec un format demandé, Entra ID utilise ce format ;
-** si aucun format n’est demandé, Entra ID applique le format configuré côté application (par défaut : `unspecified`) ;
-** pour `transient`, si le SP le demande, Entra ID renvoie une valeur aléatoire unique à l’opération SSO (valeur temporaire, non réutilisable).
+** si l’AuthnRequest contient une {{NameIDPolicy}} avec un format demandé, Entra ID utilise ce format ;
+** si aucun format n’est demandé, Entra ID applique le format configuré côté application (par défaut : {{unspecified}}) ;
+** pour {{transient}}, si le SP le demande, Entra ID renvoie une valeur aléatoire unique à l’opération SSO (valeur temporaire, non réutilisable).
 
 h3. 4.3 Vérifier la signature SAML
 
 *À faire absolument :* activer la vérification de signature côté SP et refuser toute réponse non conforme.
 
 Les tokens SAML renvoyés par Entra ID sont signés, mais *le périmètre exact de la signature est un paramètre de configuration* (réponse, assertion, ou les deux).
-Dans la pratique, votre bibliothèque doit être capable de vérifier la signature au bon niveau : *Response* (élément `samlp:Response`), *Assertion* (élément `saml:Assertion`), ou les deux, selon ce qui est configuré côté IdP.
+Dans la pratique, votre bibliothèque doit être capable de vérifier la signature au bon niveau : *Response* (élément {{samlp:Response}}), *Assertion* (élément {{saml:Assertion}}), ou les deux, selon ce qui est configuré côté IdP.
 
 * Côté IdP (Entra ID) :
 ** Entra ID peut signer :
@@ -143,8 +143,8 @@ h4. Checklist de validation minimale (dev-first)
 * Signature SAML : présente et valide (Response et/ou Assertion, selon config).
 * Issuer : correspond à l’IdP attendu (éviter toute confusion d’environnement).
 * Audience : correspond à l’identifiant attendu côté SP (EntityID / App ID URI selon configuration).
-* Fenêtre de validité : `NotBefore` / `NotOnOrAfter` cohérents (horloge serveur à l’heure).
-* Correlation : `InResponseTo` correspond à l’AuthnRequest envoyée (en SP-initiated).
+* Fenêtre de validité : {{NotBefore}} / {{NotOnOrAfter}} cohérents (horloge serveur à l’heure).
+* Correlation : {{InResponseTo}} correspond à l’AuthnRequest envoyée (en SP-initiated).
 
 h3. 4.4 Choisir le mode d’initiation (SP-initiated vs IdP-initiated)
 
@@ -166,10 +166,10 @@ h3. 4.5 Choisir le binding (HTTP-POST vs HTTP-Redirect)
 
 Deux bindings SAML sont utilisés dans Entra ID :
 
-* *HTTP-POST* (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`) :
+* *HTTP-POST* ({{urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST}}) :
 ** les messages SAML (notamment la Response contenant l’Assertion) sont transmis via un formulaire HTML encodé en Base64 et envoyés en POST vers l’ACS du SP.
 
-* *HTTP-Redirect* (`urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect`) :
+* *HTTP-Redirect* ({{urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect}}) :
 ** les messages SAML (ex. AuthnRequest) sont passés en paramètres d’URL et envoyés via une redirection HTTP.
 
 Comportement attendu côté application (SP) :
@@ -184,7 +184,7 @@ h3. 4.6 Implémenter le callback ACS (Response + NameID/attributs + création de
 
 Déclenchez votre logique d’authentification à l’URL ACS :
 * Réception : récupérer la Response SAML soumise en POST.
-* Validation : vérifier la signature au niveau configuré (Response et/ou Assertion), puis contrôler issuer, audience, fenêtre de validité, et correlation `InResponseTo` (doit correspondre à l’`ID` AuthnRequest émise côté SP en mode SP-initiated).
+* Validation : vérifier la signature au niveau configuré (Response et/ou Assertion), puis contrôler issuer, audience, fenêtre de validité, et correlation {{InResponseTo}} (doit correspondre à l’{{ID}} AuthnRequest émise côté SP en mode SP-initiated).
 * Extraction : lire le NameID et les attributs depuis l’Assertion, puis appliquer le mapping de la section *Attributs (Legacy → IdP)*.
 * Session : créer la session applicative (et stocker ce qui est nécessaire côté app), puis finaliser la redirection/retour.
 
@@ -199,11 +199,11 @@ h4. Single Logout (SLO) SAML
 * Le SLO permet de synchroniser la déconnexion entre IdP et SP :
 ** une déconnexion initiée par l’utilisateur ou par une appli peut fermer les sessions SSO sur les autres applis fédérées via le même IdP.
 * Dans Entra ID :
-** le SLO est pris en charge, mais nécessite une configuration explicite de la `LogoutURL` côté application Entra ID ;
+** le SLO est pris en charge, mais nécessite une configuration explicite de la {{LogoutURL}} côté application Entra ID ;
 ** le flux SLO Entra ID utilise le binding HTTP-Redirect (GET).
 * Côté SP :
-** exposer un endpoint de déconnexion (`SingleLogoutService`) ;
-** accepter et traiter les messages `LogoutRequest` / `LogoutResponse`.
+** exposer un endpoint de déconnexion ({{SingleLogoutService}}) ;
+** accepter et traiter les messages {{LogoutRequest}} / {{LogoutResponse}}.
 
 Si le SP ne supporte pas le SLO, prévoir un fallback : déconnexion locale (détruire la session applicative et rediriger vers une page d’atterrissage).
 
@@ -273,9 +273,9 @@ Les attributs SAML varient d’une application à l’autre : cette table est à
 * à l’équipe IAM pour configurer les mappings côté Entra ID (qui envoie quoi, sous quel nom) ;
 * au code applicatif pour lire les bons attributs dans l’Assertion (cf. étape *12* et section *4.6*).
 || Description || Attribut Legacy || Attribut SAML (Name / NameFormat) ||
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| (à renseigner) | (à renseigner) | (à renseigner) |
+| (à renseigner) | (à renseigner) | (à renseigner) |
+| (à renseigner) | (à renseigner) | (à renseigner) |
 
 ----
 

@@ -29,7 +29,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 * *F — Valider la prod* : étapes 21 à 22
 
 || Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
-| 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone <n° de dépôt>. Exemple : glab repo clone 7777 | [ ] |
+| 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone {{n° de dépôt}}. Exemple : glab repo clone 7777 | [ ] |
 | 2 | A — Préparer la préprod | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignement. | — | [ ] |
 | 3 | A — Préparer la préprod | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette vérifié : portail accessible via l'URL de test avant raccordement OIDC. | — | [ ] |
 | 4 | A — Préparer la préprod | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation Entra ID Recette. | — | [ ] |
@@ -94,13 +94,13 @@ h3. 4.1 Récupérer les clés publiques (JWKS)
 Ne codez pas les URLs des endpoints en dur : récupérez-les via le document de découverte ({{.well-known/openid-configuration}}) pour rester aligné avec l'IdP.
 
 || Élément || Exemple || Rôle ||
-| *Document de découverte OIDC* | {{https://login.microsoftonline.com/<TENANT_ID>/v2.0/.well-known/openid-configuration}} | Fournit les métadonnées de l'IdP (authorization_endpoint, token_endpoint, jwks_uri, etc.) |
-| *Champ jwks_uri* | ex. {{https://login.microsoftonline.com/<TENANT_ID>/discovery/v2.0/keys}} | Donne l'URL du jeu de clés publiques (JWKS) utilisé pour signer les tokens |
+| *Document de découverte OIDC* | {{https://login.microsoftonline.com/TENANT_ID/v2.0/.well-known/openid-configuration}} | Fournit les métadonnées de l'IdP (authorization_endpoint, token_endpoint, jwks_uri, etc.) |
+| *Champ jwks_uri* | ex. {{https://login.microsoftonline.com/TENANT_ID/discovery/v2.0/keys}} | Donne l'URL du jeu de clés publiques (JWKS) utilisé pour signer les tokens |
 | *Clés publiques (JWKS)* | JSON retourné par {{jwks_uri}} | Contient les clés identifiées par {{kid}} pour vérifier la signature des JWT |
 
 En pratique, le processus de récupération est le suivant :
 
-1. Appeler le document de découverte : {{GET https://login.microsoftonline.com/<TENANT_ID>/v2.0/.well-known/openid-configuration}}.
+1. Appeler le document de découverte : {{GET https://login.microsoftonline.com/TENANT_ID/v2.0/.well-known/openid-configuration}}.
 2. Lire le champ {{jwks_uri}} dans la réponse.
 3. Appeler {{jwks_uri}} en {{GET}} pour télécharger les clés publiques (JWKS).
 4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l’en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
@@ -110,19 +110,19 @@ h3. 4.2 Rediriger l'utilisateur vers l'URL d'autorisation
 L'application envoie l'utilisateur vers l'endpoint d'autorisation de l'IdP via une requête HTTP GET.
 
 {noformat}
-GET https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/authorize?client_id=<CLIENT_ID>&response_type=code&redirect_uri=<REDIRECT_URI>&scope=<SCOPE>&state=<STATE>&nonce=<NONCE>&response_mode=query
+GET https://login.microsoftonline.com/{{TENANT_ID}}/oauth2/v2.0/authorize?client_id={{CLIENT_ID}}&response_type=code&redirect_uri={{REDIRECT_URI}}&scope={{SCOPE}}&state={{STATE}}&nonce={{NONCE}}&response_mode=query
 {noformat}
 
 *Paramètres de la requête d'autorisation*
 
 {noformat}
 - tenant (dans l'URL) : identifiant du tenant Entra ID
-- client_id=<CLIENT_ID>
+- client_id={{CLIENT_ID}}
 - response_type=code
-- redirect_uri=<REDIRECT_URI>
-- scope=<SCOPE>
-- state=<STATE>
-- nonce=<NONCE>
+- redirect_uri={{REDIRECT_URI}}
+- scope={{SCOPE}}
+- state={{STATE}}
+- nonce={{NONCE}}
 - response_mode=query (par défaut pour ce flux)
 {noformat}
 
@@ -139,7 +139,7 @@ Les paramètres scope et client_id ne sont pas renvoyés ; l'application les gè
 
 *Exemple d'URL de callback :*
 {noformat}
-https://redirect.example.com/callback?code=<CODE>&state=<STATE>&session_state=<SESSION_STATE>&iss=https%3A%2F%2Flogin.microsoftonline.com%2F<TENANT_ID>%2Fv2.0
+https://redirect.example.com/callback?code={{CODE}}&state={{STATE}}&session_state={{SESSION_STATE}}&iss=https%3A%2F%2Flogin.microsoftonline.com%2F{{TENANT_ID}}%2Fv2.0
 {noformat}
 
 Voir *4.9 Paramètres OIDC* pour code, state, session_state, iss.
@@ -162,14 +162,14 @@ Ce bloc concerne les *clients confidentiels* (applications avec backend). Les cl
 Pour échanger le code contre les tokens, l'application doit "prouver qui elle est" au token endpoint.
 *Cheat sheet (décision rapide) :* ✅ backend sécurisé → suivez la colonne *client_secret_basic* (recommandé) ; ⚠️ *client_secret_post* uniquement si votre stack ne permet pas d'envoyer correctement l'en-tête {{Authorization}}.
 
-|| Élément || *client_secret_basic* (*RECOMMANDÉ* OAuth 2.0 (RFC 6749 §2.3.1)) || *client_secret_post* (*NON RECOMMANDÉ*) ||
-| Endpoint (commun aux 2 méthodes) | {{POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token}} | idem |
+|| Élément || *client_secret_basic* (*RECOMMANDÉ* OAuth 2.0 (RFC 6749 section 2.3.1)) || *client_secret_post* (*NON RECOMMANDÉ*) ||
+| Endpoint (commun aux 2 méthodes) | {{POST https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/token}} | idem |
 | Quand l'utiliser | Cas nominal : à privilégier si l'IdP et la bibliothèque supportent l'en-tête {{Authorization}}. | Cas dégradé : uniquement si la stack (bibliothèque, proxy, passerelle) ne permet pas d'utiliser correctement l'en-tête {{Authorization}}. |
 | Envoi des identifiants client | {{client_id:client_secret}} encodé en Base64 dans l'en-tête HTTP {{Authorization}}. | {{client_id}} et {{client_secret}} directement dans le corps de la requête POST. |
-| En-tête requis | {{Content-Type: application/x-www-form-urlencoded}} + {{Authorization: Basic <base64(client_id:client_secret)>}} | {{Content-Type: application/x-www-form-urlencoded}} |
-| Paramètres minimaux dans le body | {{grant_type=authorization_code}} + {{code=<CODE>}} + {{redirect_uri=<REDIRECT_URI>}} + {{scope=<SCOPE>}} *(seul {{scope}} est optionnel)* | {{grant_type=authorization_code}} + {{client_id=<CLIENT_ID>}} + {{client_secret=<CLIENT_SECRET>}} + {{code=<CODE>}} + {{redirect_uri=<REDIRECT_URI>}} + {{scope=<SCOPE>}} *(seul {{scope}} est optionnel)* |
+| En-tête requis | {{Content-Type: application/x-www-form-urlencoded}} + {{Authorization: Basic base64(client_id:client_secret)}} | {{Content-Type: application/x-www-form-urlencoded}} |
+| Paramètres minimaux dans le body | {{grant_type=authorization_code}} + {{code=CODE}} + {{redirect_uri=REDIRECT_URI}} + {{scope=SCOPE}} *(seul {{scope}} est optionnel)* | {{grant_type=authorization_code}} + {{client_id=CLIENT_ID}} + {{client_secret=CLIENT_SECRET}} + {{code=CODE}} + {{redirect_uri=REDIRECT_URI}} + {{scope=SCOPE}} *(seul {{scope}} est optionnel)* |
 | Exemple en-têtes | {{Authorization: Basic bXktY2xpZW50LWlkOm15LWNsaWVudC1zZWNyZXQ=}} ; {{Content-Type: application/x-www-form-urlencoded}} | {{Content-Type: application/x-www-form-urlencoded}} |
-| Exemple body | {{grant_type=authorization_code&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile}} | {{grant_type=authorization_code&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&code=<CODE>&redirect_uri=<REDIRECT_URI>&scope=openid profile}} |
+| Exemple body | {{grant_type=authorization_code&code=CODE&redirect_uri=REDIRECT_URI&scope=openid profile}} | {{grant_type=authorization_code&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&code=CODE&redirect_uri=REDIRECT_URI&scope=openid profile}} |
 | Points d'attention | {{redirect_uri}} doit être *exactement* celle utilisée en 4.2. | Même contrainte sur {{redirect_uri}} ; si {{scope}} est omis, ce sont ceux de la requête d'autorisation qui s'appliquent. |
 | Sécurité | Ne jamais exposer le {{client_secret}} côté client (navigateur, mobile) ; backend uniquement. | Même contrainte : secret côté backend uniquement, jamais exposé côté client. |
 
@@ -219,7 +219,7 @@ Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut a
 || Élément || Exemple || Rôle ||
 | Endpoint UserInfo | Valeur de {{userinfo_endpoint}} (discovery OIDC) | Utiliser l’endpoint publié par le document de découverte, plutôt qu’une URL codée en dur. |
 | Méthode | GET | Récupération des informations utilisateur. |
-| Authorization | {{Authorization: Bearer <ACCESS_TOKEN>}} | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
+| Authorization | {{Authorization: Bearer ACCESS_TOKEN}} | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
 
 Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez le *document externe* *4.0 Correspondance des claims OIDC*.
 
@@ -295,7 +295,7 @@ Pour la définition des paramètres communs à plusieurs étapes, se référer a
 | response_type | Indique ce que l'on demande à l'IdP. Pour le flux « code » : code. | 4.2 authorize |
 | response_mode | Méthode de renvoi du code : query, fragment ou form_post. Pour un flux Authorization Code standard, la valeur par défaut est query. | 4.2 authorize |
 | session_state | (Si présent) Identifiant de session côté IdP ; gestion des sessions et single logout. | 4.3 callback |
-| iss | Issuer : identifiant de l'émetteur (ex. {{https://login.microsoftonline.com/<TENANT_ID>/v2.0}}). | 4.3 callback, 4.5 validation ID Token |
+| iss | Issuer : identifiant de l'émetteur (ex. {{https://login.microsoftonline.com/TENANT_ID/v2.0}}). | 4.3 callback, 4.5 validation ID Token |
 
 ----
 
@@ -319,7 +319,7 @@ En gestion privée, les claims proviennent de l'*ID Token* (JWT validé), de *Us
 
 Symfony (PHP) – configuration et récupération des claims après connexion OIDC
 
-Pour Entra ID, l'{{OIDC_ISSUER}} est {{https://login.microsoftonline.com/<TENANT_ID>/v2.0}}.
+Pour Entra ID, l'{{OIDC_ISSUER}} est {{https://login.microsoftonline.com/TENANT_ID/v2.0}}.
 
 {code:php}
 // config/packages/knpu_oauth2_client.yaml (exemple — KnpU OAuth2 Client Bundle)
@@ -346,7 +346,7 @@ TypeScript (Node, express + openid-client)
 const { Issuer, Strategy } = require('openid-client');
 
 // Découverte des endpoints (Discovery)
-const entraIssuer = await Issuer.discover('https://login.microsoftonline.com/<TENANT_ID>/v2.0');
+const entraIssuer = await Issuer.discover('https://login.microsoftonline.com/{{TENANT_ID}}/v2.0');
 const client = new entraIssuer.Client({
   client_id: process.env.OIDC_CLIENT_ID,
   client_secret: process.env.OIDC_CLIENT_SECRET,
@@ -370,10 +370,10 @@ from flask_pyoidc.provider_configuration import ProviderConfiguration, ClientMet
 
 # Configuration IdP
 provider_config = ProviderConfiguration(
-    issuer='https://login.microsoftonline.com/<TENANT_ID>/v2.0',
+    issuer='https://login.microsoftonline.com/{{TENANT_ID}}/v2.0',
     client_metadata=ClientMetadata(
-        client_id='<CLIENT_ID>',
-        client_secret='<CLIENT_SECRET>'
+        client_id='{{CLIENT_ID}}',
+        client_secret='{{CLIENT_SECRET}}'
     )
 )
 
@@ -393,11 +393,11 @@ def index():
 # 2. Rediriger vers /authorize avec code_challenge
 # 3. Échanger le code reçu au callback :
 
-curl -X POST https://login.microsoftonline.com/<TENANT_ID>/oauth2/v2.0/token \
+curl -X POST https://login.microsoftonline.com/{{TENANT_ID}}/oauth2/v2.0/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -H "Authorization: Basic bXktYXBwOnNlY3JldDEyMw==" \
   -d "grant_type=authorization_code" \
-  -d "code=<CODE_RECU>" \
-  -d "redirect_uri=<REDIRECT_URI>" \
-  -d "code_verifier=<CODE_VERIFIER_GENERE_AU_DEBUT>"
+  -d "code={{CODE_RECU}}" \
+  -d "redirect_uri={{REDIRECT_URI}}" \
+  -d "code_verifier={{CODE_VERIFIER_GENERE_AU_DEBUT}}"
 {code}

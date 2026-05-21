@@ -22,14 +22,14 @@ h3. Claims métier (utilisés par l'application)
 
 *Nota bene :* selon la configuration Entra ID du tenant, il est possible de recevoir simultanément *email* et *mail*, ainsi que *preferred_username* et *upn*.
 Ce comportement est normal : ces valeurs sont souvent identiques, mais ce n’est pas garanti.
-Pour éviter les ambiguïtés côté application, définir une règle de priorité explicite (ex. `email` puis `mail` *(fallback de cette valeur)*, et `preferred_username` puis `upn` *(fallback de cette valeur)*).
+Pour éviter les ambiguïtés côté application, définir une règle de priorité explicite (ex. {{email}} puis {{mail}} *(fallback de cette valeur)*, et {{preferred_username}} puis {{upn}} *(fallback de cette valeur)*).
 
 *Interprétation de la colonne "Ancien claim (Legacy)" :* la mention *Legacy non documenté* signifie que la documentation historique ne précise pas ce claim.
 Cela signifie simplement que la documentation n'est pas actualisée ou reste incomplète sur ce point.
 
 h3. Claims de validation technique (token et sécurité)
 
-*À faire absolument :* valider `iss` et `aud` avec les valeurs attendues, vérifier `ver` (`2.0`) ; si l’application est mono-tenant, vérifier aussi `tid` contre le tenant autorisé.
+*À faire absolument :* valider {{iss}} et {{aud}} avec les valeurs attendues, vérifier {{ver}} ({{2.0}}) ; si l’application est mono-tenant, vérifier aussi {{tid}} contre le tenant autorisé.
 
 || Claim || Valeur / type || Exemple || Description ||
 | aud | chaîne ou tableau | 11111111-2222-3333-4444-555555555555 | Audience du jeton (client/app destinataire). À vérifier contre le client_id attendu. |
@@ -53,7 +53,7 @@ Ces contrôles sont valables pour toutes les applications qui valident un ID Tok
 || Élément || Valeur / type || Description ||
 | alg (en-tête JWT) | RS256 | Algorithme de signature attendu. Rejeter un token signé avec un algorithme non attendu. |
 | kid (en-tête JWT) | chaîne | Identifiant de la clé de signature. Permet de sélectionner la bonne clé publique dans le JWKS. |
-| Signature JWS | binaire (encodée) | Signature du token. À vérifier avec la clé publique correspondant au `kid`. |
-| Rotation des clés (rollover) | règle de gestion | Le JWKS peut changer : rafraîchir le cache JWKS si `kid` inconnu et prévoir une stratégie de rechargement périodique. |
+| Signature JWS | binaire (encodée) | Signature du token. À vérifier avec la clé publique correspondant au {{kid}}. |
+| Rotation des clés (rollover) | règle de gestion | Le JWKS peut changer : rafraîchir le cache JWKS si {{kid}} inconnu et prévoir une stratégie de rechargement périodique. |
 
 

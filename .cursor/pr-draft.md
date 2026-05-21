@@ -29,18 +29,27 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ## Auto-collected context
 
 ### Changed files
-- `composer.json`
-- `composer.lock`
+- `.cursor/pr-draft.md`
+- `"docs/0.0_Migration_SSO_-_Synth\303\250se.confluence"`
+- `"docs/1.0_Guide_migration_OIDC_-_Gestion_manag\303\251e.confluence"`
+- `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
+- `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
+- `docs/3.1_Checklist_de_demande_IAM_-_Raccordement_SAML.confluence`
+- `docs/4.0_Correspondance_des_claims_OIDC.confluence`
 
 ### Last commits
+- edf6b60 chore(deps): allow phpunit 13.1.10 and refresh lock file
 - a8a75ef docs(saml-private): align guide with oidc private patterns and fix numbering
 - 04a106f feat(quality): add composer audit scripts and manual audit:fix task
 - 17fdc46 fix(deps): bump symfony and twig to address security advisories
 - 9690c67 docs(oidc-private): align guide with managed patterns and clarify pkce
-- f5eca46 docs(guides): refine oidc managed guide and add cam to glossary
 
 ### Diff summary
- .cursor/pr-draft.md |  22 +-
- composer.json       |   2 +-
- composer.lock       | 562 ++++++++++++++++++++++++++++++++++------------------
- 3 files changed, 369 insertions(+), 217 deletions(-)
+ .cursor/pr-draft.md                                | 15 +++---
+ ...0.0_Migration_SSO_-_Synth\303\250se.confluence" |  8 ++--
+ ...ation_OIDC_-_Gestion_manag\303\251e.confluence" |  6 +--
+ ...ration_OIDC_-_Gestion_priv\303\251e.confluence" | 54 +++++++++++-----------
+ ...ration_SAML_-_Gestion_priv\303\251e.confluence" | 42 ++++++++---------
+ ...t_de_demande_IAM_-_Raccordement_SAML.confluence |  6 +--
+ docs/4.0_Correspondance_des_claims_OIDC.confluence |  8 ++--
+ 7 files changed, 70 insertions(+), 69 deletions(-)

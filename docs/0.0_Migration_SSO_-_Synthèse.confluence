@@ -15,7 +15,7 @@ h2. Mode opératoire
 
 ----
 
-h2. 1. Pré‑requis
+h2. 1. Pré-requis
 
 Règle simple : une ligne est considérée comme acquise uniquement quand la date est renseignée.
 Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1 à 3.
@@ -45,7 +45,7 @@ h3. Tableau synthétique
 
 h3. Poursuite du suivi
 
-Le suivi détaillé (étapes, acteurs, tableaux, schémas de flux, pièges courants) se fait dans le guide détaillé choisi via le tableau de routage ci‑dessous (section 3).
+Le suivi détaillé (étapes, acteurs, tableaux, schémas de flux, pièges courants) se fait dans le guide détaillé choisi via le tableau de routage ci-dessous (section 3).
 
 ----
 
@@ -108,8 +108,8 @@ h3. 4.4 Acteurs, systèmes & plateformes internes
 h3. 4.5 Conventions documentaires & process
 
 || Terme || Définition ||
-| *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. `<CLIENT_ID>`, `<CODE>`, `<REDIRECT_URI>`). |
-| *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent `main`). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
+| *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. {{{{CLIENT_ID}}}}, {{{{CODE}}}}, {{{{REDIRECT_URI}}}}). |
+| *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent {{main}}). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
 
 ----
 
