@@ -1,0 +1,33 @@
+h1. 5.5 Template guide 2 - étape Fin d'intervention technique
+
+
+Objet : [Migration SSO] Validation MR + PV recette + date de mise en production – [Nom application]
+
+Bonjour,
+
+Dans le cadre de la migration SSO, nous avons réalisé les opérations techniques sur l'application. Aucune autre modification côté application n'est prévue de notre part.
+
+Un guide technique est disponible dans le dépôt : *migration.md*. Pour la phase de recette, les sections utiles sont :
+- § 1.5 — comment démarrer l'environnement et vérifier que tout répond (5 minutes)
+- § 9 — scénarios de test S1 à S5 avec critères pass/fail et modèle de PV à remplir
+
+Nous vous remercions par avance de :
+- valider la Merge Request [[lien MR]] ;
+- configurer le fichier de variables d'environnement API, qui n'est pas versionné sur GitLab :
+  * dupliquer *environment.example.ts* en *environment.ts* dans le même dossier
+  * remplacer les champs *REPLACE_WITH_...* par les valeurs de votre environnement cible : *tenantId*, *clientId* (fournis par l'équipe IAM) et l'URL *JWKS/cert*
+  * avant déploiement, passer *localhost: false* et *validateJwt: true*
+- tester l'application et rédiger le PV de recette ;
+- définir une date de mise en production avec le CAM Eagles ;
+- nous communiquer la date retenue.
+
+Si vous avez des questions ou besoin d'assistance, nous restons à votre disposition.
+
+Très cordialement,
+
+[Prénom NOM]
+Équipe raccordement
+DSI – Pôle Architecture & Exploitation
+Dpt Service aux Applications
+Equipe Management des Services
+
