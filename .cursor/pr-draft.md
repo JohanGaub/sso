@@ -32,16 +32,20 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `.cursor/pr-draft.md`
 - `composer.json`
 - `composer.lock`
+- `config/reference.php`
+- `"docs/5.2_template_guide_1_et_2_-_\303\251tape_fin_intervention_technique.confluence"`
+- `"docs/5.5_template_guide_2_-_\303\251tape_fin_intervention_technique.confluence"`
 
 ### Last commits
+- d80e4ac chore(deps): bump rector to ^2.4.4
 - 029956e fix(docs): escape asterisk in confluence wiki markup to fix import errors
 - 64ce7ee docs(confluence): fix wiki markup for confluence import
 - edf6b60 chore(deps): allow phpunit 13.1.10 and refresh lock file
 - a8a75ef docs(saml-private): align guide with oidc private patterns and fix numbering
-- 04a106f feat(quality): add composer audit scripts and manual audit:fix task
 
 ### Diff summary
- .cursor/pr-draft.md | 14 +++-----------
- composer.json       |  2 +-
- composer.lock       | 40 ++++++++++++++++++++--------------------
- 3 files changed, 24 insertions(+), 32 deletions(-)
+ .cursor/pr-draft.md  |   7 +-
+ composer.json        |  36 +-
+ composer.lock        | 973 +++++++++++++++++++++++++++++----------------------
+ config/reference.php |  39 ++-
+ 4 files changed, 601 insertions(+), 454 deletions(-)
