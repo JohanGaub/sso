@@ -1,27 +1,82 @@
 h1. 5.5 Template guide 2 - étape Fin d'intervention technique
 
+h2. Template – Fin d'intervention de migration SSO
 
-Objet : [Migration SSO] Validation MR + PV recette + date de mise en production – [Nom application]
+*Objet :* [Migration SSO] Validation recette et préparation de mise en production – Application <APPLICATION> (INS : <INS>)
 
-Bonjour,
+Bonjour <RESPONSABLE_APPLICATIF>,
 
-Dans le cadre de la migration SSO, nous avons réalisé les opérations techniques sur l'application. Aucune autre modification côté application n'est prévue de notre part.
+Dans le cadre de la migration SSO Gardian vers Microsoft Entra ID, les opérations techniques prévues ont été réalisées.
 
-Un guide technique est disponible dans le dépôt : *migration.md*. Pour la phase de recette, les sections utiles sont :
-* § 1.5 — comment démarrer l'environnement et vérifier que tout répond (5 minutes)
-* § 9 — scénarios de test S1 à S5 avec critères pass/fail et modèle de PV à remplir
+La migration est désormais :
+* implémentée ;
+* testée ;
+* documentée ;
+* déployée sur l'environnement de recette.
 
-Nous vous remercions par avance de :
-* valider la Merge Request [[lien MR]] ;
-* configurer le fichier de variables d'environnement API, qui n'est pas versionné sur GitLab :
-** dupliquer *environment.example.ts* en *environment.ts* dans le même dossier
-** remplacer les champs *REPLACE_WITH_...* par les valeurs de votre environnement cible : *tenantId*, *clientId* (fournis par l'équipe IAM) et l'URL *JWKS/cert*
-** avant déploiement, passer *localhost: false* et *validateJwt: true*
-* tester l'application et rédiger le PV de recette ;
-* définir une date de mise en production avec le CAM Eagles ;
-* nous communiquer la date retenue.
+La documentation de référence est disponible dans le dépôt Git : *migration.md*
 
-Si vous avez des questions ou besoin d'assistance, nous restons à votre disposition.
+h2. Actions attendues
+
+Je t'invite à présent à :
+* tester l'application sur l'environnement de recette ;
+* réaliser les validations fonctionnelles et métier nécessaires ;
+* valider la Merge Request ouverte vers la branche principale [[lien MR]] ;
+* définir la date de mise en production avec le CAM Eagles ;
+* me communiquer les dates retenues pour la bascule.
+
+Les développements applicatifs peuvent se poursuivre normalement sur la branche principale. La migration SSO a été réalisée de manière indépendante et ne bloque pas les travaux de développement en cours.
+
+h2. Points techniques spécifiques à l'application
+
+_(Section à adapter selon l'application concernée)_
+
+Exemples :
+* ajout ou actualisation de variables d'environnement ;
+* création ou actualisation de données de référence ;
+* configuration IAM ;
+* prérequis techniques particuliers ;
+* opérations spécifiques de base de données ;
+* configuration MyConsole Cloud.
+
+*Exemple FLOÉ*
+* ajouter les variables d'environnement Microsoft Entra ID ;
+* insérer ou actualiser les données de référence nécessaires dans la table {code}entities{code}.
+
+*Exemple Dis-MOA*
+* créer le fichier *environment.ts* à partir de *environment.example.ts* ;
+* renseigner les paramètres IAM ({code}tenantId{code}, {code}clientId{code}, JWKS) ;
+* activer les paramètres de validation JWT avant déploiement.
+
+h2. Documentation recommandée
+
+Les sections les plus utiles du document de migration sont :
+* §1 : synthèse de la migration ;
+* §4 : résumé des impacts ;
+* §5 : guide rapide de validation ;
+* §9 : procédure de test détaillée ;
+* §12 : troubleshooting.
+
+h2. Validations déjà réalisées
+
+_(Section à adapter selon l'application concernée)_
+
+Exemples :
+* Authentication Microsoft Entra ID ;
+* Flux OIDC ;
+* PKCE ;
+* Callback ;
+* Création de session ;
+* Mapping des claims ;
+* Contrôles d'habilitation ;
+* Rattachement aux données métier ;
+* Accès complet à l'application.
+
+h2. Clôture de l'intervention
+
+Sauf anomalie remontée lors de la recette ou lors de la mise en production, mon intervention sur ce chantier est désormais terminée.
+
+Je reste naturellement disponible en cas de besoin durant les phases de validation et de déploiement.
 
 Très cordialement,
 
@@ -30,4 +85,3 @@ Très cordialement,
 DSI – Pôle Architecture & Exploitation
 Dpt Service aux Applications
 Equipe Management des Services
-
