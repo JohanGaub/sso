@@ -1,6 +1,14 @@
-h1. 6.1 Guide de déploiement hors production (dev / recette)
+h1. 6.1 Guide de déploiement hors production (DEV / recette)
 
+Ce guide décrit un déploiement *manuel* sur instance EC2 (environnements DEV ou RECETTE). Il s'adresse principalement à l'équipe de raccordement lorsque l'équipe applicative ne dispose pas de développeurs pour réaliser cette étape.
 
+Il s'appuie sur un exemple d'application conteneurisée (Docker Compose) : *adapter les commandes, noms de services et chemins à votre projet*.
+
+*Index section 6* : *6. Guide de déploiement*.
+
+----
+
+h2. 1. Préparation de l'infrastructure
 
 h3. 1.1 Consultation du schéma d'architecture
 
@@ -134,10 +142,11 @@ Identifier le répertoire applicatif.
 Exemple :
 
 {code:bash}
-cd /opt/web_app
+cd {{REPERTOIRE_APPLI}}
 {code}
 
 Vérifier au préalable l'espace disque disponible avec ncdu :
+
 {code:bash}
 ncdu /
 {code}
@@ -145,7 +154,7 @@ ncdu /
 Créer une sauvegarde :
 
 {code:bash}
-cp -R web_app web_app_$(date +%Y%m%d)
+cp -R {{NOM_APPLI}} {{NOM_APPLI}}_$(date +%Y%m%d)
 {code}
 
 {warning}
@@ -187,7 +196,7 @@ docker-compose.yml
 Se positionner ensuite dans le répertoire applicatif :
 
 {code:bash}
-cd web_app
+cd {{NOM_APPLI}}
 {code}
 
 ----
@@ -218,22 +227,29 @@ Vérifier notamment :
 h2. 7. Construction de l'application
 
 Prérequis : être positionné dans le répertoire contenant le fichier Docker Compose concerné.
-Construction de l'image (adapter le nom du service, ex. {{SERVICE_APP}} = app) :
+
+Construction de l'image (adapter le nom du service, ex. {{SERVICE_APP}}) :
 
 {code:bash}
 docker compose build {{SERVICE_APP}}
 {code}
 
-Installation des dépendances :
+Installation des dépendances (exemples selon la stack) :
 
+* *Node / pnpm* :
 {code:bash}
 docker compose run --rm {{SERVICE_APP}} pnpm install --frozen-lockfile
 {code}
 
-Génération Prisma :
+* *PHP / Composer (Symfony)* :
+{code:bash}
+docker compose run --rm {{SERVICE_APP}} composer install --no-dev --optimize-autoloader
+{code}
+
+Migrations ou génération (si applicable — ex. Prisma, Doctrine) :
 
 {code:bash}
-docker compose run --rm {{SERVICE_APP}} pnpm --filter floe-backend exec prisma generate
+docker compose run --rm {{SERVICE_APP}} {{COMMANDE_MIGRATIONS}}
 {code}
 
 ----
@@ -252,13 +268,11 @@ Ou selon la configuration du projet :
 docker compose -f compose.dev.yml up -d
 {code}
 
-Vérifier le démarrage des services :
+Vérifier le démarrage des services attendus par *votre* fichier Compose, par exemple :
 
-* application ;
-* PostgreSQL ;
-* MinIO ;
-* Mailpit ;
-* composants complémentaires éventuels.
+* application ({{SERVICE_APP}}) ;
+* base de données ({{SERVICE_DB}} — PostgreSQL ou autre) ;
+* services auxiliaires (cache, mail de dev, stockage objet, etc.).
 
 ----
 
@@ -273,13 +287,13 @@ docker ps
 Consulter les logs applicatifs :
 
 {code:bash}
-docker compose logs -f app
+docker compose logs -f {{SERVICE_APP}}
 {code}
 
-Consulter les logs PostgreSQL :
+Consulter les logs base de données :
 
 {code:bash}
-docker compose logs -f postgres
+docker compose logs -f {{SERVICE_DB}}
 {code}
 
 Contrôles à réaliser :
@@ -305,13 +319,13 @@ ncdu /
 h3. Consultation des logs applicatifs
 
 {code:bash}
-docker compose logs -f app
+docker compose logs -f {{SERVICE_APP}}
 {code}
 
-h3. Consultation des logs PostgreSQL
+h3. Consultation des logs base de données
 
 {code:bash}
-docker compose logs -f postgres
+docker compose logs -f {{SERVICE_DB}}
 {code}
 
 h3. Ressources statiques
@@ -341,11 +355,11 @@ Arrêt de l'application :
 docker compose down
 {code}
 
-Restauration de la sauvegarde :
+Restauration de la sauvegarde (remplacer {{DATE_SAUVEGARDE}} par le suffixe créé à l'étape 4, format AAAAMMJJ) :
 
 {code:bash}
-rm -rf web_app
-mv web_app_YYYYMMDD web_app
+rm -rf {{NOM_APPLI}}
+mv {{NOM_APPLI}}_{{DATE_SAUVEGARDE}} {{NOM_APPLI}}
 {code}
 
 Redémarrage :
@@ -369,5 +383,4 @@ h2. 13. Checklist de validation
 |Services Docker démarrés|☐|
 |Tests applicatifs réalisés|☐|
 |Validation recette effectuée|☐|
-
 
