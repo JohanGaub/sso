@@ -1,0 +1,373 @@
+h1. 6.1 Guide de déploiement hors production (dev / recette)
+
+
+
+h3. 1.1 Consultation du schéma d'architecture
+
+Accéder à :
+
+{code}
+[Archifactory|https://archifactory.enedis.fr]
+{code}
+
+* Rechercher l'application à l'aide de son identifiant INS.
+* Cliquer sur *Architecture*.
+* Cliquer sur *Schéma d'architecture*.
+
+Identifier :
+
+* les composants frontend ;
+* les composants backend ;
+* les bases de données ;
+* les CDN ;
+* les load balancers ;
+* les firewalls ;
+* le mode d'hébergement :
+** EC2 ;
+** VM ;
+** conteneur ;
+** partition cloud ;
+** hébergement mutualisé ;
+** hébergement dédié.
+
+h3. 1.2 Identification des instances
+
+Accéder à :
+
+{code}
+[Inventaire|https://inventaire.enedis.fr]
+{code}
+
+Navigation :
+
+* Applications
+* Filtrer
+* INS
+
+Renseigner l'identifiant INS de l'application.
+
+Puis :
+
+* Loupe
+* Données techniques
+* Cloud
+* Elastic Compute Cloud (EC2)
+
+Filtrer l'environnement souhaité :
+
+{code}
+DEV
+ou
+RECETTE
+{code}
+
+Identifier :
+
+* les instances frontend ;
+* les instances backend ;
+* les instances de base de données.
+
+----
+
+h2. 2. Démarrage des instances
+
+Accéder à :
+
+{code}
+[Console Web|https://console.web-enedis.fr]
+{code}
+
+Navigation :
+
+* Ressources
+
+Appliquer les filtres :
+
+{code}
+ENV = DEV ou RECETTE
+API = EC2
+{code}
+
+Vérifier que les instances nécessaires sont démarrées.
+
+Si nécessaire :
+
+* démarrer les instances ;
+* attendre qu'elles soient accessibles.
+
+----
+
+h2. 3. Connexion au serveur applicatif
+
+Depuis *console.web-enedis.fr* :
+
+* sélectionner l'instance ;
+* cliquer sur l'engrenage ;
+* sélectionner *Shell web*.
+
+Passage en administrateur :
+
+{code:bash}
+sudo su -
+{code}
+
+Vérifier :
+
+{code:bash}
+whoami
+{code}
+
+Résultat attendu :
+
+{code}
+root
+{code}
+
+----
+
+h2. 4. Sauvegarde préalable
+
+Avant toute modification :
+
+Identifier le répertoire applicatif.
+
+Exemple :
+
+{code:bash}
+cd /opt/web_app
+{code}
+
+Vérifier au préalable l'espace disque disponible avec ncdu :
+{code:bash}
+ncdu /
+{code}
+
+Créer une sauvegarde :
+
+{code:bash}
+cp -R web_app web_app_$(date +%Y%m%d)
+{code}
+
+{warning}
+Toujours conserver une copie de l'application avant déploiement afin de faciliter un éventuel rollback.
+{warning}
+
+----
+
+h2. 5. Localisation de la configuration Docker
+
+Installation d'outils utiles (si nécessaire) :
+
+{code:bash}
+dnf install -y plocate ncdu vim
+updatedb
+{code}
+
+Recherche des fichiers Compose :
+
+{code:bash}
+locate compose
+{code}
+
+Objectif :
+
+* identifier les fichiers Docker Compose ;
+* déterminer le répertoire racine de l'application ;
+* identifier les variantes d'environnement.
+
+Exemples :
+
+{code}
+compose.yml
+compose.dev.yml
+compose.recette.yml
+docker-compose.yml
+{code}
+
+Se positionner ensuite dans le répertoire applicatif :
+
+{code:bash}
+cd web_app
+{code}
+
+----
+
+h2. 6. Configuration de l'environnement
+
+Créer le fichier de configuration :
+
+{code:bash}
+cp .env.example .env
+{code}
+
+Éditer :
+
+{code:bash}
+vim .env
+{code}
+
+Vérifier notamment :
+
+* la configuration OIDC ;
+* les secrets ;
+* les URL ;
+* les paramètres environnementaux.
+
+----
+
+h2. 7. Construction de l'application
+
+Prérequis : être positionné dans le répertoire contenant le fichier Docker Compose concerné.
+Construction de l'image (adapter le nom du service, ex. {{SERVICE_APP}} = app) :
+
+{code:bash}
+docker compose build {{SERVICE_APP}}
+{code}
+
+Installation des dépendances :
+
+{code:bash}
+docker compose run --rm {{SERVICE_APP}} pnpm install --frozen-lockfile
+{code}
+
+Génération Prisma :
+
+{code:bash}
+docker compose run --rm {{SERVICE_APP}} pnpm --filter floe-backend exec prisma generate
+{code}
+
+----
+
+h2. 8. Démarrage des services
+
+Démarrage standard :
+
+{code:bash}
+docker compose up -d
+{code}
+
+Ou selon la configuration du projet :
+
+{code:bash}
+docker compose -f compose.dev.yml up -d
+{code}
+
+Vérifier le démarrage des services :
+
+* application ;
+* PostgreSQL ;
+* MinIO ;
+* Mailpit ;
+* composants complémentaires éventuels.
+
+----
+
+h2. 9. Vérifications après déploiement
+
+Vérifier les conteneurs actifs :
+
+{code:bash}
+docker ps
+{code}
+
+Consulter les logs applicatifs :
+
+{code:bash}
+docker compose logs -f app
+{code}
+
+Consulter les logs PostgreSQL :
+
+{code:bash}
+docker compose logs -f postgres
+{code}
+
+Contrôles à réaliser :
+
+* application accessible ;
+* authentification fonctionnelle ;
+* pages principales accessibles ;
+* absence d'erreurs critiques dans les logs ;
+* absence de boucle de redirection ;
+* accès à une page protégée nécessitant une authentification ;
+* absence d'erreur 500.
+
+----
+
+h2. 10. Dépannage
+
+h3. Analyse de l'espace disque
+
+{code:bash}
+ncdu /
+{code}
+
+h3. Consultation des logs applicatifs
+
+{code:bash}
+docker compose logs -f app
+{code}
+
+h3. Consultation des logs PostgreSQL
+
+{code:bash}
+docker compose logs -f postgres
+{code}
+
+h3. Ressources statiques
+
+Si l'application utilise un CDN :
+
+* vérifier la propagation des ressources statiques ;
+* invalider le cache CDN si nécessaire.
+
+----
+h2. 11. Critères de succès du déploiement
+
+Le déploiement peut être considéré comme réussi lorsque :
+
+* les conteneurs sont démarrés ;
+* l'application est accessible ;
+* les logs ne présentent aucune erreur bloquante ;
+* l'authentification fonctionne ;
+* les tests de recette prévus ont été réalisés ;
+* le responsable applicatif a confirmé le fonctionnement attendu.
+
+h2. 12. Rollback
+
+Arrêt de l'application :
+
+{code:bash}
+docker compose down
+{code}
+
+Restauration de la sauvegarde :
+
+{code:bash}
+rm -rf web_app
+mv web_app_YYYYMMDD web_app
+{code}
+
+Redémarrage :
+
+{code:bash}
+docker compose up -d
+{code}
+
+Vérifier le fonctionnement de l'application et confirmer le retour à un état nominal.
+
+----
+
+h2. 13. Checklist de validation
+
+||Contrôle||Statut||
+|Application accessible|☐|
+|Authentification fonctionnelle|☐|
+|Pages principales accessibles|☐|
+|Aucune erreur critique dans les logs|☐|
+|Base de données accessible|☐|
+|Services Docker démarrés|☐|
+|Tests applicatifs réalisés|☐|
+|Validation recette effectuée|☐|
+
+
