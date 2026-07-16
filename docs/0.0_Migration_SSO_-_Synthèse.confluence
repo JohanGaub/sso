@@ -13,6 +13,15 @@ h2. Mode opératoire
 # Identifier votre guide (tableau de routage, section 3).
 # Dérouler le mode opératoire du guide.
 
+h2. Les 3 environnements (référentiel)
+
+Aligné sur la *fiche de renseignement SSO* (3 champs d'URL distincts) et sur la logique des guides *1* à *3* :
+
+|| Environnement || Exemples internes || Déploiement typique || Où dans les guides ||
+| *Hors production* | DEV, RECETTE (Console Web AWS) | *Manuel* — MyConsole Cloud + Console AWS — *6.1* | Phases *A*, *B*, *C*, *D* |
+| *Pré-production* | Préprod | *Pipeline GitLab* | Phase *E* |
+| *Production* | Prod | *Pipeline GitLab* | Phase *F* |
+
 ----
 
 h2. 1. Pré-requis
@@ -39,9 +48,15 @@ h3. Tableau synthétique
 | 4 | Fournir ces informations à l'équipe IAM ou à l'équipe Gestion managée, selon l'organisation | Équipe Gestion managée ou Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur fiche de renseignement. |
 | 5 | Configurer Entra ID avec ces informations | Équipe IAM | Accès à la mire d'authentification + à l'application après authentification. |
 | 6 | Ajuster le code de l'application : claims (OIDC) / attributs (SAML), URLs, clients, certificats. | Équipe applicative et/ou équipe raccordement | Configuration applicative réalisée. |
-| 7 | Réaliser la recette fonctionnelle en préprod/dev : exécuter les scénarios de connexion / déconnexion / erreurs et produire un PV | Équipe applicative | PV de recette fonctionnelle préprod/dev validé. |
-| 8 | Planifier la mise en production | Équipe applicative et équipe Eagles | Date planifiée dans l'agenda. |
-| 9 | Réaliser la recette fonctionnelle en production : rejouer le socle de scénarios et produire un PV | Équipe applicative | PV de recette fonctionnelle production validé. |
+| 7 | Planifier la mise en *hors production* (dev / recette) | Équipe applicative et CAM Eagles | Date de déploiement hors production planifiée. |
+| 8 | Déployer sur l'environnement *hors production* | Équipe applicative et/ou équipe raccordement | Application déployée en hors production ; URL accessible. |
+| 9 | Réaliser la recette fonctionnelle en *hors production* : scénarios connexion / déconnexion / erreurs + PV | Équipe applicative | PV de recette hors production validé et transmis au CAM Eagles. |
+| 10 | Planifier la mise en *pré-production* | Équipe applicative et CAM Eagles | Date de déploiement pré-production planifiée. |
+| 11 | Déployer sur l'environnement *pré-production* (pipeline GitLab) | Équipe applicative et/ou équipe raccordement | Application déployée en pré-production. |
+| 12 | Réaliser la recette fonctionnelle en *pré-production* : rejouer le socle de scénarios + PV | Équipe applicative | PV de recette pré-production validé. |
+| 13 | Planifier la mise en *production* | Équipe applicative et CAM Eagles | Date de déploiement production planifiée et communiquée. |
+| 14 | Déployer sur l'environnement *production* (pipeline GitLab) | Équipe applicative et/ou équipe raccordement | Application déployée en production. |
+| 15 | Réaliser la recette fonctionnelle en *production* : rejouer le socle de scénarios + PV | Équipe applicative | PV de recette production validé et transmis au CAM Eagles. |
 
 h3. Poursuite du suivi
 
