@@ -2,7 +2,7 @@ h1. 5.5 Template guide 2 - étape Fin d'intervention technique
 
 h2. Template – Fin d'intervention de migration SSO
 
-*Objet :* [Migration SSO] Validation recette et préparation de mise en production – Application <APPLICATION> (INS : <INS>)
+*Objet :* [Migration SSO] Validation recette et préparation de mise en pré-production et/ou en production – Application <APPLICATION> (INS : <INS>)
 
 Bonjour <RESPONSABLE_APPLICATIF>,
 
@@ -22,7 +22,7 @@ Je t'invite à présent à :
 * tester l'application sur l'environnement de recette ;
 * réaliser les validations fonctionnelles et métier nécessaires ;
 * valider la Merge Request ouverte vers la branche principale [[lien MR]] ;
-* définir la date de mise en production avec le CAM Eagles ;
+* définir les dates de mise en pré-production et en production avec le CAM Eagles ;
 * me communiquer les dates retenues pour la bascule.
 
 Les développements applicatifs peuvent se poursuivre normalement sur la branche principale. La migration SSO a été réalisée de manière indépendante et ne bloque pas les travaux de développement en cours.
@@ -74,7 +74,7 @@ Exemples :
 
 h2. Clôture de l'intervention
 
-Sauf anomalie remontée lors de la recette ou lors de la mise en production, mon intervention sur ce chantier est désormais terminée.
+Sauf anomalie remontée lors de la recette ou lors de la mise en pré-production et en production, mon intervention sur ce chantier est désormais terminée.
 
 Je reste naturellement disponible en cas de besoin durant les phases de validation et de déploiement.
 

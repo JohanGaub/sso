@@ -32,9 +32,9 @@ h2. Les 3 environnements (référentiel)
 Aligné sur la *fiche de renseignement SSO* (3 champs d'URL distincts) et sur la logique des guides *1* à *3* :
 
 || Environnement || Exemples internes || Déploiement typique || Où dans les guides ||
-| *Hors production* | DEV, RECETTE (Console Web AWS) | *Manuel* — MyConsole Cloud + Console AWS — *6.1* | Phases *A*, *B*, *C*, *D* |
-| *Pré-production* | Préprod | *Pipeline GitLab* | Phase *E* |
-| *Production* | Prod | *Pipeline GitLab* | Phase *F* |
+| *Hors production* | DEV, RECETTE (Console Web AWS) | *Manuel* — MyConsole Cloud + Console AWS — *6.1* | Phases *A*→*D* (Préparer → Basculer) |
+| *Pré-production* | Préprod | *Pipeline GitLab* | Phase *E* (Raccorder SSO et basculer) |
+| *Production* | Prod | *Pipeline GitLab* | Phase *F* (Raccorder SSO et basculer) |
 
 ----
 

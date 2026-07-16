@@ -1,10 +1,16 @@
-h1. 6.1 Guide de déploiement hors production (DEV / recette)
+h1. 6.1 Déploiement hors production (recette / dev)
 
-Ce guide décrit un déploiement *manuel* sur instance EC2 (environnements DEV ou RECETTE). Il s'adresse principalement à l'équipe de raccordement lorsque l'équipe applicative ne dispose pas de développeurs pour réaliser cette étape.
+Ce guide couvre *uniquement* l'environnement *hors production* (filtres Console Web : DEV ou RECETTE). Il n'y a *pas* de pipeline GitLab à cette étape : déploiement *manuel* sur instances EC2 via MyConsole Cloud et Console Web AWS.
+
+Il complète la phase *D* des guides de migration *1*, *2* ou *3*.
+
+*Prérequis* (phase *A* du guide migration) : accès MyConsole Cloud, accès Console Web AWS, et — si applicable — compte utilisateur applicatif pour vérifier l'affichage des claims ou attributs SSO.
 
 Il s'appuie sur un exemple d'application conteneurisée (Docker Compose) : *adapter les commandes, noms de services et chemins à votre projet*.
 
-*Index section 6* : *6. Guide de déploiement*.
+*Pré-production* (phase *E*) et *Production* (phase *F*) : pipeline GitLab — voir les guides de migration.
+
+*Index* : *6. Guide de déploiement*.
 
 ----
 
@@ -137,24 +143,32 @@ h2. 4. Sauvegarde préalable
 
 Avant toute modification :
 
-Identifier le répertoire applicatif.
+Identifier le répertoire applicatif. Les applications sont généralement dans :
 
-Exemple :
-
-{code:bash}
-cd {{REPERTOIRE_APPLI}}
+{code}
+/opt/monapp
+/srv/monapp
+/home/deploy/monapp
 {code}
 
-Vérifier au préalable l'espace disque disponible avec ncdu :
+Se positionner dans le répertoire parent :
+
+{code:bash}
+cd /opt
+# ou /srv, /home/deploy — adapter selon le projet
+{code}
+
+Vérifier l'espace disque disponible :
 
 {code:bash}
 ncdu /
 {code}
 
-Créer une sauvegarde :
+Créer une sauvegarde horodatée :
 
 {code:bash}
-cp -R {{NOM_APPLI}} {{NOM_APPLI}}_$(date +%Y%m%d)
+cp -R monapp monapp_$(date +%Y%m%d)
+# Résultat ex. : monapp_20250716
 {code}
 
 {warning}
@@ -178,25 +192,24 @@ Recherche des fichiers Compose :
 locate compose
 {code}
 
-Objectif :
-
-* identifier les fichiers Docker Compose ;
-* déterminer le répertoire racine de l'application ;
-* identifier les variantes d'environnement.
-
-Exemples :
+Exemple de résultat typique :
 
 {code}
-compose.yml
-compose.dev.yml
-compose.recette.yml
-docker-compose.yml
+/opt/monapp/compose.yml
+/opt/monapp/compose.dev.yml
+/opt/monapp/compose.recette.yml
+/srv/monapp/docker-compose.yml
 {code}
 
-Se positionner ensuite dans le répertoire applicatif :
+Identifier :
+* le répertoire racine de l'application ;
+* la variante de fichier Compose correspondant à l'environnement cible (dev, recette).
+
+Se positionner dans le répertoire applicatif :
 
 {code:bash}
-cd {{NOM_APPLI}}
+cd /opt/monapp
+# adapter selon le résultat de locate
 {code}
 
 ----
@@ -215,12 +228,27 @@ cp .env.example .env
 vim .env
 {code}
 
-Vérifier notamment :
+Variables SSO à vérifier / renseigner selon le protocole :
 
-* la configuration OIDC ;
-* les secrets ;
-* les URL ;
-* les paramètres environnementaux.
+*OIDC :*
+{code}
+OIDC_CLIENT_ID=<client_id_fourni_par_IAM>
+OIDC_CLIENT_SECRET=<secret_fourni_par_IAM>
+OIDC_DISCOVERY_URL=https://login.microsoftonline.com/<tenant_id>/v2.0/.well-known/openid-configuration
+APP_BASE_URL=https://monapp.recette.enedis.fr
+{code}
+
+*SAML :*
+{code}
+SAML_IDP_SSO_URL=<sso_url_fourni_par_IAM_dans_les_métadonnées_IdP>
+SAML_SP_ENTITY_ID=https://monapp.recette.enedis.fr
+SAML_ACS_URL=https://monapp.recette.enedis.fr/saml/acs
+{code}
+
+Vérifier également :
+
+* la configuration MyConsole Cloud (si utilisée par l'application) ;
+* les autres secrets et paramètres environnementaux spécifiques au projet.
 
 ----
 
@@ -228,28 +256,33 @@ h2. 7. Construction de l'application
 
 Prérequis : être positionné dans le répertoire contenant le fichier Docker Compose concerné.
 
-Construction de l'image (adapter le nom du service, ex. {{SERVICE_APP}}) :
+Construction de l'image. Le nom du service est celui déclaré dans le fichier Compose (ex. `app`, `web`, `api`, `frontend`, `backend`) :
 
 {code:bash}
-docker compose build {{SERVICE_APP}}
+docker compose build app
+# adapter "app" au nom réel du service dans votre compose.yml
 {code}
 
 Installation des dépendances (exemples selon la stack) :
 
 * *Node / pnpm* :
 {code:bash}
-docker compose run --rm {{SERVICE_APP}} pnpm install --frozen-lockfile
+docker compose run --rm app pnpm install --frozen-lockfile
 {code}
 
 * *PHP / Composer (Symfony)* :
 {code:bash}
-docker compose run --rm {{SERVICE_APP}} composer install --no-dev --optimize-autoloader
+docker compose run --rm app composer install --no-dev --optimize-autoloader
 {code}
 
-Migrations ou génération (si applicable — ex. Prisma, Doctrine) :
+Migrations ou génération d'assets (si applicable) :
 
 {code:bash}
-docker compose run --rm {{SERVICE_APP}} {{COMMANDE_MIGRATIONS}}
+# Doctrine (Symfony)
+docker compose run --rm app php bin/console doctrine:migrations:migrate --no-interaction
+
+# Prisma (Node)
+docker compose run --rm app npx prisma migrate deploy
 {code}
 
 ----
@@ -262,17 +295,21 @@ Démarrage standard :
 docker compose up -d
 {code}
 
-Ou selon la configuration du projet :
+Ou avec un fichier Compose d'environnement spécifique :
 
 {code:bash}
 docker compose -f compose.dev.yml up -d
 {code}
 
-Vérifier le démarrage des services attendus par *votre* fichier Compose, par exemple :
+Vérifier que les services déclarés dans votre fichier Compose sont bien démarrés, par exemple :
 
-* application ({{SERVICE_APP}}) ;
-* base de données ({{SERVICE_DB}} — PostgreSQL ou autre) ;
-* services auxiliaires (cache, mail de dev, stockage objet, etc.).
+{code:bash}
+docker ps
+# Résultat attendu (noms à adapter) :
+# monapp-app-1        Up 2 minutes
+# monapp-db-1         Up 2 minutes
+# monapp-redis-1      Up 2 minutes
+{code}
 
 ----
 
@@ -284,16 +321,16 @@ Vérifier les conteneurs actifs :
 docker ps
 {code}
 
-Consulter les logs applicatifs :
+Consulter les logs du service applicatif (adapter le nom : `app`, `web`, `api`…) :
 
 {code:bash}
-docker compose logs -f {{SERVICE_APP}}
+docker compose logs -f app
 {code}
 
-Consulter les logs base de données :
+Consulter les logs de la base de données (adapter le nom : `db`, `postgres`, `mysql`…) :
 
 {code:bash}
-docker compose logs -f {{SERVICE_DB}}
+docker compose logs -f db
 {code}
 
 Contrôles à réaliser :
@@ -319,13 +356,15 @@ ncdu /
 h3. Consultation des logs applicatifs
 
 {code:bash}
-docker compose logs -f {{SERVICE_APP}}
+docker compose logs -f app
+# adapter "app" au nom réel du service
 {code}
 
 h3. Consultation des logs base de données
 
 {code:bash}
-docker compose logs -f {{SERVICE_DB}}
+docker compose logs -f db
+# adapter "db" au nom réel du service (postgres, mysql…)
 {code}
 
 h3. Ressources statiques
@@ -355,11 +394,12 @@ Arrêt de l'application :
 docker compose down
 {code}
 
-Restauration de la sauvegarde (remplacer {{DATE_SAUVEGARDE}} par le suffixe créé à l'étape 4, format AAAAMMJJ) :
+Restauration de la sauvegarde créée à l'étape 4 (suffixe format AAAAMMJJ) :
 
 {code:bash}
-rm -rf {{NOM_APPLI}}
-mv {{NOM_APPLI}}_{{DATE_SAUVEGARDE}} {{NOM_APPLI}}
+rm -rf monapp
+mv monapp_20250716 monapp
+# adapter "monapp" et la date au nom réel de la sauvegarde
 {code}
 
 Redémarrage :

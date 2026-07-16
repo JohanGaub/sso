@@ -10,9 +10,10 @@ En gestion privée :
 
 h2. 1. Mode opératoire (lecture)
 
-* Passe 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 22* (cochez la colonne *Réalisée* ; le récapitulatif des phases A→F est en tête de cette section).
+* Passe 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 30* (cochez la colonne *Réalisée* ; le récapitulatif des phases A→F est en tête de cette section).
 * Passe 2 : ouvrez *3. Prérequis / choix de sécurité*, puis *4. Détail technique* (4.1 à 4.9), *5. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
-* Passe 3 : validez le flux OIDC avec les checklists techniques *4.8.1* (rapide) et *4.8.2* (avant livraison) dans *4.8 Tester et diagnostiquer* — complément du tableau de suivi (ne fait pas un doublon avec les étapes 12/13/21/22).
+* Passe 3 : validez le flux OIDC avec les checklists techniques *4.8.1* (rapide) et *4.8.2* (avant livraison) dans *4.8 Tester et diagnostiquer* — complément du tableau de suivi.
+* Pour le déploiement *hors production* (recette / dev), utilisez *6.1 Déploiement hors production* (index : *6. Guide de déploiement*).
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*.
 * Pour les définitions transverses (OIDC, claims, CAM, Eagles, PKCE…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
@@ -21,38 +22,46 @@ h2. 1. Mode opératoire (lecture)
 h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 *Récapitulatif des phases :*
-* *A — Préparer la préprod* : étapes 1 à 6
-* *B — Raccorder la préprod* : étapes 7 à 9
-* *C — Adapter le dev* : étapes 10 à 11
-* *D — Valider la préprod* : étapes 12 à 13
-* *E — Raccorder la prod* : étapes 14 à 20
-* *F — Valider la prod* : étapes 21 à 22
+* *A — Hors prod — Préparer* : étapes 1 à 9
+* *B — Hors prod — Raccorder SSO* : étapes 10 à 12
+* *C — Hors prod — Adapter le code* : étape 13
+* *D — Hors prod — Basculer* : étapes 14 à 16
+* *E — Pré-production — Raccorder SSO et basculer* : étapes 17 à 22
+* *F — Production — Raccorder SSO et basculer* : étapes 23 à 30
 
 || Étape || Tâche || Action || Acteur || Durée || Sortie attendue || Commentaire || Réalisée ||
-| 1 | A — Préparer la préprod | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone N_DE_DEPOT (remplacer par le numéro de dépôt). Exemple : glab repo clone 7777 | [ ] |
-| 2 | A — Préparer la préprod | Obtenir l'URL de test/preprod | Équipe applicative et/ou Équipe de raccordement | À estimer | URL de test/préprod renseignée dans la fiche de renseignement. | — | [ ] |
-| 3 | A — Préparer la préprod | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette vérifié : portail accessible via l'URL de test avant raccordement OIDC. | — | [ ] |
-| 4 | A — Préparer la préprod | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation Entra ID Recette. | — | [ ] |
-| 5 | A — Préparer la préprod | Obtenir l'accès / habilitation à l'appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation à l'application. | — | [ ] |
-| 6 | A — Préparer la préprod | Obtenir le Client ID et le Client Secret | Équipe applicative et/ou Équipe de raccordement | À estimer | Client ID et Client Secret reçus et stockés de manière sécurisée. | — | [ ] |
-| 7 | B — Raccorder la préprod | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC et des modifications de code" envoyé à l'équipe applicative. | Utiliser le template *5.3 Template guide 2 - étape Prise en charge technique (gestion privée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 8 | B — Raccorder la préprod | Configurer l'environnement OIDC en préprod | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC préprod validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
-| 9 | B — Raccorder la préprod | Tester la connexion sur l'URL de test (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC préprod validée (mire, authent, redirection). L'étape *10* adapte le code aux claims ; tant qu'elle n'est pas réalisée, des écrans ou fonctionnalités métier peuvent rester incomplets ou en erreur — c'est attendu. | — | [ ] |
-| 10 | C — Adapter le dev | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur la *4.0 Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
-| 11 | C — Adapter le dev | Demander le déploiement en développement | Équipe applicative et/ou Équipe de raccordement | À estimer | Email de fin d’intervention envoyé (déploiement dev + actions attendues). | Utiliser le template *5.2 Template guide 1 et 2 - étape Fin d'intervention technique* (cf. *5. Templates de mail*). Actions à demander : 1) valider la Merge Request, 2) réaliser le PV de recette, 3) planifier une date de mise en production avec le CAM Eagles, 4) communiquer cette date à l'équipe de raccordement. Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 12 | D — Valider la préprod | Réaliser la recette fonctionnelle préprod, valider le PV, le transmettre au CAM Eagles | Équipe applicative | À estimer | PV préprod validé et transmis au chargé d'affaires Eagles. | — | [ ] |
-| 13 | D — Valider la préprod | Planifier le raccordement Entra ID en production | Équipe applicative et CAM Eagles | À estimer | Date de mise en prod communiquée par le CAM à l'équipe applicative et à l'équipe de raccordement. | — | [ ] |
-| 14 | E — Raccorder la prod | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC" envoyé à l'équipe applicative. | Utiliser le template *5.3 Template guide 2 - étape Prise en charge technique (gestion privée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 15 | E — Raccorder la prod | Identifier les utilisateurs de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Liste d'emails utilisateurs fournie par l'équipe applicative. | — | [ ] |
-| 16 | E — Raccorder la prod | Informer les utilisateurs de l'application d'une intervention informatique | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "intervention informatique" envoyé aux utilisateurs de l'application. | Utiliser le template *5.4 Template guide 1 et 2 - étape Information utilisateurs (intervention)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 17 | E — Raccorder la prod | Configurer l'environnement OIDC dans la prod | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
-| 18 | E — Raccorder la prod | Tester la connexion sur l'URL de prod (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC prod validée (mire, authent, redirection). Avant adaptation du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | — | [ ] |
-| 19 | E — Raccorder la prod | Confirmer que le raccordement de production a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "production prête à tester" partagé dans le ticket de suivi. | — | [ ] |
-| 20 | E — Raccorder la prod | En cas de délégation technique, demander le déploiement en production | Équipe de raccordement | À estimer | Email de fin d’intervention envoyé (déploiement prod + actions attendues). | Utiliser le template *5.2 Template guide 1 et 2 - étape Fin d'intervention technique* (cf. *5. Templates de mail*). Actions à demander : 1) valider la Merge Request, 2) réaliser le PV de recette, 3) planifier une date de mise en production avec le CAM Eagles, 4) communiquer cette date à l'équipe de raccordement. Enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 21 | F — Valider la prod | Déployer en production (souvent : créer un tag GitLab, lancer le pipeline, vérifier qu'il est au vert) | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (release ou tag créé, pipeline OK). | — | [ ] |
-| 22 | F — Valider la prod | Réaliser la recette fonctionnelle production, valider le PV, puis le transmettre au CAM Eagles | Équipe applicative | À estimer | PV production validé et transmis au chargé d'affaires Eagles. | — | [ ] |
+| 1 | A — Hors prod — Préparer | Tirer la branche "main" de l'application depuis GitLab pour disposer du code en local | Équipe applicative et/ou Équipe de raccordement | À estimer | Branche main récupérée en local et code accessible sur le poste de travail. | Utiliser la commande : glab repo clone N_DE_DEPOT (remplacer par le numéro de dépôt). Exemple : glab repo clone 7777 | [ ] |
+| 2 | A — Hors prod — Préparer | Obtenir les URL de la fiche de renseignement (3 champs : hors production, pré-production, production) | Équipe applicative et/ou Équipe de raccordement | À estimer | URL renseignées dans la fiche de renseignement. | 3 environnements distincts : hors production (manuel), pré-production (pipeline), production (pipeline). | [ ] |
+| 3 | A — Hors prod — Préparer | Obtenir l'accès / habilitation Gardian Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Gardian Recette vérifié : portail accessible via l'URL de test avant raccordement OIDC. | — | [ ] |
+| 4 | A — Hors prod — Préparer | Obtenir l'accès / habilitation Entra ID Recette pour cette appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation Entra ID Recette. | — | [ ] |
+| 5 | A — Hors prod — Préparer | Obtenir l'accès / habilitation à l'appli | Équipe applicative et/ou Équipe de raccordement | À estimer | Message reçu de l'habilitation à l'application. | — | [ ] |
+| 6 | A — Hors prod — Préparer | Obtenir l'accès MyConsole Cloud (hors production — DEV ou RECETTE) | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès MyConsole Cloud opérationnel pour le hors production. | Pas nécessaire pour la pré-production et la production (pipeline GitLab). Tracer dans le ticket Jira. | [ ] |
+| 7 | A — Hors prod — Préparer | Obtenir l'accès Console Web AWS / EC2 (hors production) | Équipe applicative et/ou Équipe de raccordement | À estimer | Accès Console Web opérationnel (shell web, démarrage instances). | [Console Web|https://console.web-enedis.fr]. Voir *6.1 Déploiement hors production*, sections 1 à 3. | [ ] |
+| 8 | A — Hors prod — Préparer | Obtenir un compte utilisateur applicatif permettant d'accéder aux écrans où des claims SSO sont affichés ou exploités | Équipe applicative et/ou Équipe de raccordement | À estimer | Compte utilisateur habilité ; accès aux pages de vérification confirmé. | *Si applicable* : marquer N/A si aucun écran n'affiche de claims. Pages métier où l'identité, les rôles ou attributs issus du token/session sont visibles. | [ ] |
+| 9 | A — Hors prod — Préparer | Obtenir le Client ID et le Client Secret | Équipe applicative et/ou Équipe de raccordement | À estimer | Client ID et Client Secret reçus et stockés de manière sécurisée. | — | [ ] |
+| 10 | B — Hors prod — Raccorder SSO | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC et des modifications de code" envoyé à l'équipe applicative. | Utiliser le template *5.3 Template guide 2 - étape Prise en charge technique (gestion privée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
+| 11 | B — Hors prod — Raccorder SSO | Configurer l'environnement OIDC en hors production (recette / dev) | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC hors production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
+| 12 | B — Hors prod — Raccorder SSO | Tester la connexion sur l'URL hors production (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC hors production validée (mire, authent, redirection). L'étape *13* adapte le code aux claims ; tant qu'elle n'est pas réalisée, des écrans ou fonctionnalités métier peuvent rester incomplets ou en erreur — c'est attendu. | — | [ ] |
+| 13 | C — Hors prod — Adapter le code | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur la *4.0 Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
+| 14 | D — Hors prod — Basculer | Planifier la mise en hors production (date de déploiement) | Équipe applicative et CAM Eagles | À estimer | Date de déploiement hors production planifiée et communiquée. | — | [ ] |
+| 15 | D — Hors prod — Basculer | En cas de défaillance en ressource technique DevOps côté applicatif, déployer en hors production (recette / dev). Sinon, demander le déploiement à l'équipe applicative. | Équipe applicative et/ou Équipe de raccordement | À estimer | Application déployée en hors production ; URL accessible. | Suivre *6.1 Déploiement hors production* (prérequis : étapes *6* et *7*). *Pas de pipeline GitLab*. Puis mail *5.5* et enregistrement Jira. | [ ] |
+| 16 | D — Hors prod — Basculer | Réaliser la recette fonctionnelle en hors production (dev / recette) et valider le PV avec le CAM Eagles | Équipe applicative | À estimer | PV de recette hors production validé avec le CAM Eagles. | Vérifier claims (étape *8*). | [ ] |
+| 17 | E — Pré-production — Raccorder SSO et basculer | Planifier la mise en pré-production | Équipe applicative et CAM Eagles | À estimer | Date de déploiement pré-production planifiée et communiquée. | — | [ ] |
+| 18 | E — Pré-production — Raccorder SSO et basculer | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC pré-production | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC pré-production" envoyé à l'équipe applicative. | Utiliser le template *5.3 Template guide 2 - étape Prise en charge technique (gestion privée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira. Marquer N/A si pas de délégation. | [ ] |
+| 19 | E — Pré-production — Raccorder SSO et basculer | Configurer l'environnement OIDC en pré-production | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC pré-production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
+| 20 | E — Pré-production — Raccorder SSO et basculer | Tester la connexion sur l'URL pré-production (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC pré-production validée (mire, authent, redirection). | — | [ ] |
+| 21 | E — Pré-production — Raccorder SSO et basculer | En cas de défaillance en ressource technique DevOps côté applicatif, déployer en pré-production (pipeline GitLab : tag, release, pipeline au vert). Sinon, demander le déploiement à l'équipe applicative. | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement pré-production effectué (release ou tag créé, pipeline OK). | *Secours* sans pipeline : *6.2 Déploiement pré-production / production* *(à rédiger)*. | [ ] |
+| 22 | E — Pré-production — Raccorder SSO et basculer | Réaliser la recette fonctionnelle pré-production et valider le PV avec le CAM Eagles | Équipe applicative | À estimer | PV pré-production validé avec le CAM Eagles. | — | [ ] |
+| 23 | F — Production — Raccorder SSO et basculer | Planifier la mise en production | Équipe applicative et CAM Eagles | À estimer | Date de déploiement production planifiée et communiquée. | — | [ ] |
+| 24 | F — Production — Raccorder SSO et basculer | Identifier les utilisateurs de l'application | Équipe applicative et/ou Équipe de raccordement | À estimer | Liste d'emails utilisateurs fournie par l'équipe applicative. | — | [ ] |
+| 25 | F — Production — Raccorder SSO et basculer | Informer les utilisateurs de l'application d'une intervention informatique | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "intervention informatique" envoyé aux utilisateurs de l'application. | Utiliser le template *5.4 Template guide 1 et 2 - étape Information utilisateurs (intervention)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
+| 26 | F — Production — Raccorder SSO et basculer | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC production | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC production" envoyé à l'équipe applicative. | Utiliser le template *5.3* (cf. *5. Templates de mail*). Marquer N/A si pas de délégation ou si déjà couvert par étape *18*. | [ ] |
+| 27 | F — Production — Raccorder SSO et basculer | Configurer l'environnement OIDC en production | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
+| 28 | F — Production — Raccorder SSO et basculer | Tester la connexion sur l'URL production (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC production validée (mire, authent, redirection). | — | [ ] |
+| 29 | F — Production — Raccorder SSO et basculer | En cas de défaillance en ressource technique DevOps côté applicatif, déployer en production (pipeline GitLab : tag, release, pipeline au vert). Sinon, demander le déploiement à l'équipe applicative. | Équipe applicative et/ou Équipe de raccordement | À estimer | Déploiement production effectué (release ou tag créé, pipeline OK). | *Secours* sans pipeline : *6.2 Déploiement pré-production / production* *(à rédiger)*. Puis mail *5.5* et enregistrement Jira. | [ ] |
+| 30 | F — Production — Raccorder SSO et basculer | Réaliser la recette fonctionnelle production et valider le PV avec le CAM Eagles | Équipe applicative | À estimer | PV production validé avec le CAM Eagles. | — | [ ] |
 
-*Durée totale du guide : à estimer (somme des étapes 1 à 22).*
+*Durée totale du guide : à estimer (somme des étapes 1 à 30).*
 
 ----
 
@@ -86,8 +95,9 @@ h2. 4. Détail technique – Flux Authorization Code (Entra ID)
 *Les sections 4.1 à 4.8* décrivent le *parcours technique principal* une fois le client IdP disponible.
 *Référence paramètres (lecture rapide) :* section *4.9 Paramètres OIDC*.
 Dans la section *2. Suivi à réaliser*, cela correspond aux étapes :
-   * en préprod : *8 à 11* (configuration OIDC, test accès mire d'authent, adaptation du code, déploiement en développement)
-   * en prod : *15 à 18* (configuration OIDC, test accès mire d'authent).
+   * en hors production (dev / recette) : *10 à 16* (raccordement SSO, adaptation du code, déploiement, recette)
+   * en pré-production : *17 à 22* (planification, raccordement SSO, déploiement, recette)
+   * en production : *23 à 30* (planification, raccordement SSO, déploiement, recette).
 
 h3. 4.1 Récupérer les clés publiques (JWKS)
 
@@ -225,7 +235,7 @@ Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemple
 
 h3. 4.8 Tester et diagnostiquer
 
-Tester ces scénarios dans l’ordre (dans votre environnement de préprod), en observant à chaque fois ce que renvoie l’IdP et ce que l’app valide côté code.
+Tester ces scénarios dans l'ordre (dans votre environnement *hors production* — dev / recette), en observant à chaque fois ce que renvoie l'IdP et ce que l'app valide côté code.
 Cette section décrit les scénarios à exécuter.
 *Entrée attendue :* sections 4.1 à 4.7 implémentées et exécutables dans l’environnement de test.
 
@@ -272,8 +282,9 @@ h4. 4.8.2 Checklist de validation finale (avant livraison)
 * Claims attendus validés (id_token et/ou UserInfo selon architecture).
 * Déconnexion locale validée côté application.
 * Logs exploitables en cas d’échec, sans fuite de données sensibles.
-* PV de recette fonctionnelle préprod validé.
-* PV de recette fonctionnelle production validé.
+* PV de recette fonctionnelle hors production (dev / recette) validé avec le CAM Eagles.
+* PV de recette fonctionnelle pré-production validé avec le CAM Eagles.
+* PV de recette fonctionnelle production validé avec le CAM Eagles.
 
 *Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).
 
@@ -282,7 +293,7 @@ h3. 4.9 Paramètres OIDC
 Pour la définition des paramètres communs à plusieurs étapes, se référer au tableau ci-dessous. Dans chaque étape, seules les *valeurs* spécifiques à l'étape sont détaillées.
 
 || Paramètre || Rôle || Utilisé dans ||
-| tenant | Identifiant du tenant IdP (common, organizations, consumers, ou GUID/domaine). Pour Entra ID en préprod/prod : identifiant du tenant. | 4.2 authorize, 4.4 token, 4.6 token (dans l'URL) |
+| tenant | Identifiant du tenant IdP (common, organizations, consumers, ou GUID/domaine). Pour Entra ID en hors production, pré-production et production : identifiant du tenant. | 4.2 authorize, 4.4 token, 4.6 token (dans l'URL) |
 | client_id | Identifiant du client fourni par l'équipe raccordement applicatif. | 4.2 authorize, 4.4 token (code), 4.6 token (refresh) |
 | client_secret | Secret du client ; à garder côté backend uniquement. | 4.4 token (code), 4.6 token (refresh) |
 | redirect_uri | URL de redirection après authentification ; doit être enregistrée côté IdP et identique entre 4.2 et 4.4. | 4.2 authorize, 4.4 token (code) |

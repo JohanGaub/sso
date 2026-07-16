@@ -21,7 +21,7 @@ Documentation unique pour migrer des applications (PHP, Python, TypeScript, OIDC
 
 ### Comment utiliser ce document ?
 
-1. **Vérifier les prérequis administratifs** : une demande (création/actualisation d’application, accès préprod, passage en prod) doit être traitée par l’équipe IAM ; le détail du process (qui envoie quoi, PV de test, fiche de renseignement, métadonnées prod, etc.) est décrit dans le **guide de raccordement** de l’équipe IAM.
+1. **Vérifier les prérequis administratifs** : une demande (création/actualisation d’application, accès hors production (dev / recette), passage en pré-prod, passage en prod) doit être traitée par l’équipe IAM ; le détail du process (qui envoie quoi, PV de test, fiche de renseignement, métadonnées prod, etc.) est décrit dans le **guide de raccordement** de l’équipe IAM.
 2. **Répondre à 3 questions** dans l’[arbre de décision](#2-arbre-de-décision-visuel) : protocole (OIDC / SAML v2), mode de gestion (managée / privée), niveau d’autonomie (autonome / accompagné / délégué).
 3. **Aller à la section correspondant à vos réponses** (ex. 3.1, 5.2) et suivre les étapes du tableau (cocher au fur et à mesure). Vous trouverez en plus des exemples de code et les pièges courants à éviter.
 4. **Consulter les annexes** pour le glossaire, la FAQ et les ressources externes.
@@ -71,7 +71,7 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 - Oublier de actualiser le **schéma de validation** des claims (liste des claims autorisés, types).
 - Confusion entre claims **standard** (ex. `id`, `email`, `nom`) et **personnalisés** (ex. `role`) : bien documenter la source (IdP) et le nom exact du claim.
 - Ne pas ignorer les erreurs quand l’application lit les claims :
-  - **en développement/préproduction** : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
+  - **en hors production (dev / recette)** : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
   - **en production** : limiter le détail des logs (pas de données sensibles), mais garder au moins un message clair indiquant qu’un claim attendu est manquant ou invalide.
 
 ---
@@ -212,7 +212,7 @@ Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, bindi
 
 **Pièges courants**
 
-- **Métadonnées** : EntityID et ACS doivent être cohérents entre SP et IdP ; attention aux environnements (dev/preprod/prod).
+- **Métadonnées** : EntityID et ACS doivent être cohérents entre SP et IdP ; attention aux environnements (hors production vs pré-production et/ou production).
 - **Certificats** : expiration, bon certificat (signature vs chiffrement) selon la config IdP.
 - **Binding** : HTTP-POST vs HTTP-Redirect pour Request/Response ; adapter la bibliothèque et l’IdP.
 

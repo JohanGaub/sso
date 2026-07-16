@@ -1,30 +1,27 @@
 h1. 6. Guide de déploiement
 
+h2. Les 3 environnements
+
+|| Environnement || Exemples internes || Déploiement || Guide ||
+| *Hors production* | DEV, RECETTE | *Manuel* — MyConsole Cloud + Console Web AWS (EC2) | *6.1* — phase *D* |
+| *Pré-production* | Préprod | *Pipeline GitLab* | Phase *E* ; *6.2* *(à rédiger)* en secours |
+| *Production* | Prod | *Pipeline GitLab* | Phase *F* ; *6.2* *(à rédiger)* en secours |
+
+Le guide *6.1* ne concerne *que* le hors production.
+
 h2. Périmètre et contexte
 
-Le cœur du chantier migration SSO est décrit dans les guides *0* à *5* : adaptation du code, raccordement IAM, recette fonctionnelle, communication.
+Les guides *1* à *3* couvrent la migration SSO (code, IAM, recette, communication). Ce guide *6* détaille le déploiement *manuel hors production*.
 
-La *configuration et le déploiement* sur les environnements (DEV, recette, production) relèvent en principe de *l'équipe applicative* ou de son pipeline GitLab.
-
-Cette section *6* existe pour les cas où l'équipe applicative *ne dispose pas de développeurs* (ou pas de compétences DevOps) : l'équipe de raccordement peut alors réaliser le déploiement manuel sur l'infrastructure Enedis, en complément de la migration SSO déjà effectuée.
-
-Ces guides n'ont pas vocation à être exhaustifs. Ils s'appuient sur des exemples d'applications existantes, à adapter à la stack de chaque projet.
+Le déploiement *pré-production* et *production* passe en principe par un *pipeline GitLab* (phases *E* et *F* des guides migration).
 
 h2. Guides disponibles
 
 || Guide || Environnement || Contenu ||
-| *6.1 Guide de déploiement hors production (DEV / recette)* | DEV, RECETTE | Préparation infra, déploiement Docker manuel, vérifications, rollback |
-| *6.2 Guide de déploiement production* | Production | *(à rédiger)* |
+| *6.1 Déploiement hors production (recette / dev)* | Hors production | Préparation infra, Docker manuel, vérifications, rollback |
+| *6.2 Déploiement pré-production / production* | Pré-production ou Production | *(à rédiger — secours si pas de pipeline GitLab)* |
 
-h2. Quand utiliser ces guides ?
+h2. Quand utiliser le guide 6.1 ?
 
-* *Équipe applicative autonome* (pipeline GitLab, tag, release) : privilégier les étapes de déploiement décrites dans les guides *1*, *2* ou *3* (phases C/F). La section *6* n'est pas nécessaire.
-* *Équipe applicative sans développeurs* (ou déploiement manuel requis) : suivre le guide *6.1* pour la partie infra (instances EC2, Docker Compose, rollback).
-* *Tests SSO après déploiement* : le guide *6.1* ne remplace pas la recette fonctionnelle. Utiliser le guide de migration applicable (1, 2 ou 3) pour les scénarios de connexion / déconnexion et le PV de recette. En OIDC, s'appuyer aussi sur *4. Correspondance des claims OIDC*.
-
-h2. À qui s'adresse cette section ?
-
-* *Équipe de raccordement* : lorsque le déploiement est confié faute de ressources côté applicatif.
-* *Équipe applicative* : lorsqu'elle souhaite déployer elle-même sans pipeline automatisé.
-
-En complément du *0. Migration SSO – Synthèse* et des guides de migration (1 à 3).
+* Phase *D* des guides *1*, *2* ou *3* : déployer en *hors production* après les accès MyConsole Cloud et Console Web AWS (phase *A*).
+* Après déploiement : poursuivre la recette SSO dans le guide migration — le *6.1* ne remplace pas la recette fonctionnelle.

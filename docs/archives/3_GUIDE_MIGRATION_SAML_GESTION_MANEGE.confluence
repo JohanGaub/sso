@@ -28,7 +28,7 @@ h2. Suivi à réaliser (Cocher chaque étape lorsque réalisée)
 | 1 | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l'équipe IAM. | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Liste d’attributs SAML attendus transmise à l’IAM. | [ ] |
 | 2 | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | Équipe IAM | À estimer | Attributs SAML émis avec noms/format conformes au mapping. | [ ] |
 | 3 | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | Équipe applicative ou Équipe de raccordement applicatif | À estimer | Mapping validé et lecture applicative stable (nominal + erreurs maîtrisées). | [ ] |
-| 4 | Réaliser la recette fonctionnelle (préprod/dev) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle préprod/dev validé. | [ ] |
+| 4 | Réaliser la recette fonctionnelle en hors production (dev / recette) et produire un PV | Équipe applicative | À estimer | PV de recette hors production validé. | [ ] |
 | 5 | Réaliser la recette fonctionnelle (production) et produire un PV | Équipe applicative | À estimer | PV de recette fonctionnelle production validé. | [ ] |
 | Total | Durée totale (somme des étapes 1 à 5) | — | À estimer | [ ] |
 
@@ -56,7 +56,7 @@ h2. Pièges courants
 * Noms d'attributs : différence entre URI, basic, unspecified ; s'assurer que l'IdP et l'SP utilisent le même nom (ou un mapping explicite).
 * Multiples valeurs : les attributs SAML sont souvent des tableaux ; prendre la première valeur ou gérer la liste selon la sémantique.
 * Signature et chiffrement : ne pas désactiver la vérification de signature en production.
-* Logs : en dev/preprod, tracer les attributs reçus ; en production, conserver des messages clairs sans données sensibles.
+* Logs : en hors production (dev / recette), tracer les attributs reçus ; en production, conserver des messages clairs sans données sensibles.
 
 h4. Checklist de validation minimale (dev-first)
 
@@ -84,7 +84,7 @@ h4. Definition of Done (DoD) — validation minimale avant livraison
 * Assertion reçue et signature valide.
 * Attributs attendus présents avec les bons noms.
 * Mapping appliqué côté code (nominal + erreurs maîtrisées).
-* PV de recette fonctionnelle préprod/dev validé.
+* PV de recette fonctionnelle hors production (dev / recette) validé.
 * PV de recette fonctionnelle production validé.
 
 ----

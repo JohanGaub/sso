@@ -14,7 +14,7 @@ h2. Informations projet
 
 || Champ || Valeur ||
 | Application |  |
-| Environnement (dev / préprod / prod) |  |
+| Environnement (hors production / pré-production / production — 3 champs sur la fiche) |  |
 | Date |  |
 | Contact technique |  |
 | Contact métier |  |
