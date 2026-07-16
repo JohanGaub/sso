@@ -7,6 +7,20 @@ h2. À qui s'adresse ce document ?
 
 Équipe applicative ; équipe de raccordement applicatif (en mode accompagné ou délégué : accompagne ou réalise à la place de l'équipe applicative).
 
+{info}
+*Périmètre de la mission de raccordement SSO*
+
+La mission couvre :
+* La configuration Entra ID (en lien avec l'équipe IAM ou Gestion managée)
+* L'adaptation du code applicatif (claims / attributs, URLs, certificats)
+* Le suivi des bascules par environnement (la planification est portée par le CAM Eagles et l'équipe applicative)
+* La vérification du raccordement SSO : scénarios connexion / déconnexion et, si accessible, affichage des claims dans les pages applicatives concernées — la validation et la signature du PV de recette fonctionnelle restent de la stricte responsabilité de l'équipe applicative
+
+Elle ne couvre *pas* par défaut le déploiement applicatif (hors production, pré-production, production) ni le provisionnement d'infrastructure — ces tâches sont du ressort de l'équipe applicative ou de son équipe DevOps.
+
+*Exception* : en cas de défaillance en ressource technique DevOps côté applicatif, l'équipe de raccordement peut intervenir sur le déploiement à titre exceptionnel. Les étapes concernées le précisent explicitement dans les guides.
+{info}
+
 h2. Mode opératoire
 
 # Vérifier les pré-requis.
@@ -50,13 +64,13 @@ h3. Tableau synthétique
 | 6 | Ajuster le code de l'application : claims (OIDC) / attributs (SAML), URLs, clients, certificats. | Équipe applicative et/ou équipe raccordement | Configuration applicative réalisée. |
 | 7 | Planifier la mise en *hors production* (dev / recette) | Équipe applicative et CAM Eagles | Date de déploiement hors production planifiée. |
 | 8 | Déployer sur l'environnement *hors production* | Équipe applicative et/ou équipe raccordement | Application déployée en hors production ; URL accessible. |
-| 9 | Réaliser la recette fonctionnelle en *hors production* : scénarios connexion / déconnexion / erreurs + PV | Équipe applicative | PV de recette hors production validé et transmis au CAM Eagles. |
+| 9 | Réaliser la recette fonctionnelle en *hors production* : scénarios connexion / déconnexion / erreurs + PV | Équipe applicative | PV de recette hors production validé avec le CAM Eagles. |
 | 10 | Planifier la mise en *pré-production* | Équipe applicative et CAM Eagles | Date de déploiement pré-production planifiée. |
 | 11 | Déployer sur l'environnement *pré-production* (pipeline GitLab) | Équipe applicative et/ou équipe raccordement | Application déployée en pré-production. |
-| 12 | Réaliser la recette fonctionnelle en *pré-production* : rejouer le socle de scénarios + PV | Équipe applicative | PV de recette pré-production validé. |
+| 12 | Réaliser la recette fonctionnelle en *pré-production* : rejouer le socle de scénarios + PV | Équipe applicative | PV de recette pré-production validé avec le CAM Eagles. |
 | 13 | Planifier la mise en *production* | Équipe applicative et CAM Eagles | Date de déploiement production planifiée et communiquée. |
 | 14 | Déployer sur l'environnement *production* (pipeline GitLab) | Équipe applicative et/ou équipe raccordement | Application déployée en production. |
-| 15 | Réaliser la recette fonctionnelle en *production* : rejouer le socle de scénarios + PV | Équipe applicative | PV de recette production validé et transmis au CAM Eagles. |
+| 15 | Réaliser la recette fonctionnelle en *production* : rejouer le socle de scénarios + PV | Équipe applicative | PV de recette production validé avec le CAM Eagles. |
 
 h3. Poursuite du suivi
 
