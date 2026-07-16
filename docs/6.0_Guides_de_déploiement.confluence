@@ -1,27 +1,22 @@
 h1. 6. Guide de déploiement
 
-h2. Les 3 environnements
+h2. Deux modes de déploiement
 
-|| Environnement || Exemples internes || Déploiement || Guide ||
-| *Hors production* | DEV, RECETTE | *Manuel* — MyConsole Cloud + Console Web AWS (EC2) | *6.1* — phase *D* |
-| *Pré-production* | Préprod | *Pipeline GitLab* | Phase *E* ; *6.2* *(à rédiger)* en secours |
-| *Production* | Prod | *Pipeline GitLab* | Phase *F* ; *6.2* *(à rédiger)* en secours |
+Quel que soit l'environnement (hors production, pré-production ou production), il existe *deux modes* de déploiement :
 
-Le guide *6.1* ne concerne *que* le hors production.
+|| Mode || Comment || Qui en principe ||
+| *Manuel* | MyConsole Cloud + Console Web AWS (EC2), Docker Compose | Équipe applicative / DevOps — ou équipe de raccordement *en cas de défaillance DevOps* |
+| *Pipeline* | GitLab (tag, release, pipeline au vert) | Équipe applicative / DevOps |
 
-h2. Périmètre et contexte
+Ce guide *6* traite *uniquement le déploiement manuel*.
+Le déploiement par *pipeline GitLab* n'est pas détaillé ici : il reste du ressort de l'équipe applicative (voir les phases *E* et *F* des guides de migration *1* à *3*).
 
-Les guides *1* à *3* couvrent la migration SSO (code, IAM, recette, communication). Ce guide *6* détaille le déploiement *manuel hors production*.
+h2. Guide disponible
 
-Le déploiement *pré-production* et *production* passe en principe par un *pipeline GitLab* (phases *E* et *F* des guides migration).
-
-h2. Guides disponibles
-
-|| Guide || Environnement || Contenu ||
-| *6.1 Déploiement hors production (recette / dev)* | Hors production | Préparation infra, Docker manuel, vérifications, rollback |
-| *6.2 Déploiement pré-production / production* | Pré-production ou Production | *(à rédiger — secours si pas de pipeline GitLab)* |
+|| Guide || Contenu ||
+| *6.1 Déploiement hors production (manuel)* | Préparation infra, récupération du code, Docker Compose, vérifications, rollback |
 
 h2. Quand utiliser le guide 6.1 ?
 
-* Phase *D* des guides *1*, *2* ou *3* : déployer en *hors production* après les accès MyConsole Cloud et Console Web AWS (phase *A*).
+* Quand le déploiement se fait *manuellement* (typiquement en *hors production* — phase *D* des guides *1*, *2* ou *3*).
 * Après déploiement : poursuivre la recette SSO dans le guide migration — le *6.1* ne remplace pas la recette fonctionnelle.
