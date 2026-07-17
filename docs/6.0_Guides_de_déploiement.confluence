@@ -14,9 +14,9 @@ Le déploiement par *pipeline GitLab* n'est pas détaillé ici : il reste du res
 h2. Guide disponible
 
 || Guide || Contenu ||
-| *6.1 Déploiement hors production (manuel)* | Préparation infra, récupération du code, Docker Compose, vérifications, rollback |
+| *6.1 Déploiement manuel* | Préparation infra, récupération du code, Docker Compose, vérifications, rollback |
 
 h2. Quand utiliser le guide 6.1 ?
 
-* Quand le déploiement se fait *manuellement* (typiquement en *hors production* — phase *D* des guides *1*, *2* ou *3*).
+* Quand le déploiement se fait *manuellement* (souvent en *hors production* — phase *D* des guides *1*, *2* ou *3* ; éventuellement en pré-production ou production si pas de pipeline).
 * Après déploiement : poursuivre la recette SSO dans le guide migration — le *6.1* ne remplace pas la recette fonctionnelle.

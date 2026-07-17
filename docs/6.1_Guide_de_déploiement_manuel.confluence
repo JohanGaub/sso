@@ -1,14 +1,14 @@
-h1. 6.1 Déploiement hors production (recette / dev)
+h1. 6.1 Déploiement manuel
 
-Ce guide couvre *uniquement* l'environnement *hors production* (filtres Console Web : DEV ou RECETTE). Il n'y a *pas* de pipeline GitLab à cette étape : déploiement *manuel* sur instances EC2 via MyConsole Cloud et Console Web AWS.
+Ce guide décrit le *déploiement manuel* d'une application conteneurisée (Docker Compose) sur instances EC2 via MyConsole Cloud et Console Web AWS.
 
-Il complète la phase *D* des guides de migration *1*, *2* ou *3*.
+Il s'applique *quel que soit l'environnement* (hors production, pré-production ou production) dès lors qu'il n'y a *pas* de pipeline GitLab et que le déploiement se fait à la main.
 
-*Prérequis* (phase *A* du guide migration) : accès MyConsole Cloud, accès Console Web AWS, et — si applicable — compte utilisateur applicatif pour vérifier l'affichage des claims ou attributs SSO.
+*Prérequis* : accès MyConsole Cloud, accès Console Web AWS, et — si applicable — compte utilisateur applicatif pour vérifier l'affichage des claims ou attributs SSO.
 
-Il s'appuie sur un exemple d'application conteneurisée (Docker Compose) : *adapter les commandes, noms de services et chemins à votre projet*.
+*Adapter* les commandes, noms de services, chemins et filtres d'environnement à votre projet.
 
-*Pré-production* (phase *E*) et *Production* (phase *F*) : pipeline GitLab — voir les guides de migration.
+Le déploiement par *pipeline GitLab* n'est pas couvert ici — voir *6. Guide de déploiement*.
 
 *Index* : *6. Guide de déploiement*.
 
@@ -67,12 +67,13 @@ Puis :
 * Cloud
 * Elastic Compute Cloud (EC2)
 
-Filtrer l'environnement souhaité :
+Filtrer l'environnement cible :
 
 {code}
 DEV
-ou
 RECETTE
+PREPROD
+PROD
 {code}
 
 Identifier :
@@ -98,7 +99,7 @@ Navigation :
 Appliquer les filtres :
 
 {code}
-ENV = DEV ou RECETTE
+ENV = DEV | RECETTE | PREPROD | PROD   # selon l'environnement cible
 API = EC2
 {code}
 
@@ -177,7 +178,36 @@ Toujours conserver une copie de l'application avant déploiement afin de facilit
 
 ----
 
-h2. 5. Localisation de la configuration Docker
+h2. 5. Mise à jour du code (branche de migration SSO)
+
+Se positionner dans le répertoire applicatif :
+
+{code:bash}
+cd /opt/monapp
+# adapter selon le projet
+{code}
+
+Vérifier la branche courante :
+
+{code:bash}
+git status
+git branch --show-current
+{code}
+
+Résultat attendu : la branche de migration SSO du projet (ex. {{migration-sso}}).
+
+Si besoin, basculer et mettre à jour :
+
+{code:bash}
+git fetch
+git checkout migration-sso
+# adapter le nom de branche si différent
+git pull
+{code}
+
+----
+
+h2. 6. Localisation de la configuration Docker
 
 Installation d'outils utiles (si nécessaire) :
 
@@ -198,12 +228,14 @@ Exemple de résultat typique :
 /opt/monapp/compose.yml
 /opt/monapp/compose.dev.yml
 /opt/monapp/compose.recette.yml
+/opt/monapp/compose.preprod.yml
+/opt/monapp/compose.prod.yml
 /srv/monapp/docker-compose.yml
 {code}
 
 Identifier :
 * le répertoire racine de l'application ;
-* la variante de fichier Compose correspondant à l'environnement cible (dev, recette).
+* la variante de fichier Compose correspondant à l'environnement cible.
 
 Se positionner dans le répertoire applicatif :
 
@@ -214,7 +246,7 @@ cd /opt/monapp
 
 ----
 
-h2. 6. Configuration de l'environnement
+h2. 7. Configuration de l'environnement
 
 Créer le fichier de configuration :
 
@@ -235,14 +267,15 @@ Variables SSO à vérifier / renseigner selon le protocole :
 OIDC_CLIENT_ID=<client_id_fourni_par_IAM>
 OIDC_CLIENT_SECRET=<secret_fourni_par_IAM>
 OIDC_DISCOVERY_URL=https://login.microsoftonline.com/<tenant_id>/v2.0/.well-known/openid-configuration
-APP_BASE_URL=https://monapp.recette.enedis.fr
+APP_BASE_URL=https://monapp.<env>.enedis.fr
+# ex. : monapp.recette.enedis.fr, monapp.preprod.enedis.fr, monapp.enedis.fr
 {code}
 
 *SAML :*
 {code}
 SAML_IDP_SSO_URL=<sso_url_fourni_par_IAM_dans_les_métadonnées_IdP>
-SAML_SP_ENTITY_ID=https://monapp.recette.enedis.fr
-SAML_ACS_URL=https://monapp.recette.enedis.fr/saml/acs
+SAML_SP_ENTITY_ID=https://monapp.<env>.enedis.fr
+SAML_ACS_URL=https://monapp.<env>.enedis.fr/saml/acs
 {code}
 
 Vérifier également :
@@ -252,11 +285,11 @@ Vérifier également :
 
 ----
 
-h2. 7. Construction de l'application
+h2. 8. Construction de l'application
 
 Prérequis : être positionné dans le répertoire contenant le fichier Docker Compose concerné.
 
-Construction de l'image. Le nom du service est celui déclaré dans le fichier Compose (ex. `app`, `web`, `api`, `frontend`, `backend`) :
+Construction de l'image. Le nom du service est celui déclaré dans le fichier Compose (ex. {{app}}, {{web}}, {{api}}, {{frontend}}, {{backend}}) :
 
 {code:bash}
 docker compose build app
@@ -287,7 +320,7 @@ docker compose run --rm app npx prisma migrate deploy
 
 ----
 
-h2. 8. Démarrage des services
+h2. 9. Démarrage des services
 
 Démarrage standard :
 
@@ -299,6 +332,10 @@ Ou avec un fichier Compose d'environnement spécifique :
 
 {code:bash}
 docker compose -f compose.dev.yml up -d
+docker compose -f compose.recette.yml up -d
+docker compose -f compose.preprod.yml up -d
+docker compose -f compose.prod.yml up -d
+# utiliser celui qui correspond à l'environnement cible
 {code}
 
 Vérifier que les services déclarés dans votre fichier Compose sont bien démarrés, par exemple :
@@ -313,7 +350,7 @@ docker ps
 
 ----
 
-h2. 9. Vérifications après déploiement
+h2. 10. Vérifications après déploiement
 
 Vérifier les conteneurs actifs :
 
@@ -321,13 +358,13 @@ Vérifier les conteneurs actifs :
 docker ps
 {code}
 
-Consulter les logs du service applicatif (adapter le nom : `app`, `web`, `api`…) :
+Consulter les logs du service applicatif (adapter le nom : {{app}}, {{web}}, {{api}}…) :
 
 {code:bash}
 docker compose logs -f app
 {code}
 
-Consulter les logs de la base de données (adapter le nom : `db`, `postgres`, `mysql`…) :
+Consulter les logs de la base de données (adapter le nom : {{db}}, {{postgres}}, {{mysql}}…) :
 
 {code:bash}
 docker compose logs -f db
@@ -345,7 +382,7 @@ Contrôles à réaliser :
 
 ----
 
-h2. 10. Dépannage
+h2. 11. Dépannage
 
 h3. Analyse de l'espace disque
 
@@ -375,7 +412,8 @@ Si l'application utilise un CDN :
 * invalider le cache CDN si nécessaire.
 
 ----
-h2. 11. Critères de succès du déploiement
+
+h2. 12. Critères de succès du déploiement
 
 Le déploiement peut être considéré comme réussi lorsque :
 
@@ -383,10 +421,12 @@ Le déploiement peut être considéré comme réussi lorsque :
 * l'application est accessible ;
 * les logs ne présentent aucune erreur bloquante ;
 * l'authentification fonctionne ;
-* les tests de recette prévus ont été réalisés ;
+* les contrôles prévus ont été réalisés ;
 * le responsable applicatif a confirmé le fonctionnement attendu.
 
-h2. 12. Rollback
+----
+
+h2. 13. Rollback
 
 Arrêt de l'application :
 
@@ -412,7 +452,7 @@ Vérifier le fonctionnement de l'application et confirmer le retour à un état 
 
 ----
 
-h2. 13. Checklist de validation
+h2. 14. Checklist de validation
 
 ||Contrôle||Statut||
 |Application accessible|☐|
@@ -422,5 +462,4 @@ h2. 13. Checklist de validation
 |Base de données accessible|☐|
 |Services Docker démarrés|☐|
 |Tests applicatifs réalisés|☐|
-|Validation recette effectuée|☐|
-
+|Validation par l'équipe applicative effectuée|☐|
