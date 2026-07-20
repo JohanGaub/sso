@@ -168,8 +168,8 @@ Votre code se contente de *lire* ces variables.
 *Lire les claims*
 
 {noformat}
-Préfixe standard     : OIDC_CLAIM_<NOM_DU_CLAIM>
-Préfixe après redir. : REDIRECT_OIDC_CLAIM_<NOM_DU_CLAIM>
+Préfixe standard     : OIDC_CLAIM_[NOM_DU_CLAIM]
+Préfixe après redir. : REDIRECT_OIDC_CLAIM_[NOM_DU_CLAIM]
 {noformat}
 
 Si un claim est vide, testez les deux préfixes. La casse compte ({{OIDC_CLAIM_email}} ≠ {{OIDC_CLAIM_Email}}).
@@ -190,7 +190,7 @@ email = request.environ.get('OIDC_CLAIM_email')
 role  = request.environ.get('OIDC_CLAIM_role')
 {code}
 
-{code:js}
+{code:javascript}
 // Node.js / Express (Apache transmet souvent les claims en en-têtes HTTP)
 const email = req.headers['oidc-claim-email'];
 const role  = req.headers['oidc-claim-role'];
@@ -414,13 +414,13 @@ h3. Séquence de déploiement manuel (résumé)
 
 # Vérifier l'infrastructure (schéma d'architecture, instances EC2).
 # Sauvegarder le répertoire courant ({{cp -R /opt/app /opt/app.bak}}).
-# Préparer les sources : {{git fetch && git checkout <branche> && git pull}}.
+# Préparer les sources : {{git fetch}}, {{git checkout [branche]}}, {{git pull}}.
 # Mettre à jour les variables d'environnement ({{.env}}) : Client ID, Client Secret, OIDC/SAML endpoints.
 # Vérifier l'image Docker et reconstruire si nécessaire.
-# Redémarrer les conteneurs : {{docker compose up -d <service>}}.
-# Vérifier les logs : {{docker compose logs -f <service>}}.
+# Redémarrer les conteneurs : {{docker compose up -d [service]}}.
+# Vérifier les logs : {{docker compose logs -f [service]}}.
 # Tester la connexion SSO (login OK, claims ou attributs affichés).
-# En cas d'échec : rollback ({{rm -rf /opt/app && mv /opt/app.bak /opt/app}}).
+# En cas d'échec : rollback — {{rm -rf /opt/app}}, puis {{mv /opt/app.bak /opt/app}}.
 
 h3. Lecture
 
