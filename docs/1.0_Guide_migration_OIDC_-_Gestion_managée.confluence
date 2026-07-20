@@ -12,7 +12,7 @@ h2. 1. Mode opératoire (lecture)
 * Passe 1 : dans *2. Suivi à réaliser*, enchaînez les *étapes 1 à 29* (cochez la colonne *Réalisée* ; le récapitulatif des phases A→F est en tête de cette section).
 * Passe 2 : ouvrez *3. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Pour le déploiement, voir *6. Guides de déploiement*.
-* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*.
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4.1 Correspondance des claims OIDC*.
 * Pour les définitions transverses (OIDC, claims, CAM, Eagles…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
 ----
@@ -41,7 +41,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 11 | B — Hors prod — Raccorder SSO | Recevoir l'information que le raccordement a été réalisé | Équipe applicative et/ou Équipe de raccordement | À estimer | Message "raccordement prêt à tester" reçu de l'équipe Gestion managée. | — | [ ] |
 | 12 | B — Hors prod — Raccorder SSO | Tester la connexion sur l'URL hors production (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC hors production validée (mire, authent, redirection). Avant adaptation du code (étape suivante), l'accès fonctionnel complet peut rester partiel. | — | [ ] |
 | 13 | C — Hors prod — Adapter le code | En cas de délégation technique, informer l'équipe applicative de la prise en charge des modifications | Équipe de raccordement | À estimer | Message "prise en charge des modifications de code" envoyé à l'équipe applicative. | Utiliser le template *5.1 Template guide 1 - étape Prise en charge technique (gestion managée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
-| 14 | C — Hors prod — Adapter le code | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *4. Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
+| 14 | C — Hors prod — Adapter le code | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur *4.1 Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
 | 15 | D — Hors prod — Basculer | Planifier la mise en hors production (date de déploiement) | Équipe applicative et CAM Eagles | À estimer | Date de déploiement hors production planifiée et communiquée à l'équipe de raccordement. | — | [ ] |
 | 16 | D — Hors prod — Basculer | Déployer en hors production. En cas de défaillance en ressource technique DevOps côté applicatif, réaliser le déploiement ; sinon, le demander à l'équipe applicative. | Équipe applicative et/ou Équipe de raccordement | À estimer | Application déployée ; URL accessible. | — | [ ] |
 | 17 | D — Hors prod — Basculer | Réaliser la recette fonctionnelle en hors production (dev / recette) et valider le PV avec le CAM Eagles | Équipe applicative | À estimer | PV de recette hors production validé avec le CAM Eagles. | Vérifier l'affichage des claims (étape *8*). | [ ] |
@@ -65,7 +65,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 h2. 3. Pièges courants
 
 * *Compte non habilité* : tester avec un compte non habilité et conclure à un problème OIDC alors que c'est un problème de droits applicatifs.
-* *Préfixe {{OIDC_CLAIM_}} vs {{REDIRECT_OIDC_CLAIM_}}* : selon que l'application est appelée directement ou après redirection interne, le préfixe change. Si un claim attendu est vide, tester les deux préfixes (voir *4. Correspondance des claims OIDC*).
+* *Préfixe {{OIDC_CLAIM_}} vs {{REDIRECT_OIDC_CLAIM_}}* : selon que l'application est appelée directement ou après redirection interne, le préfixe change. Si un claim attendu est vide, tester les deux préfixes (voir *4.1 Correspondance des claims OIDC*).
 * *Claim absent côté Apache* : le claim n'apparaît pas dans les variables d'environnement parce qu'il n'a pas été demandé dans la *fiche de renseignement* ou n'est pas exposé par Entra ID. Vérifier la liste transmise à l'équipe IAM avant de modifier le code.
 * *Cache navigateur / session legacy* : après la bascule, l'utilisateur reste connecté via un cookie Gardian résiduel. Forcer une suppression des cookies du domaine pour reproduire un parcours OIDC propre.
 * *Casse du nom de claim* : {{OIDC_CLAIM_email}} vs {{OIDC_CLAIM_Email}} — la casse peut varier selon la configuration Apache. Lister une fois les clés {code}OIDC_CLAIM_*{code} présentes dans l'environnement ({{$_SERVER}} en PHP) avant de coder.
@@ -79,7 +79,7 @@ En *gestion managée*, le module Apache ({{mod_auth_openidc}}) gère le flux OID
 *Règle simple :*
 * Préfixe le plus courant : {{OIDC_CLAIM_NOM}} (remplacer NOM par le nom du claim ; ex. {{OIDC_CLAIM_email}}, {{OIDC_CLAIM_nom}}, {{OIDC_CLAIM_role}}).
 * Si l'application passe par une redirection interne : préfixe {{REDIRECT_OIDC_CLAIM_NOM}} (même logique, autre préfixe).
-* Correspondance Legacy ↔ Entra ID : document *4. Correspondance des claims OIDC*.
+* Correspondance Legacy ↔ Entra ID : document *4.1 Correspondance des claims OIDC*.
 
 *En cas de claim manquant :*
 # Vérifier que le claim est listé dans la *fiche de renseignement* transmise à l'IAM.
@@ -88,7 +88,7 @@ En *gestion managée*, le module Apache ({{mod_auth_openidc}}) gère le flux OID
 
 h2. 5. Exemples de code
 
-Les exemples ci-dessous supposent que le claim {{email}} est exposé sous {{OIDC_CLAIM_email}}. Adaptez le nom du claim et le préfixe selon votre application (voir *4. Correspondance des claims OIDC*).
+Les exemples ci-dessous supposent que le claim {{email}} est exposé sous {{OIDC_CLAIM_email}}. Adaptez le nom du claim et le préfixe selon votre application (voir *4.1 Correspondance des claims OIDC*).
 
 Symfony (PHP)
 

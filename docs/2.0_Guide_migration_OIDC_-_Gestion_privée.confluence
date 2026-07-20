@@ -14,8 +14,8 @@ h2. 1. Mode opératoire (lecture)
 * Passe 2 : ouvrez *3. Prérequis / choix de sécurité*, puis *4. Détail technique* (4.1 à 4.9), *5. Pièges courants* ou *6. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Passe 3 : validez le flux OIDC avec les checklists techniques *4.8.1* (rapide) et *4.8.2* (avant livraison) dans *4.8 Tester et diagnostiquer* — complément du tableau de suivi.
 * Pour le déploiement, voir *6. Guides de déploiement*.
-* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*.
-* Pour comprendre le flux OIDC et PKCE avec des schémas visuels, consultez *4.1 Flux OIDC et PKCE – Guide visuel*.
+* Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4.1 Correspondance des claims OIDC*.
+* Pour comprendre le flux OIDC et PKCE avec des schémas visuels, consultez *4.2 Flux OIDC et PKCE – Guide visuel*.
 * Pour les définitions transverses (OIDC, claims, CAM, Eagles, PKCE…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
 ----
@@ -43,7 +43,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 | 10 | B — Hors prod — Raccorder SSO | En cas de délégation technique, informer l'équipe applicative de la prise en charge de la configuration OIDC et des modifications dans le code | Équipe de raccordement | À estimer | Message "prise en charge de la configuration OIDC et des modifications de code" envoyé à l'équipe applicative. | Utiliser le template *5.3 Template guide 2 - étape Prise en charge technique (gestion privée)* (cf. *5. Templates de mail*), puis enregistrer le mail dans le ticket Jira de l'application. | [ ] |
 | 11 | B — Hors prod — Raccorder SSO | Configurer l'environnement OIDC en hors production (recette / dev) | Équipe applicative et/ou Équipe de raccordement | À estimer | Flux OIDC hors production validé : mire Microsoft, authentification OK, redirection vers la page attendue. | — | [ ] |
 | 12 | B — Hors prod — Raccorder SSO | Tester la connexion sur l'URL hors production (email + mot de passe) | Équipe applicative et/ou Équipe de raccordement | À estimer | Connexion OIDC hors production validée (mire, authent, redirection). L'étape *13* adapte le code aux claims ; tant qu'elle n'est pas réalisée, des écrans ou fonctionnalités métier peuvent rester incomplets ou en erreur — c'est attendu. | — | [ ] |
-| 13 | C — Hors prod — Adapter le code | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur la *4.0 Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
+| 13 | C — Hors prod — Adapter le code | Adapter le code avec les claims nécessaires au fonctionnement de l'application (remplacer les anciennes claims en s'appuyant sur la *4.1 Correspondance des claims OIDC*) | Équipe applicative et/ou Équipe de raccordement | À estimer | Merge Request GitLab créée avec les modifications de code. | — | [ ] |
 | 14 | D — Hors prod — Basculer | Planifier la mise en hors production (date de déploiement) | Équipe applicative et CAM Eagles | À estimer | Date de déploiement hors production planifiée et communiquée. | — | [ ] |
 | 15 | D — Hors prod — Basculer | Déployer en hors production. En cas de défaillance en ressource technique DevOps côté applicatif, réaliser le déploiement ; sinon, le demander à l'équipe applicative. | Équipe applicative et/ou Équipe de raccordement | À estimer | Application déployée ; URL accessible. | — | [ ] |
 | 16 | D — Hors prod — Basculer | Réaliser la recette fonctionnelle en hors production (dev / recette) et valider le PV avec le CAM Eagles | Équipe applicative | À estimer | PV de recette hors production validé avec le CAM Eagles. | Vérifier claims (étape *8*). | [ ] |
@@ -212,7 +212,7 @@ Réf. [Validate tokens](https://learn.microsoft.com/en-us/entra/identity-platfor
 | Anti-rejeu | {{nonce}} correspond à la valeur envoyée en 4.2 (si flow interactif). |
 | Contexte tenant | {{ver}} attendu ({{2.0}}) ; {{tid}} vérifié si application mono-tenant. |
 
-Pour le détail des claims (sens, exemples, usages), utilisez le *document externe* *4.0 Correspondance des claims OIDC*.
+Pour le détail des claims (sens, exemples, usages), utilisez le *document externe* *4.1 Correspondance des claims OIDC*.
 
 h3. 4.6 Rafraîchir l'Access Token (Refresh Token)
 
@@ -232,7 +232,7 @@ Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut a
 | Méthode | GET | Récupération des informations utilisateur. |
 | Authorization | {{Authorization: Bearer ACCESS_TOKEN}} | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
 
-Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez le *document externe* *4.0 Correspondance des claims OIDC*.
+Pour le détail des claims potentiellement renvoyés par UserInfo (sens, exemples, usages), utilisez le *document externe* *4.1 Correspondance des claims OIDC*.
 
 h3. 4.8 Tester et diagnostiquer
 
@@ -266,7 +266,7 @@ Cette section décrit les scénarios à exécuter.
 | {{redirect_uri_mismatch}} ou callback refusé | 4.3 Callback puis 4.4 Token |
 | {{invalid_grant}} au token endpoint | 4.4 Échange du code puis 4.3 Callback (code/state) |
 | ID Token rejeté ({{iss}}/{{aud}}/{{nonce}}) | 4.5 Validation ID Token |
-| Claims manquants ou incomplets | 4.7 UserInfo (si utilisé), puis le *document externe* *4.0 Correspondance des claims OIDC* |
+| Claims manquants ou incomplets | 4.7 UserInfo (si utilisé), puis le *document externe* *4.1 Correspondance des claims OIDC* |
 | Erreur après expiration de session | 4.6 Refresh Token (si utilisé), sinon relancer le login |
 
 h4. 4.8.1 Checklist rapide (dev-first)

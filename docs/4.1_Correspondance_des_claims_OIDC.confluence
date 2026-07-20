@@ -1,4 +1,4 @@
-h1. 4. Correspondance des claims OIDC
+h1. 4.1 Correspondance des claims OIDC
 
 Selon l'application, le claim est disponible avec le préfixe *OIDC_CLAIM_*... (souvent) et/ou *REDIRECT_OIDC_CLAIM_*... (cas des applis avec redirection).
 

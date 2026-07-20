@@ -214,7 +214,7 @@ h3. Pièges à retenir
 h3. Lecture
 
 * *1. Guide migration OIDC – Gestion managée* — intégralité.
-* *4. Correspondance des claims OIDC* — table de correspondance Legacy ↔ Entra ID.
+* *4.1 Correspondance des claims OIDC* — table de correspondance Legacy ↔ Entra ID.
 
 ----
 
@@ -272,8 +272,8 @@ h3. Checklists à connaître
 h3. Lecture
 
 * *2. Guide migration OIDC – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.9, 5).
-* *4.1 Flux OIDC et PKCE – Guide visuel* — schémas et analogies pour bien visualiser le flux web app vs SPA.
-* *4. Correspondance des claims OIDC*.
+* *4.2 Flux OIDC et PKCE – Guide visuel* — schémas et analogies pour bien visualiser le flux web app vs SPA.
+* *4.1 Correspondance des claims OIDC*.
 
 ----
 
@@ -413,14 +413,14 @@ Cela signifie : par défaut, c'est l'équipe applicative qui déploie. Vous n'in
 h3. Séquence de déploiement manuel (résumé)
 
 # Vérifier l'infrastructure (schéma d'architecture, instances EC2).
-# Sauvegarder le répertoire courant ({code}cp -R /opt/app /opt/app.bak{code}).
-# Préparer les sources : {code}git fetch && git checkout <branche> && git pull{code}.
-# Mettre à jour les variables d'environnement ({code}.env{code}) : Client ID, Client Secret, OIDC/SAML endpoints.
+# Sauvegarder le répertoire courant ({{cp -R /opt/app /opt/app.bak}}).
+# Préparer les sources : {{git fetch && git checkout <branche> && git pull}}.
+# Mettre à jour les variables d'environnement ({{.env}}) : Client ID, Client Secret, OIDC/SAML endpoints.
 # Vérifier l'image Docker et reconstruire si nécessaire.
-# Redémarrer les conteneurs : {code}docker compose up -d <service>{code}.
-# Vérifier les logs : {code}docker compose logs -f <service>{code}.
+# Redémarrer les conteneurs : {{docker compose up -d <service>}}.
+# Vérifier les logs : {{docker compose logs -f <service>}}.
 # Tester la connexion SSO (login OK, claims ou attributs affichés).
-# En cas d'échec : rollback ({code}rm -rf /opt/app && mv /opt/app.bak /opt/app{code}).
+# En cas d'échec : rollback ({{rm -rf /opt/app && mv /opt/app.bak /opt/app}}).
 
 h3. Lecture
 
@@ -498,7 +498,7 @@ h3. Documentation interne (cet espace)
 || *1. Guide OIDC Gestion managée* | Raccordement Apache OIDC (Cloud Place) |
 || *2. Guide OIDC Gestion privée* | Flux Authorization Code, PKCE, validation JWT |
 || *3. Guide SAML Gestion privée* | Flux SAML 2.0, SP/IdP, signature, ACS, SLO |
-|| *4. Correspondance des claims OIDC* | Mapping Legacy → Entra ID |
+|| *4.1 Correspondance des claims OIDC* | Mapping Legacy → Entra ID |
 || *5. Templates de mail* | Communication standardisée à chaque étape |
 || *6.1 Déploiement manuel* | Docker Compose, MyConsole Cloud, AWS Console |
 

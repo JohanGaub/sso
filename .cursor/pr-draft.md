@@ -32,26 +32,23 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 - `.cursor/pr-draft.md`
 - `"docs/1.0_Guide_migration_OIDC_-_Gestion_manag\303\251e.confluence"`
 - `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
-- `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
+- `docs/4.0_Correspondance_des_claims_OIDC.confluence`
 - `docs/4.1_Flux_OIDC_et_PKCE_-_Guide_visuel.confluence`
-- `"docs/5.5_template_guide_2_-_\303\251tape_fin_intervention_technique.confluence"`
-- `"docs/6.1_Guide_de_d\303\251ploiement_manuel.confluence"`
 - `"docs/7.0_Guide_de_formation_nouveaux_d\303\251veloppeurs.confluence"`
+- `docs/4.0_Ressources_techniques.confluence`
 
 ### Last commits
+- 4c55b49 docs(confluence): enhance OIDC and SAML migration guides, update deployment references, and improve link formatting
 - e38ba6e docs(confluence): refine OIDC migration guides and introduce visual guide for better understanding
 - e03e19a docs(confluence): update migration guides and add training guide for new developers
 - f272d1a docs(formalism): hamonize link
 - 1cfc5eb docs(deploy): update deploy references
-- 6b2f6d4 docs(guides): update deploy guidance
 
 ### Diff summary
- .cursor/pr-draft.md                                      | 12 ++++++------
- ...e_migration_OIDC_-_Gestion_manag\303\251e.confluence" |  2 +-
- ...de_migration_OIDC_-_Gestion_priv\303\251e.confluence" |  2 +-
- ...de_migration_SAML_-_Gestion_priv\303\251e.confluence" |  2 +-
- docs/4.1_Flux_OIDC_et_PKCE_-_Guide_visuel.confluence     |  6 +++---
- ...-_\303\251tape_fin_intervention_technique.confluence" |  2 +-
- "docs/6.1_Guide_de_d\303\251ploiement_manuel.confluence" |  6 +++---
- ...de_formation_nouveaux_d\303\251veloppeurs.confluence" | 16 ++++++++--------
- 8 files changed, 24 insertions(+), 24 deletions(-)
+ .cursor/pr-draft.md                                  | 16 +++-------------
+ ...gration_OIDC_-_Gestion_manag\303\251e.confluence" | 10 +++++-----
+ ...igration_OIDC_-_Gestion_priv\303\251e.confluence" | 12 ++++++------
+ docs/4.1_Correspondance_des_claims_OIDC.confluence   |  2 +-
+ docs/4.2_Flux_OIDC_et_PKCE_-_Guide_visuel.confluence |  2 +-
+ ...ormation_nouveaux_d\303\251veloppeurs.confluence" | 20 ++++++++++----------
+ 6 files changed, 26 insertions(+), 36 deletions(-)

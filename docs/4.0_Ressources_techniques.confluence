@@ -1,0 +1,6 @@
+h1. 4. Ressources techniques
+
+Cette section regroupe les ressources techniques de référence pour la migration SSO.
+
+* *4.1 Correspondance des claims OIDC* — table de mapping des attributs utilisateur entre l'ancien SSO (Gardian) et Microsoft Entra ID, avec les deux préfixes possibles ({{OIDC_CLAIM_}} et {{REDIRECT_OIDC_CLAIM_}}).
+* *4.2 Flux OIDC et PKCE – Guide visuel* — schémas et analogies pour comprendre les flux d'authentification OIDC pour une web app classique et une SPA, y compris le mécanisme PKCE et les cas où il s'applique même avec un backend.

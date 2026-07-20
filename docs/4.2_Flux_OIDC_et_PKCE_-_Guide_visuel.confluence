@@ -1,4 +1,4 @@
-h1. 4.1 Comprendre le flux OIDC et PKCE — Guide visuel
+h1. 4.2 Comprendre le flux OIDC et PKCE — Guide visuel
 
 Ce document vulgarise le fonctionnement de l'authentification OIDC avec Microsoft Entra ID, pour deux types d'applications très différents : la *web app classique* (avec un serveur backend) et la *Single Page App* (SPA, sans backend).
 
