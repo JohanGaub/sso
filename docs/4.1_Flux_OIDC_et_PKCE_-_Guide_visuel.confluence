@@ -383,7 +383,7 @@ stop
 
 h2. Références
 
-* [OAuth 2.0 authorization code flow (Microsoft)|https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow]
-* [Single-page application — authorization code flow with PKCE (Microsoft)|https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code]
-* [RFC 7636 — PKCE (IETF)|https://datatracker.ietf.org/doc/html/rfc7636]
+* OAuth 2.0 authorization code flow (Microsoft) — https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow
+* SPA — authorization code flow with PKCE (Microsoft) — https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
+* RFC 7636 — PKCE (IETF) — https://datatracker.ietf.org/doc/html/rfc7636
 * *Dans ce projet* : *2. Guide OIDC – Gestion privée*, sections 3 (décision PKCE) et 4.1 à 4.5 (flux détaillé).

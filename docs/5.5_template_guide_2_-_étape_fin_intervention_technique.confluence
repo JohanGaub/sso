@@ -45,7 +45,7 @@ Exemples :
 
 *Exemple Dis-MOA*
 * créer le fichier *environment.ts* à partir de *environment.example.ts* ;
-* renseigner les paramètres IAM ({code}tenantId{code}, {code}clientId{code}, JWKS) ;
+* renseigner les paramètres IAM ({code}tenantId{code}, {code}clientId{code}, {code}jwksUri{code}) ;
 * activer les paramètres de validation JWT avant déploiement.
 
 h2. Documentation recommandée

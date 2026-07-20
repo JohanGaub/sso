@@ -138,7 +138,7 @@ h3. Lecture
 
 h3. Exercice de compréhension
 
-Décoder manuellement un JWT de test sur [jwt.io|https://jwt.io] et identifier : {{iss}}, {{aud}}, {{sub}}, {{exp}}, {{email}}.
+Décoder manuellement un JWT de test sur https://jwt.io et identifier : {{iss}}, {{aud}}, {{sub}}, {{exp}}, {{email}}.
 Quel claim sert d'identifiant stable pour corréler un utilisateur dans une base de données ?
 
 ----
@@ -504,13 +504,13 @@ h3. Documentation interne (cet espace)
 
 h3. Références officielles Microsoft
 
-* [OAuth 2.0 authorization code flow|https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow]
-* [OpenID Connect on the Microsoft identity platform|https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc]
-* [ID tokens — claims reference|https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference]
-* [Single sign-on SAML protocol|https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol]
+* OAuth 2.0 authorization code flow — https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow
+* OpenID Connect on the Microsoft identity platform — https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols-oidc
+* ID tokens — claims reference — https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference
+* Single sign-on SAML protocol — https://learn.microsoft.com/en-us/entra/identity-platform/single-sign-on-saml-protocol
 
 h3. Outils utiles
 
-* [jwt.io|https://jwt.io] — décoder et inspecter un JWT en ligne.
-* [SAML Tracer (extension Firefox/Chrome)|https://addons.mozilla.org/fr/firefox/addon/saml-tracer/] — capturer les échanges SAML dans le navigateur.
-* [OpenID Connect Debugger|https://oidcdebugger.com] — tester le flux OIDC interactivement.
+* jwt.io — décoder et inspecter un JWT en ligne : https://jwt.io
+* SAML Tracer (extension Firefox/Chrome) — capturer les échanges SAML : https://addons.mozilla.org/fr/firefox/addon/saml-tracer/
+* OpenID Connect Debugger — tester le flux OIDC interactivement : https://oidcdebugger.com

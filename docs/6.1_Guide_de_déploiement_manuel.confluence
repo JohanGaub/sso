@@ -21,7 +21,7 @@ h3. 1.1 Consultation du schéma d'architecture
 Accéder à :
 
 {code}
-[Archifactory|https://archifactory.enedis.fr]
+https://archifactory.enedis.fr
 {code}
 
 * Rechercher l'application à l'aide de son identifiant INS.
@@ -49,7 +49,7 @@ h3. 1.2 Identification des instances
 Accéder à :
 
 {code}
-[Inventaire|https://inventaire.enedis.fr]
+https://inventaire.enedis.fr
 {code}
 
 Navigation :
@@ -89,7 +89,7 @@ h2. 2. Démarrage des instances
 Accéder à :
 
 {code}
-[Console Web|https://console.web-enedis.fr]
+https://console.web-enedis.fr
 {code}
 
 Navigation :
