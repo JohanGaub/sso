@@ -2,7 +2,7 @@ h1. 4. Correspondance des claims OIDC
 
 Selon l'application, le claim est disponible avec le préfixe *OIDC_CLAIM_*... (souvent) et/ou *REDIRECT_OIDC_CLAIM_*... (cas des applis avec redirection).
 
-h3. Claims métier (utilisés par l'application)
+h2. Claims métier (utilisés par l'application)
 
 || Ancien claim (Legacy) || Nouveau claim (préfixe: OIDC_CLAIM_ ou REDIRECT_OIDC_CLAIM_) || Exemple || Description ||
 | Legacy non documenté | sub | 7pQm9sKx2L3nV4aBcDeFgHiJkLmNoPqRsTuVwXyZ123 | Identifiant *stable* et unique du sujet (utilisateur) dans l'IdP. Sert d'identifiant technique pour corréler un utilisateur côté application. |
@@ -27,7 +27,7 @@ Pour éviter les ambiguïtés côté application, définir une règle de priorit
 *Interprétation de la colonne "Ancien claim (Legacy)" :* la mention *Legacy non documenté* signifie que la documentation historique ne précise pas ce claim.
 Cela signifie simplement que la documentation n'est pas actualisée ou reste incomplète sur ce point.
 
-h3. Claims de validation technique (token et sécurité)
+h2. Claims de validation technique (token et sécurité)
 
 *À faire absolument :* valider {{iss}} et {{aud}} avec les valeurs attendues, vérifier {{ver}} ({{2.0}}) ; si l'application est mono-tenant, vérifier aussi {{tid}} contre le tenant autorisé.
 

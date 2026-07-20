@@ -137,7 +137,7 @@ h3. 4.4 Acteurs, systèmes & plateformes internes
 h3. 4.5 Conventions documentaires & process
 
 || Terme || Définition ||
-| *Convention de notation* | Dans les exemples d'URL et de corps de requête, les valeurs à remplacer par vos propres données sont notées entre chevrons (ex. {{CLIENT_ID}}, {{CODE}}, {{REDIRECT_URI}}). |
+| *Convention de notation* | Deux notations coexistent dans la documentation : (1) {{monospace}} — formatage Confluence pour les noms techniques (paramètres, claims, commandes) ; (2) les valeurs *à remplacer* par vos propres données sont notées entre chevrons, ex. {{CLIENT_ID}}, {{REDIRECT_URI}}. |
 | *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent {{main}}). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
 
 ----

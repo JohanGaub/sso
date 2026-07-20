@@ -259,7 +259,7 @@ Cette section décrit les scénarios à exécuter.
 * (Optionnel) Refresh / UserInfo si demandés :
 ** si {{offline_access}} est utilisé : vérifier que le refresh (4.6) remplace bien les tokens,
 ** si UserInfo est utilisé : vérifier que 4.7 renvoie les claims attendus.
-* En cas d’échec : revenir à la section concernée (4.3, 4.4, 4.5, 4.6 ou 4.7), corriger, puis rejouer le scénario.
+* En cas d’échec : revenir à la section concernée (voir tableau ci-dessous), corriger, puis rejouer le scénario.
 
 || Symptôme observé || Étape à vérifier d’abord ||
 | {{redirect_uri_mismatch}} ou callback refusé | 4.3 Callback puis 4.4 Token |
@@ -282,9 +282,7 @@ h4. 4.8.2 Checklist de validation finale (avant livraison)
 * Claims attendus validés (id_token et/ou UserInfo selon architecture).
 * Déconnexion locale validée côté application.
 * Logs exploitables en cas d’échec, sans fuite de données sensibles.
-* PV de recette fonctionnelle hors production (dev / recette) validé avec le CAM Eagles.
-* PV de recette fonctionnelle pré-production validé avec le CAM Eagles.
-* PV de recette fonctionnelle production validé avec le CAM Eagles.
+* PV de recette fonctionnelle validé avec le CAM Eagles pour chaque environnement (hors production, pré-production, production).
 
 *Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).
 

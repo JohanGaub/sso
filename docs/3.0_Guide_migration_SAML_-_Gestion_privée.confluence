@@ -256,7 +256,7 @@ Checklist rapide (ce que vérifier en priorité) :
 
 En cas de doute, activez des logs détaillés en hors production (dev / recette) (sans données sensibles), et gardez des messages clairs en production (attribut manquant/invalide, signature refusée, etc.).
 Si le blocage concerne la validation de signature, revenez d’abord à *4.3 Vérifier la signature SAML* puis à *Checklist de validation minimale (dev-first)*.
-En cas d’échec sur un scénario, corrigez la section concernée (3.3, 3.5, 4.6 ou 3.7), puis rejouez le scénario avant de passer au suivant.
+En cas d’échec sur un scénario, corrigez la section concernée (voir tableau ci-dessous), puis rejouez le scénario avant de passer au suivant.
 
 || Symptôme observé || Étape à vérifier d’abord ||
 | Signature invalide ou assertion refusée | 4.3 Vérifier la signature SAML |
