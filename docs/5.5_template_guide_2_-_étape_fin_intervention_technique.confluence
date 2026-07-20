@@ -2,9 +2,9 @@ h1. 5.5 Template guide 2 - étape Fin d'intervention technique
 
 h2. Template – Fin d'intervention de migration SSO
 
-*Objet :* [Migration SSO] Validation recette et préparation de mise en pré-production et/ou en production – Application <APPLICATION> (INS : <INS>)
+*Objet :* [Migration SSO] Validation recette et préparation de mise en pré-production et/ou en production – Application [Nom application] (INS : [INS])
 
-Bonjour <RESPONSABLE_APPLICATIF>,
+Bonjour [Responsable applicatif],
 
 Dans le cadre de la migration SSO Gardian vers Microsoft Entra ID, les opérations techniques prévues ont été réalisées.
 
