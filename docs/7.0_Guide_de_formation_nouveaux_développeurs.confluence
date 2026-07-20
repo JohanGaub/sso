@@ -149,7 +149,7 @@ h3. Objectifs
 
 À l'issue de ce module, vous êtes capable de :
 * expliquer ce que fait le module Apache {{mod_auth_openidc}} à la place de l'application ;
-* lire un claim dans les variables d'environnement (préfixe {{OIDC_CLAIM_*}} vs {{REDIRECT_OIDC_CLAIM_*}}) ;
+* lire un claim dans les variables d'environnement (préfixe {{OIDC_CLAIM_...}} vs {{REDIRECT_OIDC_CLAIM_...}}) ;
 * adapter le code dans les langages courants (PHP, Python, TypeScript) ;
 * dérouler les phases A→F du tableau de suivi du guide 1.
 
@@ -477,7 +477,7 @@ h3. Quiz de clôture (~30 min)
 # Le {{redirect_uri}} peut légèrement varier entre authorize et token. _(Faux)_
 # Le CAM Eagles signe le PV de recette à la place de l'équipe applicative. _(Faux)_
 # Le binding HTTP-POST est utilisé pour envoyer la Response SAML vers l'ACS. _(Vrai)_
-# En gestion privée OIDC, les claims se lisent dans {{OIDC_CLAIM_*}}. _(Faux — c'est la gestion managée)_
+# En gestion privée OIDC, les claims se lisent dans {{OIDC_CLAIM_...}}. _(Faux — c'est la gestion managée)_
 # PKCE est obligatoire pour les apps avec backend sécurisé. _(Faux — recommandé mais pas obligatoire)_
 # La vérification de signature SAML peut être désactivée en développement pour tester plus vite. _(Faux)_
 

@@ -46,7 +46,7 @@ Dans tous les cas, le {{code_verifier}} est généré et stocké *côté serveur
 
 h3. 2.2 Schéma du flux Authorization Code (web app)
 
-{plantuml}
+{noformat}
 @startuml
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 10
@@ -109,7 +109,7 @@ App -> B : Cookie de session (httpOnly, Secure)
 B -> U : Affiche /tableau-de-bord ✅
 
 @enduml
-{plantuml}
+{noformat}
 
 h3. 2.3 Ce qu'il faut retenir
 
@@ -163,7 +163,7 @@ Dans ce schéma :
 
 h3. 3.4 Schéma du flux Authorization Code avec PKCE (SPA)
 
-{plantuml}
+{noformat}
 @startuml
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 10
@@ -211,7 +211,7 @@ B -> B : Valide l'ID Token\n(signature JWKS, iss, aud, nonce, exp)
 B -> U : Affiche /dashboard ✅
 
 @enduml
-{plantuml}
+{noformat}
 
 ----
 
@@ -219,7 +219,7 @@ h2. 4. Pourquoi PKCE protège là où le code seul ne suffit pas
 
 Ce schéma montre concrètement ce qui se passe si un attaquant intercepte le code d'autorisation :
 
-{plantuml}
+{noformat}
 @startuml
 skinparam sequenceArrowThickness 2
 skinparam roundcorner 10
@@ -260,7 +260,7 @@ end note
 IdP -> SPA : ✅ id_token + access_token
 
 @enduml
-{plantuml}
+{noformat}
 
 ----
 
@@ -295,7 +295,7 @@ code_challenge :
 
 Exemple en JavaScript :
 
-{code:js}
+{code:javascript}
 // Générer le code_verifier
 function generateCodeVerifier() {
   const array = new Uint8Array(64);
@@ -342,7 +342,7 @@ En *mémoire JavaScript* (variable d'état React/Vue) de préférence. Pas en lo
 
 h2. 8. Récapitulatif visuel — Vue d'ensemble
 
-{plantuml}
+{noformat}
 @startuml
 skinparam roundcorner 15
 skinparam defaultFontSize 13
@@ -377,7 +377,7 @@ endif
 
 stop
 @enduml
-{plantuml}
+{noformat}
 
 ----
 
