@@ -2,15 +2,15 @@ h1. 6.1 Déploiement manuel
 
 Ce guide décrit le *déploiement manuel* d'une application conteneurisée (Docker Compose) sur instances EC2 via MyConsole Cloud et Console Web AWS.
 
-Il s'applique *quel que soit l'environnement* (hors production, pré-production ou production) dès lors qu'il n'y a *pas* de pipeline GitLab et que le déploiement se fait à la main.
+Il s'applique *quel que soit l'environnement* dès lors que le déploiement se fait à la main (pas de pipeline GitLab).
 
 *Prérequis* : accès MyConsole Cloud, accès Console Web AWS, et — si applicable — compte utilisateur applicatif pour vérifier l'affichage des claims ou attributs SSO.
 
 *Adapter* les commandes, noms de services, chemins et filtres d'environnement à votre projet.
 
-Le déploiement par *pipeline GitLab* n'est pas couvert ici — voir *6. Guide de déploiement*.
+Le déploiement *automatique* (pipeline GitLab) sera documenté dans *6.2 Déploiement automatique* *(à rédiger)*.
 
-*Index* : *6. Guide de déploiement*.
+*Index* : *6. Guides de déploiement*.
 
 ----
 
