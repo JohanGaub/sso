@@ -1,0 +1,389 @@
+h1. 4.1 Comprendre le flux OIDC et PKCE — Guide visuel
+
+Ce document vulgarise le fonctionnement de l'authentification OIDC avec Microsoft Entra ID, pour deux types d'applications très différents : la *web app classique* (avec un serveur backend) et la *Single Page App* (SPA, sans backend).
+
+Il explique aussi *pourquoi* PKCE existe et *comment* il fonctionne — avec des analogies du quotidien.
+
+{info}
+*À qui s'adresse ce document ?*
+À tout développeur qui intègre un raccordement SSO — que ce soit la première fois ou que vous ayez besoin de consolider votre compréhension du flux. Aucun prérequis au-delà d'une connaissance basique du web (navigateur, requêtes HTTP).
+{info}
+
+----
+
+h2. 1. Avant tout : comprendre les acteurs
+
+Dans un flux OIDC, il y a toujours trois acteurs :
+
+|| Acteur || Rôle || Dans notre contexte ||
+|| *L'utilisateur* | Veut accéder à une ressource protégée | Un agent qui se connecte à une application interne |
+|| *L'application (client)* | Veut savoir qui est l'utilisateur | Votre app (web app, SPA, etc.) |
+|| *Entra ID (IdP)* | Certifie l'identité de l'utilisateur | Microsoft Entra ID — le nouveau SSO cible |
+
+*L'analogie du portier d'hôtel :*
+Imaginez que votre application est un hôtel. Elle ne peut pas vérifier elle-même votre identité — elle fait appel à une agence de sécurité certifiée (Entra ID). L'agence vérifie votre pièce d'identité et délivre un badge temporaire (l'ID Token). L'hôtel accepte le badge sans avoir à re-vérifier votre identité lui-même.
+
+----
+
+h2. 2. Le flux OIDC pour une web app classique (avec backend)
+
+h3. 2.1 Caractéristiques
+
+Une *web app classique* possède un *serveur backend* (ex. Symfony, Spring, Django, Node.js). Ce serveur peut stocker des informations secrètes de manière sécurisée — notamment le {{client_secret}} fourni par l'équipe IAM.
+
+*Analogie :* pensez à une porte d'entrée avec une serrure à double clé. La clé principale ({{client_secret}}) n'est jamais montrée au visiteur — elle reste dans la main du personnel de sécurité (le serveur backend). Le visiteur (le navigateur) ne la voit jamais.
+
+{note}
+*"Mais j'ai une web app avec backend et on m'a quand même demandé d'utiliser PKCE !"*
+
+C'est tout à fait normal — PKCE et {{client_secret}} ne s'excluent pas. Votre web app peut utiliser les *deux* simultanément. Cela arrive dans 3 situations :
+* *Entra ID l'impose* : l'App Registration a l'option *"Require PKCE"* activée par un administrateur IAM.
+* *Votre bibliothèque OIDC l'envoie automatiquement* : les librairies modernes (KnpU, league/oauth2, Spring Security…) génèrent PKCE par défaut depuis 2022-2023.
+* *Bonne pratique "defense in depth"* : même avec un backend sécurisé, ajouter PKCE coûte rien et protège contre l'interception du code dans les logs ou l'historique navigateur.
+
+Dans tous les cas, le {{code_verifier}} est généré et stocké *côté serveur backend* — le navigateur ne le voit jamais. La sécurité n'est pas dégradée.
+{note}
+
+h3. 2.2 Schéma du flux Authorization Code (web app)
+
+{plantuml}
+@startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam sequenceParticipantBorderColor #444444
+skinparam noteBorderColor #888888
+skinparam noteBackgroundColor #FFFDE7
+
+title Flux OIDC – Web App classique (avec backend + client_secret)
+
+actor "Utilisateur" as U #LightBlue
+participant "Navigateur" as B #LightGreen
+participant "Backend\n(Symfony, Node...)" as App #Orange
+participant "Entra ID\n(IdP)" as IdP #LightCoral
+
+autonumber
+
+U -> B : Accède à une URL protégée\n(ex. /tableau-de-bord)
+B -> App : GET /tableau-de-bord
+App -> B : HTTP 302 → redirect vers Entra ID\n(client_id, redirect_uri, scope, state, nonce)
+note right of App
+  L'app génère un **state** aléatoire
+  (stocké en session pour vérification anti-CSRF)
+  et un **nonce** (anti-rejeu dans l'ID Token).
+end note
+
+B -> IdP : GET /authorize?client_id=...&state=...&nonce=...
+IdP -> B : Affiche la page de connexion Microsoft
+U -> IdP : Saisit email + mot de passe (+ MFA si requis)
+
+IdP -> B : HTTP 302 → redirect vers redirect_uri\n?code=CODE_UNIQUE&state=STATE
+note right of IdP
+  Entra ID génère un **code d'autorisation**
+  à usage unique, valable ~60 secondes.
+  Ce code seul ne donne accès à rien.
+end note
+
+B -> App : GET /callback?code=CODE_UNIQUE&state=STATE
+note right of App
+  ✅ Vérifie que **state** reçu == state stocké
+  (protection contre les attaques CSRF)
+end note
+
+App -> IdP : POST /token\n{ code, client_id, **client_secret**, redirect_uri }
+note right of App
+  Cette requête se fait **serveur → serveur**
+  (le navigateur n'y participe pas).
+  Le **client_secret** ne transite jamais
+  dans le navigateur.
+end note
+
+IdP -> App : { id_token, access_token, refresh_token }
+note right of App
+  L'app valide l'ID Token :
+  - Signature (clé publique JWKS)
+  - iss, aud, nonce, exp
+  Si tout est OK → utilisateur authentifié.
+end note
+
+App -> B : Cookie de session (httpOnly, Secure)
+B -> U : Affiche /tableau-de-bord ✅
+
+@enduml
+{plantuml}
+
+h3. 2.3 Ce qu'il faut retenir
+
+* *Le navigateur ne voit jamais les tokens* : le {{client_secret}} et les tokens restent côté serveur.
+* *Le code d'autorisation* n'est qu'un intermédiaire éphémère — il ne sert qu'à obtenir les vrais tokens.
+* *Le {{state}}* protège contre les attaques CSRF (quelqu'un vous forcent à lancer un flux d'authentification à votre insu).
+* *Le {{nonce}}* protège contre le rejeu de tokens (quelqu'un vous renvoie un ancien ID Token).
+
+----
+
+h2. 3. Le flux OIDC pour une SPA (Single Page App)
+
+h3. 3.1 Le problème fondamental
+
+Une SPA (React, Vue, Angular...) n'a pas de backend propre. *Tout s'exécute dans le navigateur de l'utilisateur.*
+
+*Le problème :* on ne peut pas stocker un {{client_secret}} dans le navigateur. Pourquoi ?
+
+Parce que le code JavaScript d'une SPA est *public* — n'importe qui peut l'inspecter (F12 → Sources). Si vous y mettiez un secret, n'importe qui pourrait le lire et l'utiliser.
+
+{warning}
+*Règle absolue :* ne jamais mettre un {{client_secret}} dans le code d'une SPA, d'une app mobile, ou dans n'importe quoi qui s'exécute côté client (navigateur, application téléchargeable).
+{warning}
+
+*Analogie :* imaginez que vous glissez votre code PIN sous votre carte bancaire avec un post-it. Quiconque tient votre carte peut lire le PIN. Une SPA, c'est pareil : le code est "lisible par tous".
+
+h3. 3.2 La solution : PKCE
+
+*PKCE* (Proof Key for Code Exchange, prononcé "pixy") résout ce problème.
+
+*L'idée centrale :* au lieu d'utiliser un secret statique partagé ({{client_secret}}), la SPA génère un secret *éphémère et unique* pour chaque authentification. Elle en envoie une version cryptée (empreinte) au début, et révèle le secret original à la fin. Entra ID vérifie que les deux correspondent.
+
+h3. 3.3 Analogie : le casier du vestiaire avec mot de passe
+
+Imaginez que vous allez au vestiaire d'un musée :
+
+1. *Avant de déposer votre veste*, vous inventez un mot de passe à usage unique : {{monMotDePasse}} et vous donnez au préposé une *empreinte cryptée* de ce mot de passe : {{aX7pQ2mZ...}} (calculée avec SHA-256). Le préposé note l'empreinte dans son registre.
+
+2. *Le préposé vous donne un ticket* numéroté (le code d'autorisation).
+
+3. *Si quelqu'un vole votre ticket* pendant que vous visitez le musée... il peut essayer de récupérer votre veste, mais le préposé lui demandera de réciter le mot de passe. L'attaquant ne connaît pas {{monMotDePasse}} — il n'a que l'empreinte — donc *il ne peut pas récupérer la veste*.
+
+4. *À votre retour*, vous présentez le ticket + vous dites {{monMotDePasse}}. Le préposé recalcule l'empreinte et vérifie. Si ça correspond → vous récupérez votre veste.
+
+Dans ce schéma :
+* *Votre veste* = les tokens (ID Token, Access Token)
+* *Le ticket* = le code d'autorisation
+* *{{monMotDePasse}}* = le {{code_verifier}} (secret éphémère de la SPA)
+* *L'empreinte cryptée* = le {{code_challenge}} (SHA-256 du code_verifier)
+* *Le préposé* = Entra ID
+
+h3. 3.4 Schéma du flux Authorization Code avec PKCE (SPA)
+
+{plantuml}
+@startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam noteBackgroundColor #E8F5E9
+
+title Flux OIDC – SPA avec PKCE (sans client_secret)
+
+actor "Utilisateur" as U #LightBlue
+participant "Navigateur\n(SPA)" as B #LightGreen
+participant "Entra ID\n(IdP)" as IdP #LightCoral
+
+autonumber
+
+U -> B : Accède à une route protégée\n(ex. /dashboard)
+
+B -> B : 🎲 Génère un secret aléatoire :\n   **code_verifier** = "xK9mR2...aZ7" (43-128 chars)\n   **code_challenge** = BASE64URL(SHA256(code_verifier))
+note right of B
+  Ces deux valeurs sont générées
+  **localement dans le navigateur**.
+  Elles sont liées mathématiquement :
+  on ne peut pas retrouver code_verifier
+  à partir de code_challenge.
+end note
+
+B -> IdP : GET /authorize?\n  client_id=...\n  **code_challenge=aX7pQ2mZ...**\n  code_challenge_method=S256\n  redirect_uri=...\n  scope=openid profile\n  state=STATE\n  nonce=NONCE
+
+IdP -> IdP : Mémorise le code_challenge\nassocié à cette tentative d'auth
+IdP -> B : Affiche la page de connexion Microsoft
+U -> IdP : Saisit email + mot de passe
+IdP -> B : HTTP 302 → redirect_uri\n#code=CODE_UNIQUE&state=STATE
+
+B -> B : ✅ Vérifie state (anti-CSRF)
+
+B -> IdP : POST /token {\n  code=CODE_UNIQUE,\n  **code_verifier="xK9mR2...aZ7"**,\n  client_id=...,\n  redirect_uri=...\n  ⛔ PAS de client_secret\n}
+
+IdP -> IdP : Calcule SHA256(code_verifier)\nVérifie == code_challenge reçu à l'étape 3
+note right of IdP
+  ✅ Si le hash correspond → OK
+  ❌ Si quelqu'un a volé le code mais
+     n'a pas le code_verifier → refusé
+end note
+
+IdP -> B : { id_token, access_token }
+B -> B : Valide l'ID Token\n(signature JWKS, iss, aud, nonce, exp)
+B -> U : Affiche /dashboard ✅
+
+@enduml
+{plantuml}
+
+----
+
+h2. 4. Pourquoi PKCE protège là où le code seul ne suffit pas
+
+Ce schéma montre concrètement ce qui se passe si un attaquant intercepte le code d'autorisation :
+
+{plantuml}
+@startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 10
+skinparam noteBackgroundColor #FFEBEE
+
+title PKCE – Que se passe-t-il si quelqu'un vole le code ?
+
+actor "SPA légitime" as SPA #LightGreen
+actor "Attaquant" as Att #Salmon
+participant "Entra ID" as IdP #LightCoral
+
+autonumber
+
+SPA -> IdP : GET /authorize?code_challenge=**"aX7pQ2mZ"**&...
+IdP -> SPA : Code d'autorisation : **CODE123**
+
+note over Att
+  L'attaquant intercepte la redirection
+  et récupère CODE123
+  (ex. via une app malveillante installée
+  sur le même appareil)
+end note
+
+Att -> IdP : POST /token { code=**CODE123**, ??? }
+note right of IdP
+  ❓ "Quel est le **code_verifier** ?"
+  "SHA256(???) doit être égal à **aX7pQ2mZ**"
+  L'attaquant n'a que l'empreinte, pas le secret.
+end note
+IdP -> Att : ❌ **invalid_grant** — accès refusé
+
+SPA -> IdP : POST /token { code=**CODE123**, code_verifier=**"xK9mR2...aZ7"** }
+note right of IdP
+  SHA256("xK9mR2...aZ7") == "aX7pQ2mZ" ✅
+  La SPA prouve qu'elle est bien celle
+  qui a initié la demande.
+end note
+IdP -> SPA : ✅ id_token + access_token
+
+@enduml
+{plantuml}
+
+----
+
+h2. 5. Web App vs SPA — Comparaison côte à côte
+
+|| | *Web App (backend seul)* | *Web App + PKCE* | *SPA / App mobile* |
+|| *Où s'exécute le code ?* | Serveur (privé) | Serveur (privé) | Navigateur (public) |
+|| *Peut stocker un secret ?* | ✅ Oui | ✅ Oui | ❌ Non |
+|| *{{client_secret}}* | ✅ Utilisé | ✅ Utilisé | ❌ Absent |
+|| *PKCE* | ❌ Optionnel | ✅ Obligatoire (si Entra ID l'impose ou recommandé) | ✅ Obligatoire |
+|| *Qui génère le code_verifier ?* | — | Le serveur backend | Le navigateur (SPA) |
+|| *Le navigateur voit les tokens ?* | ❌ Non | ❌ Non | ✅ Oui (mémoire JS) |
+|| *La requête /token est faite par...* | Le serveur backend | Le serveur backend | Le navigateur (SPA) |
+|| *Niveau de sécurité* | Bon | ✅ Meilleur (double protection) | Bon (avec PKCE) |
+|| *Protection CSRF* | {{state}} | {{state}} | {{state}} |
+|| *Protection anti-rejeu* | {{nonce}} | {{nonce}} | {{nonce}} |
+
+----
+
+h2. 6. Le code_verifier en pratique — règles techniques
+
+{noformat}
+code_verifier :
+  - Chaîne aléatoire de 43 à 128 caractères
+  - Caractères autorisés : A-Z, a-z, 0-9, -, _, ., ~
+  - Généré localement dans la SPA (ex. via crypto.getRandomValues)
+
+code_challenge :
+  - code_challenge = BASE64URL(SHA256(ASCII(code_verifier)))
+  - Méthode : toujours "S256" (SHA-256) — ne pas utiliser "plain"
+{noformat}
+
+Exemple en JavaScript :
+
+{code:js}
+// Générer le code_verifier
+function generateCodeVerifier() {
+  const array = new Uint8Array(64);
+  crypto.getRandomValues(array);
+  return btoa(String.fromCharCode(...array))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+// Calculer le code_challenge (SHA-256 + base64url)
+async function generateCodeChallenge(verifier) {
+  const data = new TextEncoder().encode(verifier);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+// Usage
+const codeVerifier = generateCodeVerifier();
+const codeChallenge = await generateCodeChallenge(codeVerifier);
+// Stocker codeVerifier en sessionStorage (pas localStorage)
+sessionStorage.setItem('pkce_verifier', codeVerifier);
+{code}
+
+----
+
+h2. 7. Les 5 questions que tout le monde se pose
+
+*"Pourquoi le navigateur fait-il une redirection vers Entra ID plutôt que de le contacter directement ?"*
+Parce que l'utilisateur doit *saisir son mot de passe directement sur le site d'Entra ID* — pas sur votre app. Votre app ne voit jamais le mot de passe. C'est le principe fondamental du SSO : la délégation d'authentification.
+
+*"Pourquoi y a-t-il un code intermédiaire et pas directement un token ?"*
+Le code transite dans l'URL du navigateur (visible dans les logs, l'historique, les en-têtes HTTP Referer). Les tokens ne doivent pas y transiter. Le code est éphémère (~60s, usage unique) et ne vaut rien sans le secret pour l'échanger.
+
+*"PKCE protège contre quoi exactement ?"*
+Contre le vol du code d'autorisation par une application malveillante installée sur le même appareil (attaque "authorization code interception"). Sans PKCE sur une SPA, quelqu'un qui intercepte le code peut l'échanger contre des tokens — car il n'y a pas de {{client_secret}} à fournir.
+
+*"Est-ce qu'une web app devrait aussi utiliser PKCE ?"*
+Microsoft le recommande pour toutes les apps. Pour une web app avec backend, PKCE en plus du {{client_secret}} est une sécurité supplémentaire — mais le {{client_secret}} seul suffit déjà si le serveur est sécurisé.
+
+*"Où stocker les tokens dans une SPA ?"*
+En *mémoire JavaScript* (variable d'état React/Vue) de préférence. Pas en localStorage (XSS y a accès), pas en sessionStorage si vous pouvez l'éviter. L'Access Token doit avoir une durée de vie courte (5-60 min).
+
+----
+
+h2. 8. Récapitulatif visuel — Vue d'ensemble
+
+{plantuml}
+@startuml
+skinparam roundcorner 15
+skinparam defaultFontSize 13
+
+title Vue d'ensemble – Choisir son flux OIDC
+
+start
+
+:L'application a-t-elle un backend\n(serveur privé, non exposé) ?;
+
+if (OUI) then (Web App / API)
+  :Flux Authorization Code\n**avec client_secret**;
+  note right
+    Le client_secret est stocké
+    côté serveur uniquement.
+    Le navigateur ne voit jamais les tokens.
+  end note
+  :PKCE optionnel\n(recommandé par Microsoft);
+else (NON — SPA / App mobile)
+  :Flux Authorization Code\n**avec PKCE obligatoire**;
+  note right
+    Pas de client_secret
+    (le code source est public).
+    PKCE prouve la continuité du flux.
+  end note
+  :Stocker les tokens en mémoire JS\n(pas en localStorage);
+endif
+
+:Valider l'ID Token :\n- Signature (JWKS)\n- iss, aud, nonce, exp;
+
+:Utiliser l'Access Token\npour appeler les APIs protégées;
+
+stop
+@enduml
+{plantuml}
+
+----
+
+h2. Références
+
+* [OAuth 2.0 authorization code flow (Microsoft)|https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow]
+* [Single-page application — authorization code flow with PKCE (Microsoft)|https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code]
+* [RFC 7636 — PKCE (IETF)|https://datatracker.ietf.org/doc/html/rfc7636]
+* *Dans ce projet* : *2. Guide OIDC – Gestion privée*, sections 3 (décision PKCE) et 4.1 à 4.5 (flux détaillé).

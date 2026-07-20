@@ -30,24 +30,19 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `"docs/0.0_Migration_SSO_-_Synth\303\250se.confluence"`
 - `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
-- `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
-- `docs/4.0_Correspondance_des_claims_OIDC.confluence`
-- `"docs/5.2_template_guide_1_-_\303\251tape_fin_intervention_technique.confluence"`
 - `"docs/7.0_Guide_de_formation_nouveaux_d\303\251veloppeurs.confluence"`
+- `docs/4.1_Flux_OIDC_et_PKCE_-_Guide_visuel.confluence`
 
 ### Last commits
+- e03e19a docs(confluence): update migration guides and add training guide for new developers
 - f272d1a docs(formalism): hamonize link
 - 1cfc5eb docs(deploy): update deploy references
 - 6b2f6d4 docs(guides): update deploy guidance
 - 4c6f766 docs(sso): update deploy intro
-- bd736c2 docs(sso): align env phases, PV validation and deployment scope across guides
 
 ### Diff summary
- .cursor/pr-draft.md                                                | 7 -------
- "docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence" | 2 +-
- "docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence" | 2 +-
- docs/4.0_Correspondance_des_claims_OIDC.confluence                 | 4 ++--
- ...e_guide_1_-_\303\251tape_fin_intervention_technique.confluence" | 2 +-
- 5 files changed, 5 insertions(+), 12 deletions(-)
+ .cursor/pr-draft.md                                         | 13 ++-----------
+ ...Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence" |  3 ++-
+ ...de_de_formation_nouveaux_d\303\251veloppeurs.confluence" |  1 +
+ 3 files changed, 5 insertions(+), 12 deletions(-)

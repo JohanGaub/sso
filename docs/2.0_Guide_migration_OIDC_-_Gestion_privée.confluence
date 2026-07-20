@@ -15,6 +15,7 @@ h2. 1. Mode opératoire (lecture)
 * Passe 3 : validez le flux OIDC avec les checklists techniques *4.8.1* (rapide) et *4.8.2* (avant livraison) dans *4.8 Tester et diagnostiquer* — complément du tableau de suivi.
 * Pour le déploiement, voir *6. Guides de déploiement*.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4. Correspondance des claims OIDC*.
+* Pour comprendre le flux OIDC et PKCE avec des schémas visuels, consultez *4.1 Flux OIDC et PKCE – Guide visuel*.
 * Pour les définitions transverses (OIDC, claims, CAM, Eagles, PKCE…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
 ----
@@ -67,7 +68,7 @@ h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
 
 h2. 3. Prérequis / choix de sécurité
 
-*Décision PKCE (déclencheur) :* *avec PKCE* si SPA / app mobile (pas de backend pour stocker un secret) ; *sans PKCE* possible si l'application a un backend serveur (Symfony, Spring, Node, etc.).
+*Décision PKCE (déclencheur) :* *avec PKCE* obligatoire si SPA / app mobile (pas de backend pour stocker un secret) ; *avec PKCE également* si l'App Registration Entra ID a l'option *"Require PKCE"* activée ou si votre bibliothèque OIDC le génère automatiquement — PKCE et {{client_secret}} sont compatibles et cumulables sur une web app avec backend.
 
 À valider *avant* de dérouler les sections 4.1 à 4.9 :
 * Type de client :

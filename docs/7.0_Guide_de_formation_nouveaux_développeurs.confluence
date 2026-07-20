@@ -272,6 +272,7 @@ h3. Checklists à connaître
 h3. Lecture
 
 * *2. Guide migration OIDC – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.9, 5).
+* *4.1 Flux OIDC et PKCE – Guide visuel* — schémas et analogies pour bien visualiser le flux web app vs SPA.
 * *4. Correspondance des claims OIDC*.
 
 ----
