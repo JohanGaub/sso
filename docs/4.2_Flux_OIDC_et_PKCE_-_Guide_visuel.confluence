@@ -1,12 +1,14 @@
 h1. 4.2 Comprendre le flux OIDC et PKCE — Guide visuel
 
-Ce document vulgarise le fonctionnement de l'authentification OIDC avec Microsoft Entra ID, pour deux types d'applications très différents : la *web app classique* (avec un serveur backend) et la *Single Page App* (SPA, sans backend).
+*OIDC* (OpenID Connect) est le protocole standard qui permet à une application de déléguer la vérification de l'identité d'un utilisateur à un fournisseur d'identité externe (*IdP*, pour *Identity Provider*) — ici, Microsoft Entra ID.
 
-Il explique aussi *pourquoi* PKCE existe et *comment* il fonctionne — avec des analogies du quotidien.
+Ce document vulgarise le fonctionnement de l'authentification OIDC avec Entra ID, pour deux types d'applications : la *web app classique* (avec un serveur backend) et la *Single Page App* (SPA, sans backend).
+
+Il explique aussi *pourquoi* le mécanisme PKCE existe et *comment* il fonctionne (section 3).
 
 {info}
 *À qui s'adresse ce document ?*
-À tout développeur qui intègre un raccordement SSO — que ce soit la première fois ou que vous ayez besoin de consolider votre compréhension du flux. Aucun prérequis au-delà d'une connaissance basique du web (navigateur, requêtes HTTP).
+À tout développeur qui intègre un raccordement SSO.
 {info}
 
 ----
@@ -21,7 +23,9 @@ Dans un flux OIDC, il y a toujours trois acteurs :
 || *Entra ID (IdP)* | Certifie l'identité de l'utilisateur | Microsoft Entra ID — le nouveau SSO cible |
 
 *L'analogie du portier d'hôtel :*
-Imaginez que votre application est un hôtel. Elle ne peut pas vérifier elle-même votre identité — elle fait appel à une agence de sécurité certifiée (Entra ID). L'agence vérifie votre pièce d'identité et délivre un badge temporaire (l'ID Token). L'hôtel accepte le badge sans avoir à re-vérifier votre identité lui-même.
+Imaginez que votre application est un hôtel. Elle ne peut pas vérifier elle-même votre identité. Elle fait appel à une agence de sécurité certifiée (Entra ID). L'agence vérifie votre pièce d'identité (le username et le password) et délivre un badge temporaire (l'ID Token). L'hôtel accepte le badge sans avoir à re-vérifier votre identité lui-même.
+
+{tip}Les abréviations techniques des schémas ({{iss}}, {{aud}}, {{exp}}, {{JWKS}}...) sont définies dans *4.1 Correspondance des claims OIDC* ; les définitions générales (IdP, PKCE, ID Token...) dans *0. Migration SSO – Synthèse*, section 4.{tip}
 
 ----
 
@@ -31,21 +35,13 @@ h3. 2.1 Caractéristiques
 
 Une *web app classique* possède un *serveur backend* (ex. Symfony, Spring, Django, Node.js). Ce serveur peut stocker des informations secrètes de manière sécurisée — notamment le {{client_secret}} fourni par l'équipe IAM.
 
-*Analogie :* pensez à une porte d'entrée avec une serrure à double clé. La clé principale ({{client_secret}}) n'est jamais montrée au visiteur — elle reste dans la main du personnel de sécurité (le serveur backend). Le visiteur (le navigateur) ne la voit jamais.
-
-{note}
-*"Mais j'ai une web app avec backend et on m'a quand même demandé d'utiliser PKCE !"*
-
-C'est tout à fait normal — PKCE et {{client_secret}} ne s'excluent pas. Votre web app peut utiliser les *deux* simultanément. Cela arrive dans 3 situations :
-* *Entra ID l'impose* : l'App Registration a l'option *"Require PKCE"* activée par un administrateur IAM.
-* *Votre bibliothèque OIDC l'envoie automatiquement* : les librairies modernes (KnpU, league/oauth2, Spring Security…) génèrent PKCE par défaut depuis 2022-2023.
-* *Bonne pratique "defense in depth"* : même avec un backend sécurisé, ajouter PKCE coûte rien et protège contre l'interception du code dans les logs ou l'historique navigateur.
-
-Dans tous les cas, le {{code_verifier}} est généré et stocké *côté serveur backend* — le navigateur ne le voit jamais. La sécurité n'est pas dégradée.
-{note}
+*Analogie du {{client_secret}} :* pensez à un livreur qui doit récupérer un colis dans un immeuble sécurisé. Il ne passe pas par l'accueil visiteurs (le navigateur) — il entre par la porte du personnel (le serveur backend) et présente un badge confidentiel (le {{client_secret}}), connu uniquement de son entreprise et du service de sécurité de l'immeuble. Ce badge ({{client_secret}}) n'est jamais montré aux visiteurs qui passent par le hall (le navigateur) : il circule uniquement entre les deux "back-offices" — le serveur de votre application et Entra ID.
 
 h3. 2.2 Schéma du flux Authorization Code (web app)
 
+!4.2-01-flux-web-app.png|width=900!
+
+{expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
 @startuml
 skinparam sequenceArrowThickness 2
@@ -110,12 +106,14 @@ B -> U : Affiche /tableau-de-bord ✅
 
 @enduml
 {noformat}
+{expand}
 
 h3. 2.3 Ce qu'il faut retenir
 
 * *Le navigateur ne voit jamais les tokens* : le {{client_secret}} et les tokens restent côté serveur.
-* *Le code d'autorisation* n'est qu'un intermédiaire éphémère — il ne sert qu'à obtenir les vrais tokens.
-* *Le {{state}}* protège contre les attaques CSRF (quelqu'un vous forcent à lancer un flux d'authentification à votre insu).
+* *Le code d'autorisation* est une chaîne à usage unique, générée par Entra ID juste après la connexion, valable ~60 secondes. Ce n'est ni un mot de passe ni un token : il ne prouve rien à lui seul, il ne sert qu'à être échangé contre les vrais tokens (ID Token, Access Token) auprès d'Entra ID. C'est un concept différent du {{client_secret}} (vu ci-dessus) et du {{code_verifier}}/{{code_challenge}} (vus section 3) — les trois interviennent ensemble mais jouent des rôles différents.
+* *La signature de l'ID Token* est vérifiée avant de lui faire confiance (détail des claims contrôlés : *4.1 Correspondance des claims OIDC*).
+* *Le {{state}}* protège contre les attaques CSRF (Cross-Site Request Forgery — quelqu'un vous force à lancer un flux d'authentification à votre insu).
 * *Le {{nonce}}* protège contre le rejeu de tokens (quelqu'un vous renvoie un ancien ID Token).
 
 ----
@@ -131,38 +129,48 @@ Une SPA (React, Vue, Angular...) n'a pas de backend propre. *Tout s'exécute dan
 Parce que le code JavaScript d'une SPA est *public* — n'importe qui peut l'inspecter (F12 → Sources). Si vous y mettiez un secret, n'importe qui pourrait le lire et l'utiliser.
 
 {warning}
-*Règle absolue :* ne jamais mettre un {{client_secret}} dans le code d'une SPA, d'une app mobile, ou dans n'importe quoi qui s'exécute côté client (navigateur, application téléchargeable).
+*Règle absolue :* ne jamais mettre un {{client_secret}} dans le code d'une SPA, d'une app mobile, ou tout ce qui s'exécute côté client (navigateur, application téléchargeable).
 {warning}
 
-*Analogie :* imaginez que vous glissez votre code PIN sous votre carte bancaire avec un post-it. Quiconque tient votre carte peut lire le PIN. Une SPA, c'est pareil : le code est "lisible par tous".
+*Analogie :* imaginez que vous colliez votre code PIN sous votre carte bancaire avec un post-it. Quiconque tient votre carte peut lire le PIN. Une SPA, c'est pareil : le code est "lisible par tous".
 
 h3. 3.2 La solution : PKCE
 
 *PKCE* (Proof Key for Code Exchange, prononcé "pixy") résout ce problème.
 
-*L'idée centrale :* au lieu d'utiliser un secret statique partagé ({{client_secret}}), la SPA génère un secret *éphémère et unique* pour chaque authentification. Elle en envoie une version cryptée (empreinte) au début, et révèle le secret original à la fin. Entra ID vérifie que les deux correspondent.
+*L'idée centrale :* au lieu d'utiliser un secret statique partagé ({{client_secret}}), la SPA génère elle-même un secret temporaire, unique à chaque authentification : le {{code_verifier}}. Elle n'envoie jamais ce secret directement — elle en envoie d'abord une empreinte cryptée (le {{code_challenge}}), et ne révèle le {{code_verifier}} lui-même qu'à la toute fin, au moment d'échanger le code d'autorisation contre les tokens. Entra ID vérifie alors que l'empreinte du {{code_verifier}} reçu correspond bien au {{code_challenge}} initial.
 
-h3. 3.3 Analogie : le casier du vestiaire avec mot de passe
+h3. 3.3 Analogie : le vestiaire de musée avec mot de passe
 
-Imaginez que vous allez au vestiaire d'un musée :
+Imaginez que vous allez déposer votre manteau au vestiaire d'un musée. Trois objets interviennent, chacun avec son équivalent technique :
 
-1. *Avant de déposer votre veste*, vous inventez un mot de passe à usage unique : {{monMotDePasse}} et vous donnez au préposé une *empreinte cryptée* de ce mot de passe : {{aX7pQ2mZ...}} (calculée avec SHA-256). Le préposé note l'empreinte dans son registre.
+* *Un mot de passe que vous inventez vous-même*, gardé secret — c'est l'équivalent du {{code_verifier}}.
+* *Une empreinte de ce mot de passe*, obtenue en le passant dans une moulinette à sens unique (algorithme SHA-256) — c'est l'équivalent du {{code_challenge}}. Comme pour une empreinte digitale, impossible de retrouver le mot de passe en partant de l'empreinte.
+* *Un ticket numéroté* que le vestiaire vous remet en échange de votre manteau — c'est l'équivalent du code d'autorisation.
 
-2. *Le préposé vous donne un ticket* numéroté (le code d'autorisation).
+*Déroulé, étape par étape :*
 
-3. *Si quelqu'un vole votre ticket* pendant que vous visitez le musée... il peut essayer de récupérer votre veste, mais le préposé lui demandera de réciter le mot de passe. L'attaquant ne connaît pas {{monMotDePasse}} — il n'a que l'empreinte — donc *il ne peut pas récupérer la veste*.
+1. *Avant de déposer votre manteau*, vous inventez votre mot de passe ({{code_verifier}}) et calculez son empreinte ({{code_challenge}}). Vous ne donnez au préposé (Entra ID) que *l'empreinte* — jamais le mot de passe. Le préposé la note dans son registre et dépose votre manteau.
+2. *Le préposé vous remet un ticket numéroté* (le code d'autorisation). Ce ticket ne suffit pas à lui seul pour récupérer le manteau.
+3. *À votre retour*, vous présentez le ticket et récitez votre mot de passe d'origine ({{code_verifier}}). Le préposé recalcule l'empreinte à partir de ce mot de passe et vérifie qu'elle correspond à celle notée dans son registre. Si ça correspond → vous récupérez votre manteau.
 
-4. *À votre retour*, vous présentez le ticket + vous dites {{monMotDePasse}}. Le préposé recalcule l'empreinte et vérifie. Si ça correspond → vous récupérez votre veste.
+*Et si quelqu'un vous vole votre ticket pendant la visite ?*
+Un pickpocket se présente au vestiaire avec le ticket volé. Le préposé lui demande de réciter le mot de passe pour confirmer que c'est bien lui qui a déposé le manteau. Le pickpocket *n'a que le ticket* — il n'a jamais connu votre mot de passe, qui n'a jamais quitté votre poche. Il ne peut pas le réciter : *le vol échoue*.
 
-Dans ce schéma :
-* *Votre veste* = les tokens (ID Token, Access Token)
-* *Le ticket* = le code d'autorisation
-* *{{monMotDePasse}}* = le {{code_verifier}} (secret éphémère de la SPA)
-* *L'empreinte cryptée* = le {{code_challenge}} (SHA-256 du code_verifier)
-* *Le préposé* = Entra ID
+*Résumé des correspondances :*
+
+|| Élément de l'analogie || Équivalent technique ||
+|| Votre manteau | Les tokens (ID Token, Access Token) |
+|| Le ticket numéroté | Le code d'autorisation |
+|| Votre mot de passe secret | Le {{code_verifier}} |
+|| L'empreinte du mot de passe | Le {{code_challenge}} (SHA-256 du code_verifier) |
+|| Le préposé du vestiaire | Entra ID |
 
 h3. 3.4 Schéma du flux Authorization Code avec PKCE (SPA)
 
+!4.2-02-flux-spa-pkce.png|width=900!
+
+{expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
 @startuml
 skinparam sequenceArrowThickness 2
@@ -212,6 +220,7 @@ B -> U : Affiche /dashboard ✅
 
 @enduml
 {noformat}
+{expand}
 
 ----
 
@@ -219,6 +228,9 @@ h2. 4. Pourquoi PKCE protège là où le code seul ne suffit pas
 
 Ce schéma montre concrètement ce qui se passe si un attaquant intercepte le code d'autorisation :
 
+!4.2-03-demo-attaque-pkce.png|width=800!
+
+{expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
 @startuml
 skinparam sequenceArrowThickness 2
@@ -247,7 +259,7 @@ Att -> IdP : POST /token { code=**CODE123**, ??? }
 note right of IdP
   ❓ "Quel est le **code_verifier** ?"
   "SHA256(???) doit être égal à **aX7pQ2mZ**"
-  L'attaquant n'a que l'empreinte, pas le secret.
+  L'attaquant n'a que le code volé, pas le code_verifier.
 end note
 IdP -> Att : ❌ **invalid_grant** — accès refusé
 
@@ -261,10 +273,23 @@ IdP -> SPA : ✅ id_token + access_token
 
 @enduml
 {noformat}
+{expand}
 
 ----
 
-h2. 5. Web App vs SPA — Comparaison côte à côte
+h2. 5. Cas particulier : PKCE sur une web app avec backend
+
+Vous avez peut-être déjà vécu ça : *"j'ai une web app avec backend, mais on m'a quand même demandé d'utiliser PKCE"*. Maintenant que vous connaissez PKCE (section 3), voici pourquoi : PKCE et {{client_secret}} ne s'excluent pas — une web app peut utiliser les *deux en même temps*. Cela arrive dans 3 situations :
+
+* *Entra ID l'impose* : l'App Registration a l'option *"Require PKCE"* activée par un administrateur IAM.
+* *Votre bibliothèque OIDC l'ajoute automatiquement* : les librairies modernes (KnpU, league/oauth2, Spring Security…) génèrent PKCE par défaut depuis 2022-2023.
+* *Bonne pratique de "sécurité en couches" (defense in depth)* : même avec un backend sécurisé, ajouter PKCE ne coûte rien et protège contre l'interception du code dans les logs ou l'historique navigateur.
+
+La seule différence avec le flux SPA vu en section 3 : ici, le {{code_verifier}} est généré et stocké *côté serveur backend* — jamais dans le navigateur. La sécurité du {{client_secret}} n'est donc pas dégradée ; PKCE s'ajoute simplement en couche supplémentaire.
+
+----
+
+h2. 6. Web App vs SPA — Comparaison côte à côte
 
 || | *Web App (backend seul)* | *Web App + PKCE* | *SPA / App mobile* |
 || *Où s'exécute le code ?* | Serveur (privé) | Serveur (privé) | Navigateur (public) |
@@ -280,7 +305,7 @@ h2. 5. Web App vs SPA — Comparaison côte à côte
 
 ----
 
-h2. 6. Le code_verifier en pratique — règles techniques
+h2. 7. Le code_verifier en pratique — règles techniques
 
 {noformat}
 code_verifier :
@@ -321,7 +346,7 @@ sessionStorage.setItem('pkce_verifier', codeVerifier);
 
 ----
 
-h2. 7. Les 5 questions que tout le monde se pose
+h2. 8. Les 5 questions que tout le monde se pose
 
 *"Pourquoi le navigateur fait-il une redirection vers Entra ID plutôt que de le contacter directement ?"*
 Parce que l'utilisateur doit *saisir son mot de passe directement sur le site d'Entra ID* — pas sur votre app. Votre app ne voit jamais le mot de passe. C'est le principe fondamental du SSO : la délégation d'authentification.
@@ -333,15 +358,18 @@ Le code transite dans l'URL du navigateur (visible dans les logs, l'historique, 
 Contre le vol du code d'autorisation par une application malveillante installée sur le même appareil (attaque "authorization code interception"). Sans PKCE sur une SPA, quelqu'un qui intercepte le code peut l'échanger contre des tokens — car il n'y a pas de {{client_secret}} à fournir.
 
 *"Est-ce qu'une web app devrait aussi utiliser PKCE ?"*
-Microsoft le recommande pour toutes les apps. Pour une web app avec backend, PKCE en plus du {{client_secret}} est une sécurité supplémentaire — mais le {{client_secret}} seul suffit déjà si le serveur est sécurisé.
+Microsoft le recommande pour toutes les apps, mais ce n'est pas obligatoire si votre backend est sécurisé. Voir section 5 pour le détail des 3 cas où ça arrive en pratique.
 
 *"Où stocker les tokens dans une SPA ?"*
-En *mémoire JavaScript* (variable d'état React/Vue) de préférence. Pas en localStorage (XSS y a accès), pas en sessionStorage si vous pouvez l'éviter. L'Access Token doit avoir une durée de vie courte (5-60 min).
+En *mémoire JavaScript* (variable d'état React/Vue) de préférence. Pas en localStorage : une faille XSS (Cross-Site Scripting — injection de code malveillant dans la page) y donnerait accès à un attaquant. Pas en sessionStorage non plus si vous pouvez l'éviter, pour la même raison. L'Access Token doit avoir une durée de vie courte (5-60 min).
 
 ----
 
-h2. 8. Récapitulatif visuel — Vue d'ensemble
+h2. 9. Récapitulatif visuel — Vue d'ensemble
 
+!4.2-04-arbre-decision.png|width=800!
+
+{expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
 @startuml
 skinparam roundcorner 15
@@ -378,6 +406,7 @@ endif
 stop
 @enduml
 {noformat}
+{expand}
 
 ----
 

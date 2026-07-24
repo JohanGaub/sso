@@ -7,7 +7,7 @@
         "php": ">=8.4.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-bundle": "^3.2.4",
+        "doctrine/doctrine-bundle": "^3.3.1",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6.7",
         "knpuniversity/oauth2-client-bundle": "^2.20.2",

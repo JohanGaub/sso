@@ -14,9 +14,9 @@ h2. Parcours pédagogique — Vue d'ensemble
 || Module || Titre || Durée || Documents à lire ||
 || *0* | Contexte & onboarding | ~2h | *0.* Migration SSO – Synthèse |
 || *1* | Concepts fondamentaux | ~2h | *0.* sections 4.1 à 4.5 (Glossaire) |
-|| *2* | OIDC — Gestion managée | ~2h | *1.* Guide OIDC managée + *4.* Correspondance claims |
-|| *3* | OIDC — Gestion privée | ~4h | *2.* Guide OIDC privée + *4.* Correspondance claims |
-|| *4* | SAML — Gestion privée | ~4h | *3.* Guide SAML privée |
+|| *2* | OIDC — Gestion managée | ~2h | *1.* Guide OIDC managée + *4.1* Correspondance claims |
+|| *3* | OIDC — Gestion privée | ~4h | *2.* Guide OIDC privée + *4.1* Correspondance claims + *4.2* Guide visuel PKCE |
+|| *4* | SAML — Gestion privée | ~4h | *3.* Guide SAML privée + *3.1* Checklist IAM SAML |
 || *5* | Processus & communication | ~1h | *5.* Templates de mail (5.0 à 5.5) |
 || *6* | Déploiement | ~1h | *6.* Guides de déploiement + *6.1* Déploiement manuel |
 || *7* | Mise en pratique | ~4h | Tous les guides |
@@ -336,6 +336,7 @@ h3. Pièges à retenir
 h3. Lecture
 
 * *3. Guide migration SAML – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.8, 5, 6).
+* *3.1 Checklist de demande IAM – Raccordement SAML* — informations à transmettre à l'IAM pour chaque demande de raccordement (hors production, pré-production, production).
 
 ----
 
@@ -498,7 +499,9 @@ h3. Documentation interne (cet espace)
 || *1. Guide OIDC Gestion managée* | Raccordement Apache OIDC (Cloud Place) |
 || *2. Guide OIDC Gestion privée* | Flux Authorization Code, PKCE, validation JWT |
 || *3. Guide SAML Gestion privée* | Flux SAML 2.0, SP/IdP, signature, ACS, SLO |
+|| *3.1 Checklist de demande IAM – Raccordement SAML* | Informations à transmettre à l'IAM pour un raccordement SAML |
 || *4.1 Correspondance des claims OIDC* | Mapping Legacy → Entra ID |
+|| *4.2 Flux OIDC et PKCE – Guide visuel* | Schémas et analogies : web app vs SPA, mécanisme PKCE |
 || *5. Templates de mail* | Communication standardisée à chaque étape |
 || *6.1 Déploiement manuel* | Docker Compose, MyConsole Cloud, AWS Console |
 
