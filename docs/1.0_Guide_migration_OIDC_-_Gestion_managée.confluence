@@ -1,10 +1,10 @@
 h1. 1. Guide migration OIDC - Gestion managée
 
 En gestion managée :
-* Le CAM Eagles fournit la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
+* Le CAM Eagles fournit la *fiche de renseignement* à l'équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
 * L'équipe IAM demande de configurer Entra ID chez Microsoft, reçoit ClientID et ClientSecret et les transmet (via le CAM Eagles) à l'équipe Gestion managée.
-* L’équipe Gestion managée reçoit le Client ID / Client Secret et configure la mécanique OIDC.
-* L’équipe applicative et/ou l’équipe de raccordement adapte la lecture des *claims* dans le code.
+* L'équipe Gestion managée reçoit le Client ID / Client Secret et configure la mécanique OIDC.
+* L'équipe applicative et/ou l'équipe de raccordement adapte la lecture des *claims* dans le code.
 *NB :* en gestion managée, les claims sont injectés par le module Apache (préfixe {code}OIDC_CLAIM_*{code}) — voir *4. Où lire les claims* et *5. Exemples de code*.
 
 h2. 1. Mode opératoire (lecture)
@@ -13,11 +13,11 @@ h2. 1. Mode opératoire (lecture)
 * Passe 2 : ouvrez *3. Pièges courants* ou *5. Exemples de code* uniquement si vous bloquez (claim manquant, erreur, doute de lecture).
 * Pour le déploiement, voir *6. Guides de déploiement*.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4.1 Correspondance des claims OIDC*.
-* Pour les définitions transverses (OIDC, claims, CAM, Eagles…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
+* Pour les définitions transverses (OIDC, claims, CAM, Eagles...), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
 ----
 
-h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
+h2. 2. Suivi à réaliser (cocher chaque étape lorsqu'elle est réalisée)
 
 *Récapitulatif des phases :*
 * *A — Hors prod — Préparer* : étapes 1 à 9

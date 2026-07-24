@@ -282,7 +282,7 @@ h2. 5. Cas particulier : PKCE sur une web app avec backend
 Vous avez peut-être déjà vécu ça : *"j'ai une web app avec backend, mais on m'a quand même demandé d'utiliser PKCE"*. Maintenant que vous connaissez PKCE (section 3), voici pourquoi : PKCE et {{client_secret}} ne s'excluent pas — une web app peut utiliser les *deux en même temps*. Cela arrive dans 3 situations :
 
 * *Entra ID l'impose* : l'App Registration a l'option *"Require PKCE"* activée par un administrateur IAM.
-* *Votre bibliothèque OIDC l'ajoute automatiquement* : les librairies modernes (KnpU, league/oauth2, Spring Security…) génèrent PKCE par défaut depuis 2022-2023.
+* *Votre bibliothèque OIDC l'ajoute automatiquement* : les librairies modernes (KnpU, league/oauth2, Spring Security...) génèrent PKCE par défaut depuis 2022-2023.
 * *Bonne pratique de "sécurité en couches" (defense in depth)* : même avec un backend sécurisé, ajouter PKCE ne coûte rien et protège contre l'interception du code dans les logs ou l'historique navigateur.
 
 La seule différence avec le flux SPA vu en section 3 : ici, le {{code_verifier}} est généré et stocké *côté serveur backend* — jamais dans le navigateur. La sécurité du {{client_secret}} n'est donc pas dégradée ; PKCE s'ajoute simplement en couche supplémentaire.

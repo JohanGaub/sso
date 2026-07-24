@@ -1,7 +1,7 @@
 h1. 0. Migration SSO – Synthèse en 1 page
 
 Ce document cadre la migration et oriente vers les guides 1 à 3.
-Chaque guide détaille l’exécution.
+Chaque guide détaille l'exécution.
 
 h2. À qui s'adresse ce document ?
 
@@ -96,7 +96,7 @@ h2. 4. Glossaire (termes clés)
 h3. 4.1 Protocoles OIDC / OAuth 2.0
 
 || Terme || Définition ||
-| *Access Token* | Jeton OAuth2 utilisé pour accéder à des ressources protégées (API, Graph, backend applicatif…) ; envoyé en {{Authorization: Bearer …}}. |
+| *Access Token* | Jeton OAuth2 utilisé pour accéder à des ressources protégées (API, Graph, backend applicatif...) ; envoyé en {{Authorization: Bearer ...}}. |
 | *Authorization Code (avec/sans PKCE)* | Flux OIDC dans lequel le SSO renvoie d'abord un code à usage unique et de courte durée à l'application, qui l'échange ensuite contre les tokens (ID Token, Access Token, éventuellement Refresh Token) au token endpoint. *Avec PKCE* : renforcement par {{code_verifier}} / {{code_challenge}}, recommandé dès qu'il n'y a pas de backend sécurisé. *Sans PKCE* : uniquement si l'application dispose d'un backend sécurisé portant le {{client_secret}}. Détail dans le guide 2 (OIDC gestion privée). |
 | *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : aud, exp, iss, nonce, amr. |
 | *Discovery OIDC* | Document exposé par le SSO à l'URL {{/.well-known/openid-configuration}}. Il décrit les endpoints (authorization, token, userinfo, end_session) et l'URL des clés publiques ({{jwks_uri}}) pour vérifier les JWT. Les bibliothèques OIDC s'en servent pour configurer les URLs. |
@@ -137,7 +137,7 @@ h3. 4.4 Acteurs, systèmes & plateformes internes
 h3. 4.5 Conventions documentaires & process
 
 || Terme || Définition ||
-| *Convention de notation* | Deux notations coexistent dans la documentation : (1) {{monospace}} — formatage Confluence pour les noms techniques (paramètres, claims, commandes) ; (2) les valeurs *à remplacer* par vos propres données sont notées entre chevrons, ex. {{CLIENT_ID}}, {{REDIRECT_URI}}. |
+| *Convention de notation* | Deux notations coexistent dans la documentation : (1) {{monospace}} — formatage Confluence pour les noms techniques fixes (paramètres, claims, commandes), ex. {{client_id}}, {{redirect_uri}} ; (2) les valeurs *à remplacer* par vos propres données sont notées entre crochets, ex. [CLIENT_ID], [Nom application]. |
 | *Merge Request (MR)* | Demande de *relecture et d'intégration de code* dans GitLab : vous proposez vos changements, puis d'autres personnes vérifient (qualité, sécurité, impacts) avant d'accepter ou de demander des corrections. Tant que la MR n'est pas validée, le code n'est pas fusionné dans la branche cible (souvent {{main}}). Pour un débutant : c'est le *sas de contrôle* entre « j'ai codé » et « le code part en environnement ». |
 
 ----

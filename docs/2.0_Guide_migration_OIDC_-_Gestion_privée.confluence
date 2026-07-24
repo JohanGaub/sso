@@ -1,11 +1,11 @@
 h1. 2. Guide migration OIDC - Gestion privée
 
 En gestion privée :
-* Le CAM Eagles fournit la *fiche de renseignement* à l’équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
+* Le CAM Eagles fournit la *fiche de renseignement* à l'équipe IAM avec les informations pour configurer Entra ID (URL du site, redirect URIs, claims nécessaires).
 * L'équipe IAM configure Entra ID chez Microsoft, puis transmet (via le CAM Eagles) le Client ID et le Client Secret à l'équipe applicative.
 * L'équipe applicative reçoit le Client ID / Client Secret.
-* L’équipe applicative et/ou l’équipe de raccordement configurent l'environnement OIDC dans le code (images et conteneurs incluant les informations OIDC).
-* L’équipe applicative adapte la lecture des *claims* nécessaires au fonctionnement de l’application.
+* L'équipe applicative et/ou l'équipe de raccordement configurent l'environnement OIDC dans le code (images et conteneurs incluant les informations OIDC).
+* L'équipe applicative adapte la lecture des *claims* nécessaires au fonctionnement de l'application.
 *NB :* en gestion privée, l'application implémente le flux OIDC (Authorization Code, avec ou sans PKCE — voir *3. Prérequis / choix de sécurité*) ; les claims se lisent dans l'*ID Token*, via *UserInfo* et/ou la session applicative — voir *4.5*, *4.7* et *6. Exemples de code*.
 
 h2. 1. Mode opératoire (lecture)
@@ -16,11 +16,11 @@ h2. 1. Mode opératoire (lecture)
 * Pour le déploiement, voir *6. Guides de déploiement*.
 * Pour la correspondance des claims OIDC (Legacy ↔ Entra ID), utilisez le document *4.1 Correspondance des claims OIDC*.
 * Pour comprendre le flux OIDC et PKCE avec des schémas visuels, consultez *4.2 Flux OIDC et PKCE – Guide visuel*.
-* Pour les définitions transverses (OIDC, claims, CAM, Eagles, PKCE…), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
+* Pour les définitions transverses (OIDC, claims, CAM, Eagles, PKCE...), utilisez la synthèse : *0. Migration SSO – Synthèse*, sections *4.1 Protocoles OIDC*, *4.3 Concepts transverses* et *4.4 Acteurs, systèmes & plateformes internes*.
 
 ----
 
-h2. 2. Suivi à réaliser (cocher chaque étape lorsqu’elle est réalisée)
+h2. 2. Suivi à réaliser (cocher chaque étape lorsqu'elle est réalisée)
 
 *Récapitulatif des phases :*
 * *A — Hors prod — Préparer* : étapes 1 à 9
@@ -91,7 +91,7 @@ h2. 4. Détail technique – Flux Authorization Code (Entra ID)
 * *4.5* Valider l'ID Token — vérifier signature, audience, expiration et intégrité
 * *4.6* Rafraîchir l'Access Token (optionnel) — requête POST vers l'endpoint token avec un refresh_token
 * *4.7* Récupérer les informations utilisateur (optionnel) — appel à l'endpoint UserInfo avec l'Access Token
-* *4.8* Tester et diagnostiquer — exécuter les cas d’échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
+* *4.8* Tester et diagnostiquer — exécuter les cas d'échec/validation (login OK/KO, déconnexion, refresh/UserInfo si utilisés)
 
 *Les sections 4.1 à 4.8* décrivent le *parcours technique principal* une fois le client IdP disponible.
 *Référence paramètres (lecture rapide) :* section *4.9 Paramètres OIDC*.
@@ -114,7 +114,7 @@ En pratique, le processus de récupération est le suivant :
 1. Appeler le document de découverte : {{GET https://login.microsoftonline.com/TENANT_ID/v2.0/.well-known/openid-configuration}}.
 2. Lire le champ {{jwks_uri}} dans la réponse.
 3. Appeler {{jwks_uri}} en {{GET}} pour télécharger les clés publiques (JWKS).
-4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l’en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
+4. Mettre en cache ce JWKS et utiliser le champ {{kid}} de l'en-tête du JWT pour sélectionner la bonne clé lors de la vérification de signature (rafraîchir périodiquement ou lorsqu'un {{kid}} inconnu apparaît).
 
 h3. 4.2 Rediriger l'utilisateur vers l'URL d'autorisation
 
@@ -160,7 +160,7 @@ Voir *4.9 Paramètres OIDC* pour code, state, session_state, iss.
 | state | state (identique à celui envoyé en 4.2) | Comparer avec la valeur stockée côté application pour vérifier l'intégrité (protection CSRF). |
 | session_state, iss | (Si présents) | Optionnels ; voir *4.9 Paramètres OIDC*. |
 
-*À faire absolument :* vérifier que {{state}} reçu en callback est strictement identique à la valeur stockée avant de lancer l’échange du code (4.4).
+*À faire absolument :* vérifier que {{state}} reçu en callback est strictement identique à la valeur stockée avant de lancer l'échange du code (4.4).
 
 h3. 4.4 Échanger le code contre les tokens
 
@@ -194,7 +194,7 @@ Réf. [Redeem a code for an access token](https://learn.microsoft.com/en-us/entr
 | expires_in | entier (secondes) | Durée de validité de l'Access Token (ex. 3599) |
 | ext_expires_in | entier (secondes) | Durée supplémentaire avant expiration forcée |
 | access_token | JWT (chaîne) | Jeton OAuth 2.0 pour appeler les APIs protégées |
-| id_token | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l’utilisateur |
+| id_token | JWT (chaîne) | Jeton OpenID Connect contenant les informations d'identité (claims) de l'utilisateur |
 | refresh_token | chaîne opaque | Fourni uniquement si le scope offline_access a été demandé. Permet d'obtenir de nouveaux tokens sans ré-authentifier l'utilisateur. |
 
 h3. 4.5 Valider l'ID Token
@@ -228,7 +228,7 @@ h3. 4.7 Récupérer les informations utilisateur (UserInfo)
 Si l'ID Token ne contient pas tous les claims nécessaires, l'application peut appeler l'endpoint UserInfo.
 
 || Élément || Exemple || Rôle ||
-| Endpoint UserInfo | Valeur de {{userinfo_endpoint}} (discovery OIDC) | Utiliser l’endpoint publié par le document de découverte, plutôt qu’une URL codée en dur. |
+| Endpoint UserInfo | Valeur de {{userinfo_endpoint}} (discovery OIDC) | Utiliser l'endpoint publié par le document de découverte, plutôt qu'une URL codée en dur. |
 | Méthode | GET | Récupération des informations utilisateur. |
 | Authorization | {{Authorization: Bearer ACCESS_TOKEN}} | L'Access Token OIDC/OAuth2 est envoyé en Bearer. |
 
@@ -238,31 +238,31 @@ h3. 4.8 Tester et diagnostiquer
 
 Tester ces scénarios dans l'ordre (dans votre environnement *hors production* — dev / recette), en observant à chaque fois ce que renvoie l'IdP et ce que l'app valide côté code.
 Cette section décrit les scénarios à exécuter.
-*Entrée attendue :* sections 4.1 à 4.7 implémentées et exécutables dans l’environnement de test.
+*Entrée attendue :* sections 4.1 à 4.7 implémentées et exécutables dans l'environnement de test.
 
 * Login OK :
-** l’app reçoit le *code* (4.3),
+** l'app reçoit le *code* (4.3),
 ** obtient *id_token*/*access_token* au token endpoint (4.4),
-** et valide l’*ID Token* (4.5) avant de marquer l’utilisateur “connecté”.
+** et valide l'*ID Token* (4.5) avant de marquer l'utilisateur "connecté".
 * Login échoué – {{redirect_uri}} :
 ** un {{redirect_uri}} non conforme provoque un échec côté redirection/callback,
-** l’app affiche un message clair et ne tente pas d’échanger un code invalide.
+** l'app affiche un message clair et ne tente pas d'échanger un code invalide.
 * Login échoué – {{invalid_grant}} :
 ** le code est expiré / déjà utilisé / PKCE mal apparié,
-** l’échange au token endpoint (4.4) échoue,
-** l’app gère correctement l’erreur (pas de crash) et propose une nouvelle authentification.
+** l'échange au token endpoint (4.4) échoue,
+** l'app gère correctement l'erreur (pas de crash) et propose une nouvelle authentification.
 * Login échoué – {{consent}} :
-** l’utilisateur refuse ou ne valide pas,
-** l’app traite la réponse d’erreur et ne valide aucun token.
+** l'utilisateur refuse ou ne valide pas,
+** l'app traite la réponse d'erreur et ne valide aucun token.
 * Logout / déconnexion :
-** l’app détruit la session locale (cookies/tokens/session serveur),
-** l’utilisateur n’est plus considéré comme connecté côté application.
+** l'app détruit la session locale (cookies/tokens/session serveur),
+** l'utilisateur n'est plus considéré comme connecté côté application.
 * (Optionnel) Refresh / UserInfo si demandés :
 ** si {{offline_access}} est utilisé : vérifier que le refresh (4.6) remplace bien les tokens,
 ** si UserInfo est utilisé : vérifier que 4.7 renvoie les claims attendus.
-* En cas d’échec : revenir à la section concernée (voir tableau ci-dessous), corriger, puis rejouer le scénario.
+* En cas d'échec : revenir à la section concernée (voir tableau ci-dessous), corriger, puis rejouer le scénario.
 
-|| Symptôme observé || Étape à vérifier d’abord ||
+|| Symptôme observé || Étape à vérifier d'abord ||
 | {{redirect_uri_mismatch}} ou callback refusé | 4.3 Callback puis 4.4 Token |
 | {{invalid_grant}} au token endpoint | 4.4 Échange du code puis 4.3 Callback (code/state) |
 | ID Token rejeté ({{iss}}/{{aud}}/{{nonce}}) | 4.5 Validation ID Token |
@@ -274,7 +274,7 @@ h4. 4.8.1 Checklist rapide (dev-first)
 * {{state}} callback validé avant appel {{/token}}.
 * {{iss}}/{{aud}}/{{ver}} validés (et {{tid}} si mono-tenant).
 * {{redirect_uri}} strictement identique entre authorize et token.
-* Gestion d’erreur stable ({{invalid_grant}}, consent refusé, callback invalide).
+* Gestion d'erreur stable ({{invalid_grant}}, consent refusé, callback invalide).
 
 h4. 4.8.2 Checklist de validation finale (avant livraison)
 
@@ -282,7 +282,7 @@ h4. 4.8.2 Checklist de validation finale (avant livraison)
 * Login KO correctement rejeté (sans crash, message clair).
 * Claims attendus validés (id_token et/ou UserInfo selon architecture).
 * Déconnexion locale validée côté application.
-* Logs exploitables en cas d’échec, sans fuite de données sensibles.
+* Logs exploitables en cas d'échec, sans fuite de données sensibles.
 * PV de recette fonctionnelle validé avec le CAM Eagles pour chaque environnement (hors production, pré-production, production).
 
 *Sortie attendue :* flux OIDC opérationnel et diagnostiquable de bout en bout (login, erreurs, déconnexion).

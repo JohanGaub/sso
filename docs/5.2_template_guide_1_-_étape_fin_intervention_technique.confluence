@@ -6,7 +6,7 @@ h1. 5.2 Template guide 1 - étape Fin d'intervention technique
 
 Bonjour [Équipe applicative],
 
-Dans le cadre de la migration SSO, nous avons réalisé les opérations techniques sur l’application. Aucune autre modification côté application n’est prévue de notre part.
+Dans le cadre de la migration SSO, nous avons réalisé les opérations techniques sur l'application. Aucune autre modification côté application n'est prévue de notre part.
 
 Nous vous remercions par avance de :
 1) valider la Merge Request [lien MR] ;
@@ -14,7 +14,7 @@ Nous vous remercions par avance de :
 3) définir les dates de mise en pré-production et/ou en production avec le CAM Eagles ;
 4) nous communiquer la date retenue.
 
-Si vous avez des questions ou besoin d’assistance, nous restons à votre disposition.
+Si vous avez des questions ou besoin d'assistance, nous restons à votre disposition.
 
 Très cordialement,
 

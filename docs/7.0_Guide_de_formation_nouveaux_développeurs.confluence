@@ -234,7 +234,7 @@ h3. Contenu
 
 || Type d'application || Décision ||
 || SPA, app mobile (pas de backend sécurisé) | Utiliser *PKCE* (sans client_secret). |
-|| Application avec backend (Symfony, Spring, Node, Python…) | *client_secret_basic* recommandé (PKCE optionnel mais conseillé). |
+|| Application avec backend (Symfony, Spring, Node, Python...) | *client_secret_basic* ; PKCE non obligatoire par défaut, mais s'ajoute automatiquement si Entra ID impose *"Require PKCE"* ou si votre bibliothèque OIDC le génère (voir *4.2*, section 5). |
 
 *Flux Authorization Code — les 7 étapes*
 
@@ -336,6 +336,7 @@ h3. Pièges à retenir
 h3. Lecture
 
 * *3. Guide migration SAML – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.8, 5, 6).
+* *4.3 Flux SAML – Guide visuel* — schémas et analogies pour bien visualiser SP-initiated vs IdP-initiated et le rôle de la signature.
 * *3.1 Checklist de demande IAM – Raccordement SAML* — informations à transmettre à l'IAM pour chaque demande de raccordement (hors production, pré-production, production).
 
 ----
@@ -479,7 +480,7 @@ h3. Quiz de clôture (~30 min)
 # Le CAM Eagles signe le PV de recette à la place de l'équipe applicative. _(Faux)_
 # Le binding HTTP-POST est utilisé pour envoyer la Response SAML vers l'ACS. _(Vrai)_
 # En gestion privée OIDC, les claims se lisent dans {{OIDC_CLAIM_...}}. _(Faux — c'est la gestion managée)_
-# PKCE est obligatoire pour les apps avec backend sécurisé. _(Faux — recommandé mais pas obligatoire)_
+# PKCE est obligatoire pour les apps avec backend sécurisé. _(Faux par défaut — mais peut le devenir selon la configuration Entra ID ou la bibliothèque OIDC utilisée, voir *4.2* section 5)_
 # La vérification de signature SAML peut être désactivée en développement pour tester plus vite. _(Faux)_
 
 h3. Debriefing & questions
@@ -502,6 +503,7 @@ h3. Documentation interne (cet espace)
 || *3.1 Checklist de demande IAM – Raccordement SAML* | Informations à transmettre à l'IAM pour un raccordement SAML |
 || *4.1 Correspondance des claims OIDC* | Mapping Legacy → Entra ID |
 || *4.2 Flux OIDC et PKCE – Guide visuel* | Schémas et analogies : web app vs SPA, mécanisme PKCE |
+|| *4.3 Flux SAML – Guide visuel* | Schémas et analogies : SP-initiated vs IdP-initiated, signature XML, SLO |
 || *5. Templates de mail* | Communication standardisée à chaque étape |
 || *6.1 Déploiement manuel* | Docker Compose, MyConsole Cloud, AWS Console |
 

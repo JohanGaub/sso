@@ -358,13 +358,13 @@ Vérifier les conteneurs actifs :
 docker ps
 {code}
 
-Consulter les logs du service applicatif (adapter le nom : {{app}}, {{web}}, {{api}}…) :
+Consulter les logs du service applicatif (adapter le nom : {{app}}, {{web}}, {{api}}...) :
 
 {code:bash}
 docker compose logs -f app
 {code}
 
-Consulter les logs de la base de données (adapter le nom : {{db}}, {{postgres}}, {{mysql}}…) :
+Consulter les logs de la base de données (adapter le nom : {{db}}, {{postgres}}, {{mysql}}...) :
 
 {code:bash}
 docker compose logs -f db
@@ -401,7 +401,7 @@ h3. Consultation des logs base de données
 
 {code:bash}
 docker compose logs -f db
-# adapter "db" au nom réel du service (postgres, mysql…)
+# adapter "db" au nom réel du service (postgres, mysql...)
 {code}
 
 h3. Ressources statiques

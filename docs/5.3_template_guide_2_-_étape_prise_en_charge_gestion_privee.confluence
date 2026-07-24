@@ -6,11 +6,11 @@ Objet : [Migration SSO] Prise en charge technique – [Nom application]
 
 Bonjour [Équipe applicative],
 
-Dans le cadre de la migration SSO, nous prenons en charge, à partir du [date], les actions techniques suivantes pour l’application [Nom application] :
-* configuration de la mécanique OIDC dans l’application (configuration environnement / paramètres OIDC) ;
-* modifications de code nécessaires à la lecture et à l’exploitation des claims.
+Dans le cadre de la migration SSO, nous prenons en charge, à partir du [date], les actions techniques suivantes pour l'application [Nom application] :
+* configuration de la mécanique OIDC dans l'application (configuration environnement / paramètres OIDC) ;
+* modifications de code nécessaires à la lecture et à l'exploitation des claims.
 
-Nous vous tiendrons informés de l’avancement et vous transmettrons un message de fin d’intervention dès que possible (avec la Merge Request et la suite attendue).
+Nous vous tiendrons informés de l'avancement et vous transmettrons un message de fin d'intervention dès que possible (avec la Merge Request et la suite attendue).
 
 Très cordialement,
 
