@@ -30,21 +30,25 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
+- `docs/0.1_Suivi_vulnerabilites_migration.confluence`
 - `"docs/1.0_Guide_migration_OIDC_-_Gestion_manag\303\251e.confluence"`
 - `"docs/2.0_Guide_migration_OIDC_-_Gestion_priv\303\251e.confluence"`
 - `"docs/3.0_Guide_migration_SAML_-_Gestion_priv\303\251e.confluence"`
-- `docs/0.1_Suivi_vulnerabilites_migration.confluence`
+- `"docs/7.0_Guide_de_formation_nouveaux_d\303\251veloppeurs.confluence"`
+- `docs/8.0_Suivi_vulnerabilites_migration.confluence`
 
 ### Last commits
+- 9af77e9 docs(confluence): add vulnerability tracking guide for SSO migration and update step counts in OIDC and SAML guides for clarity
 - f110c6d docs(confluence): update OIDC and SAML migration guides to correct step counts and enhance clarity in operational procedures
 - 061fec0 docs(confluence): enhance SAML and OIDC guides with new visual aids, refine documentation for clarity, and update .gitignore to include image files
 - 924bccf docs(confluence): update OIDC and PKCE guides, refine training materials, and enhance document structure
 - 660432c docs(confluence): update visual flow diagrams and standardize code claim prefixes in training materials
-- bb03b90 docs(confluence): refine training guide for new developers and standardize claim prefixes in code examples
 
 ### Diff summary
- .cursor/pr-draft.md                                |   8 +-
- ...ation_OIDC_-_Gestion_manag\303\251e.confluence" |  77 ++++++++-------
- ...ration_OIDC_-_Gestion_priv\303\251e.confluence" |  85 ++++++++--------
- ...ration_SAML_-_Gestion_priv\303\251e.confluence" | 107 +++++++++++----------
- 4 files changed, 141 insertions(+), 136 deletions(-)
+ .cursor/pr-draft.md                                | 11 ++--
+ docs/0.1_Suivi_vulnerabilites_migration.confluence | 68 ----------------------
+ ...ation_OIDC_-_Gestion_manag\303\251e.confluence" |  6 +-
+ ...ration_OIDC_-_Gestion_priv\303\251e.confluence" |  6 +-
+ ...ration_SAML_-_Gestion_priv\303\251e.confluence" |  6 +-
+ ...mation_nouveaux_d\303\251veloppeurs.confluence" |  7 ++-
+ 6 files changed, 17 insertions(+), 87 deletions(-)

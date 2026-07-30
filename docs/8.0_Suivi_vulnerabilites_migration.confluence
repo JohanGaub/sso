@@ -1,4 +1,4 @@
-h1. 0.1 Suivi des vulnérabilités — Migration SSO
+h1. 8. Suivi des vulnérabilités — Migration SSO
 
 Micro-procédure commune aux guides *1.*, *2.* et *3.*. Elle sert à mesurer les vulnérabilités *avant* et *après* la migration hors production, puis à reporter le résultat (Jira + Excel).
 

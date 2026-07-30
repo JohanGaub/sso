@@ -19,7 +19,7 @@ h2. Parcours pédagogique — Vue d'ensemble
 || *4* | SAML — Gestion privée | ~4h | *3.* Guide SAML privée + *3.1* Checklist IAM SAML |
 || *5* | Processus & communication | ~1h | *5.* Templates de mail (5.0 à 5.5) |
 || *6* | Déploiement | ~1h | *6.* Guides de déploiement + *6.1* Déploiement manuel |
-|| *7* | Mise en pratique | ~4h | Tous les guides |
+|| *7* | Mise en pratique | ~4h | Guides 1–3 + *8.* Suivi des vulnérabilités |
 
 *Ordre recommandé :* M0 → M1 → M2 ou M3 ou M4 (selon votre premier projet) → M5 → M6 → M7.
 Les modules 2, 3 et 4 peuvent être abordés dans n'importe quel ordre après M1 ; commencez par le protocole du projet sur lequel vous intervenez.
@@ -450,10 +450,11 @@ L'application "MonAppli" est hébergée en DataCenter ZCI. Elle authentifie les 
 
 h3. Exercice 2 — Compléter le tableau de suivi (~1h)
 
-Prendre le tableau du guide 1 (étapes 1 à 29) et simuler la réalisation des phases A, B, C, D sur un projet fictif :
+Prendre le tableau du guide 1 et simuler la réalisation des phases A, B, C, D sur un projet fictif :
 * cocher les étapes réalisées ;
 * renseigner la colonne "Sortie attendue" avec des exemples concrets ;
-* noter les commentaires pertinents (ex. "claim manquant — demandé à l'IAM le DD/MM").
+* noter les commentaires pertinents (ex. "claim manquant — demandé à l'IAM le DD/MM") ;
+* inclure l'audit de sécurité avant / après (voir *8. Suivi des vulnérabilités — Migration SSO*).
 
 h3. Exercice 3 — Diagnostiquer à partir d'un log (~1h)
 
