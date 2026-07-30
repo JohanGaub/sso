@@ -1,6 +1,6 @@
 h1. 2. Suivi des vulnérabilités — Migration SSO
 
-Micro-procédure commune aux guides *1.1*, *1.2* et *1.3*. Elle sert à mesurer les vulnérabilités *avant* et *après* la migration hors production, puis à reporter le résultat (Jira + Excel).
+Micro-procédure commune aux guides *1.1*, *1.2* et *1.3*. Elle sert à mesurer les vulnérabilités *avant* et *après* la migration hors production via *Dependency Track*, puis à reporter les résultats dans l'Excel de suivi et le ticket Jira.
 
 *Hors périmètre :* le détail du travail de migration SSO (claims, raccordement, bascule) reste dans le guide choisi. Cette page décrit uniquement l'*audit de sécurité*.
 
@@ -9,60 +9,90 @@ Micro-procédure commune aux guides *1.1*, *1.2* et *1.3*. Elle sert à mesurer 
 h2. 1. Prérequis
 
 * Dépôt applicatif cloné en local, branche de travail créée (voir étape *1* du guide de migration).
-* Script présent à la racine du dépôt de travail : {code}./scripts/audit-security.sh{code}
+* *cdxgen* disponible en local : {code}npm install -g @cyclonedx/cdxgen{code} (ou via la version fournie par l'outillage Eagles).
+* *API key Dependency Track* : récupérée auprès du responsable de l'instance DT — ne jamais la committer dans le code ; la stocker en variable d'environnement ou dans un gestionnaire de secrets.
+* *Identifiant du projet parent DT* : {code}058c651b-39ba-4072-875c-dadad580ec1d{code} (confirmer si l'instance a changé).
 * Ticket Jira de la migration ouvert.
 * Fichier de suivi Excel accessible (colonnes *Vulnérabilités avant migration* et *Vulnérabilités après migration*).
 
 ----
 
-h2. 2. Quand lancer le script
+h2. 2. Quand lancer
 
-|| Moment || Quand (dans le guide) || Effet sur {code}INS-security-audit.json{code} ||
-| *Avant* la migration | Phase *A — Préparer*, juste après la préparation du dépôt | Métriques + détail d'audit *avant* migration |
-| *Après* la migration | Phase *D — Basculer*, juste après le PV de recette hors production | Métriques *après*, vulnérabilités corrigées, statut de la migration, détail d'audit *après* |
+|| Moment || Quand (dans le guide) || Fichier généré ||
+|| *Avant* la migration | Phase *A — Préparer*, juste après la préparation du dépôt (étape 2) | {code}cdxgen-pre-migration-sbom.json{code} |
+|| *Après* la migration | Phase *D — Basculer*, juste après le PV de recette hors production | {code}cdxgen-post-migration-sbom.json{code} |
 
 Un seul couple avant / après suffit pour le chantier hors production. Ne pas relancer l'audit à chaque environnement (pré-production / production), sauf demande explicite du responsable.
 
 ----
 
-h2. 3. Commande
+h2. 3. Commandes
 
-Depuis la racine du dépôt applicatif :
+Depuis la racine du dépôt applicatif. Remplacer {code}[API_KEY]{code} par la clé fournie par le responsable DT et {code}[NOM_DU_PROJET]{code} par le nom exact du projet applicatif.
+
+h3. Avant migration
 
 {code:bash}
-./scripts/audit-security.sh
+CDXGEN_DEBUG_MODE=DEBUG cdxgen \
+  -o cdxgen-pre-migration-sbom.json \
+  --server-url http://dependencytrack.dcv-place.cloud.stargate-pacy.enedis.fr \
+  --api-key [API_KEY] \
+  --parent-project-id 058c651b-39ba-4072-875c-dadad580ec1d \
+  --project-name "[NOM_DU_PROJET] premigration" \
+  --spec-version 1.6
 {code}
 
-Le script génère ou met à jour le fichier {code}INS-security-audit.json{code} à la racine (ou à l'emplacement indiqué par le script).
+Résultats :
+* Fichier {code}cdxgen-pre-migration-sbom.json{code} créé localement (SBOM au format CycloneDX 1.6).
+* Projet *[NOM_DU_PROJET] premigration* créé (ou mis à jour) dans Dependency Track via l'upload automatique.
+
+h3. Après migration
+
+{code:bash}
+CDXGEN_DEBUG_MODE=DEBUG cdxgen \
+  -o cdxgen-post-migration-sbom.json \
+  --server-url http://dependencytrack.dcv-place.cloud.stargate-pacy.enedis.fr \
+  --api-key [API_KEY] \
+  --parent-project-id 058c651b-39ba-4072-875c-dadad580ec1d \
+  --project-name "[NOM_DU_PROJET] postmigration" \
+  --spec-version 1.6
+{code}
+
+Résultats :
+* Fichier {code}cdxgen-post-migration-sbom.json{code} créé localement.
+* Projet *[NOM_DU_PROJET] postmigration* créé (ou mis à jour) dans Dependency Track.
 
 ----
 
-h2. 4. Contenu attendu de INS-security-audit.json
+h2. 4. Lire les métriques dans Dependency Track
 
-*Après la 1re exécution (avant migration) :*
-* métriques de vulnérabilités *avant* migration ;
-* détail d'audit *avant* migration.
+Après chaque exécution, se connecter à [Dependency Track|http://dependencytrack.dcv-place.cloud.stargate-pacy.enedis.fr] et naviguer vers le projet correspondant (*premigration* ou *postmigration*).
 
-*Après la 2e exécution (après migration) :*
-* métriques de vulnérabilités *après* migration ;
-* vulnérabilités corrigées (comparaison avant / après) ;
-* statut de la migration ;
-* détail d'audit *après* migration.
+|| Métrique DT || Signification || À reporter dans Excel ||
+|| *Critical* | Vulnérabilités critiques (score CVSS ≥ 9,0) | ✅ Oui |
+|| *High* | Vulnérabilités hautes (CVSS 7,0–8,9) | ✅ Oui |
+|| *Medium* | Vulnérabilités moyennes (CVSS 4,0–6,9) | ✅ Oui |
+|| *Low / Info* | Faibles / informatifs | Optionnel |
+
+Relever les métriques *Critical / High / Medium* pour le projet *premigration*, puis recommencer pour *postmigration*.
 
 ----
 
 h2. 5. Reporting
 
-# Joindre {code}INS-security-audit.json{code} au ticket Jira de la migration.
-# Dans le fichier Excel de suivi, renseigner :
-** *Vulnérabilités avant migration* : métriques de la 1re exécution (avant migration) ;
-** *Vulnérabilités après migration* : métriques de la 2e exécution (après migration) — copier/coller les résultats du JSON ou de la sortie du script.
+# Dans le fichier Excel de suivi, renseigner les colonnes :
+## *Vulnérabilités avant migration* : métriques Critical / High / Medium relevées dans le projet *premigration* de Dependency Track.
+## *Vulnérabilités après migration* : métriques relevées dans le projet *postmigration*.
+# Joindre les deux fichiers SBOM au ticket Jira de la migration :
+## {code}cdxgen-pre-migration-sbom.json{code}
+## {code}cdxgen-post-migration-sbom.json{code}
 
 ----
 
 h2. 6. Rappel dans les guides
 
 Les étapes correspondantes du *Suivi à réaliser* renvoient vers cette page :
-* guide *1.1 Guide migration OIDC - Gestion managée* ;
-* guide *1.2 Guide migration OIDC - Gestion privée* ;
-* guide *1.3 Guide migration SAML - Gestion privée*.
+* guide *1.1 Guide migration OIDC - Gestion managée* (étapes *2* et *18*) ;
+* guide *1.2 Guide migration OIDC - Gestion privée* (étapes *2* et *17*) ;
+* guide *1.3 Guide migration SAML - Gestion privée* (étapes *2* et *20*).
