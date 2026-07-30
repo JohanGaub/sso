@@ -1,0 +1,68 @@
+h1. 0.1 Suivi des vulnérabilités — Migration SSO
+
+Micro-procédure commune aux guides *1.*, *2.* et *3.*. Elle sert à mesurer les vulnérabilités *avant* et *après* la migration hors production, puis à reporter le résultat (Jira + Excel).
+
+*Hors périmètre :* le détail du travail de migration SSO (claims, raccordement, bascule) reste dans le guide choisi. Cette page décrit uniquement l'*audit de sécurité*.
+
+----
+
+h2. 1. Prérequis
+
+* Dépôt applicatif cloné en local, branche de travail créée (voir étape *1* du guide de migration).
+* Script présent à la racine du dépôt de travail : {code}./scripts/audit-security.sh{code}
+* Ticket Jira de la migration ouvert.
+* Fichier de suivi Excel accessible (colonnes *Vulnérabilités avant migration* et *Vulnérabilités après migration*).
+
+----
+
+h2. 2. Quand lancer le script
+
+|| Moment || Quand (dans le guide) || Effet sur {code}INS-security-audit.json{code} ||
+| *Avant* la migration | Phase *A — Préparer*, juste après la préparation du dépôt | Métriques + détail d'audit *avant* migration |
+| *Après* la migration | Phase *D — Basculer*, juste après le PV de recette hors production | Métriques *après*, vulnérabilités corrigées, statut de la migration, détail d'audit *après* |
+
+Un seul couple avant / après suffit pour le chantier hors production. Ne pas relancer l'audit à chaque environnement (pré-production / production), sauf demande explicite du responsable.
+
+----
+
+h2. 3. Commande
+
+Depuis la racine du dépôt applicatif :
+
+{code:bash}
+./scripts/audit-security.sh
+{code}
+
+Le script génère ou met à jour le fichier {code}INS-security-audit.json{code} à la racine (ou à l'emplacement indiqué par le script).
+
+----
+
+h2. 4. Contenu attendu de INS-security-audit.json
+
+*Après la 1re exécution (avant migration) :*
+* métriques de vulnérabilités *avant* migration ;
+* détail d'audit *avant* migration.
+
+*Après la 2e exécution (après migration) :*
+* métriques de vulnérabilités *après* migration ;
+* vulnérabilités corrigées (comparaison avant / après) ;
+* statut de la migration ;
+* détail d'audit *après* migration.
+
+----
+
+h2. 5. Reporting
+
+# Joindre {code}INS-security-audit.json{code} au ticket Jira de la migration.
+# Dans le fichier Excel de suivi, renseigner :
+** *Vulnérabilités avant migration* : métriques de la 1re exécution (avant migration) ;
+** *Vulnérabilités après migration* : métriques de la 2e exécution (après migration) — copier/coller les résultats du JSON ou de la sortie du script.
+
+----
+
+h2. 6. Rappel dans les guides
+
+Les étapes correspondantes du *Suivi à réaliser* renvoient vers cette page :
+* guide *1. Guide migration OIDC - Gestion managée* ;
+* guide *2. Guide migration OIDC - Gestion privée* ;
+* guide *3. Guide migration SAML - Gestion privée*.
