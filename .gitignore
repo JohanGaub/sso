@@ -85,9 +85,9 @@ var/cache/rector/
 ###< symfony/asset-mapper ###
 
 ###> docs formats policy ###
-# Dans docs/, on versionne uniquement .md, .confluence et les images (docs/images/**/*.png).
+# Dans docs/, on versionne uniquement .md, .confluence et les images (docs/images/**/).
 # Git ne descend pas dans un répertoire ignoré : !/docs/ et !/docs/**/ permettent
-# le parcours, puis les règles !*.md / !*.confluence / !docs/images/**/*.png ré-incluent
+# le parcours, puis les règles !*.md / !*.confluence / !docs/images/**/* ré-incluent
 # les fichiers autorisés.
 /docs/**/*
 !/docs/
@@ -95,4 +95,8 @@ var/cache/rector/
 !/docs/**/*.md
 !/docs/**/*.confluence
 !/docs/images/**/*.png
+!/docs/images/**/*.svg
+!/docs/images/**/*.gif
+!/docs/images/**/*.jpg
+!/docs/images/**/*.jpeg
 ###< docs formats policy ###

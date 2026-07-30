@@ -35,7 +35,7 @@ C'est le mode *par défaut* : l'utilisateur commence son parcours *sur votre app
 
 h3. 2.2 Schéma du flux SP-initiated
 
-!4.3-01-flux-sp-initiated.png|width=900!
+!3.3-01-flux-sp-initiated.png|width=900!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
@@ -108,7 +108,7 @@ Dans ce mode, l'utilisateur commence son parcours *sur le portail Entra ID* (My 
 
 h3. 3.2 Schéma du flux IdP-initiated
 
-!4.3-02-flux-idp-initiated.png|width=900!
+!3.3-02-flux-idp-initiated.png|width=900!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
@@ -175,7 +175,7 @@ h2. 4. Pourquoi la signature protège l'Assertion (et pourquoi on ne la désacti
 
 La signature XML est ce qui fait le lien entre le contenu de l'Assertion (NameID, attributs) et la garantie qu'elle vient bien d'Entra ID, sans avoir été modifiée en chemin. Le schéma ci-dessous illustre ce qui se passe si un attaquant tente de modifier une Assertion interceptée.
 
-!4.3-03-demo-attaque-signature.png|width=850!
+!3.3-03-demo-attaque-signature.png|width=850!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
@@ -267,7 +267,7 @@ Non. Le *NameID* est l'identifiant unique de l'utilisateur (l'équivalent d'une 
 
 h2. 8. Récapitulatif visuel — Vue d'ensemble
 
-!4.3-04-arbre-decision.png|width=800!
+!3.3-04-arbre-decision.png|width=800!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}

@@ -39,7 +39,7 @@ Une *web app classique* possède un *serveur backend* (ex. Symfony, Spring, Djan
 
 h3. 2.2 Schéma du flux Authorization Code (web app)
 
-!4.2-01-flux-web-app.png|width=900!
+!3.2-01-flux-web-app.png|width=900!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
@@ -168,7 +168,7 @@ Un pickpocket se présente au vestiaire avec le ticket volé. Le préposé lui d
 
 h3. 3.4 Schéma du flux Authorization Code avec PKCE (SPA)
 
-!4.2-02-flux-spa-pkce.png|width=900!
+!3.2-02-flux-spa-pkce.png|width=900!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
@@ -228,7 +228,7 @@ h2. 4. Pourquoi PKCE protège là où le code seul ne suffit pas
 
 Ce schéma montre concrètement ce qui se passe si un attaquant intercepte le code d'autorisation :
 
-!4.2-03-demo-attaque-pkce.png|width=800!
+!3.2-03-demo-attaque-pkce.png|width=800!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
@@ -367,7 +367,7 @@ En *mémoire JavaScript* (variable d'état React/Vue) de préférence. Pas en lo
 
 h2. 9. Récapitulatif visuel — Vue d'ensemble
 
-!4.2-04-arbre-decision.png|width=800!
+!3.2-04-arbre-decision.png|width=800!
 
 {expand:Voir le code source PlantUML (pour modification future)}
 {noformat}
