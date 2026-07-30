@@ -1,0 +1,30 @@
+h1. 1. Guides de migration SSO
+
+Cette section regroupe les guides d'exécution de la migration SSO. Choisissez *un seul* parcours selon le protocole et le mode de gestion, puis déroulez son tableau de suivi.
+
+*Entrée cadrage :* *0. Migration SSO – Synthèse* (prérequis, étapes communes, glossaire).
+*Pendant le chantier :* *2. Suivi des vulnérabilités — Migration SSO* (audit avant / après, Jira, Excel).
+*Références :* *3. Ressources techniques* (claims OIDC, guides visuels, checklist IAM SAML).
+*Communication :* *4. Templates de mail*.
+*Déploiement :* *5. Guides de déploiement*.
+
+----
+
+h2. Règle de routage
+
+Choisissez votre guide selon le protocole et, pour l'OIDC, le mode de gestion.
+
+*Rappel :* il n'existe *pas* de parcours *SAML – gestion managée*. Le SAML n'est proposé qu'en *gestion privée*.
+
+|| Protocole || Mode || Guide || Décisions clés à prévoir ||
+| OIDC | Gestion managée (claims uniquement) | *1.1* Guide migration OIDC - Gestion managée (hébergement Cloud Place avec module Apache) | — |
+| OIDC | Gestion privée (flux + claims) | *1.2* Guide migration OIDC - Gestion privée (hébergement DataCenter ZCI, Cloud Public et Cloud Place sans module Apache) | *Avec ou sans PKCE* : *avec PKCE* si SPA / app mobile (pas de backend pour stocker un secret) ; *sans PKCE* possible si l'application a un backend serveur (Symfony, Spring, etc.). Détail dans le guide *1.2*. |
+| SAML | Gestion privée *(seul mode)* | *1.3* Guide migration SAML - Gestion privée (hébergement DataCenter ZCI, Cloud Public et Cloud Place sans module Apache) | Checklist IAM : *3.4* |
+
+----
+
+h2. Documents de cette section
+
+* *1.1 Guide migration OIDC - Gestion managée* — claims via Apache ({code}OIDC_CLAIM_*{code}), raccordement par l'équipe Gestion managée.
+* *1.2 Guide migration OIDC - Gestion privée* — flux Authorization Code (avec ou sans PKCE) + lecture des claims dans l'ID Token / UserInfo.
+* *1.3 Guide migration SAML - Gestion privée* — flux SAML (SP/IdP-initiated) + lecture des attributs dans l'Assertion.

@@ -1,9 +1,0 @@
-h1. 6. Guides de déploiement
-
-Deux modes, quel que soit l'environnement :
-
-|| Mode || Guide || Contenu ||
-| *Manuel* | *6.1* | MyConsole Cloud, Console Web AWS, Docker Compose *(disponible)* |
-| *Automatique* | *6.2* | Pipeline GitLab *(à rédiger)* |
-
-À utiliser dès qu'une étape des guides *1* à *3* demande de *déployer*. La recette SSO reste dans le guide migration.

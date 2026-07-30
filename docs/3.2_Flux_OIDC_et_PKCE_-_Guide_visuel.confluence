@@ -1,4 +1,4 @@
-h1. 4.2 Comprendre le flux OIDC et PKCE — Guide visuel
+h1. 3.2 Comprendre le flux OIDC et PKCE — Guide visuel
 
 *OIDC* (OpenID Connect) est le protocole standard qui permet à une application de déléguer la vérification de l'identité d'un utilisateur à un fournisseur d'identité externe (*IdP*, pour *Identity Provider*) — ici, Microsoft Entra ID.
 
@@ -25,7 +25,7 @@ Dans un flux OIDC, il y a toujours trois acteurs :
 *L'analogie du portier d'hôtel :*
 Imaginez que votre application est un hôtel. Elle ne peut pas vérifier elle-même votre identité. Elle fait appel à une agence de sécurité certifiée (Entra ID). L'agence vérifie votre pièce d'identité (le username et le password) et délivre un badge temporaire (l'ID Token). L'hôtel accepte le badge sans avoir à re-vérifier votre identité lui-même.
 
-{tip}Les abréviations techniques des schémas ({{iss}}, {{aud}}, {{exp}}, {{JWKS}}...) sont définies dans *4.1 Correspondance des claims OIDC* ; les définitions générales (IdP, PKCE, ID Token...) dans *0. Migration SSO – Synthèse*, section 4.{tip}
+{tip}Les abréviations techniques des schémas ({{iss}}, {{aud}}, {{exp}}, {{JWKS}}...) sont définies dans *3.1 Correspondance des claims OIDC* ; les définitions générales (IdP, PKCE, ID Token...) dans *0. Migration SSO – Synthèse*, section 4.{tip}
 
 ----
 
@@ -112,7 +112,7 @@ h3. 2.3 Ce qu'il faut retenir
 
 * *Le navigateur ne voit jamais les tokens* : le {{client_secret}} et les tokens restent côté serveur.
 * *Le code d'autorisation* est une chaîne à usage unique, générée par Entra ID juste après la connexion, valable ~60 secondes. Ce n'est ni un mot de passe ni un token : il ne prouve rien à lui seul, il ne sert qu'à être échangé contre les vrais tokens (ID Token, Access Token) auprès d'Entra ID. C'est un concept différent du {{client_secret}} (vu ci-dessus) et du {{code_verifier}}/{{code_challenge}} (vus section 3) — les trois interviennent ensemble mais jouent des rôles différents.
-* *La signature de l'ID Token* est vérifiée avant de lui faire confiance (détail des claims contrôlés : *4.1 Correspondance des claims OIDC*).
+* *La signature de l'ID Token* est vérifiée avant de lui faire confiance (détail des claims contrôlés : *3.1 Correspondance des claims OIDC*).
 * *Le {{state}}* protège contre les attaques CSRF (Cross-Site Request Forgery — quelqu'un vous force à lancer un flux d'authentification à votre insu).
 * *Le {{nonce}}* protège contre le rejeu de tokens (quelqu'un vous renvoie un ancien ID Token).
 
@@ -415,4 +415,4 @@ h2. Références
 * OAuth 2.0 authorization code flow (Microsoft) — https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow
 * SPA — authorization code flow with PKCE (Microsoft) — https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-auth-code-flow#request-an-authorization-code
 * RFC 7636 — PKCE (IETF) — https://datatracker.ietf.org/doc/html/rfc7636
-* *Dans ce projet* : *2. Guide OIDC – Gestion privée*, sections 3 (décision PKCE) et 4.1 à 4.5 (flux détaillé).
+* *Dans ce projet* : *1.2 Guide OIDC – Gestion privée*, sections 3 (décision PKCE) et 4.1 à 4.5 (flux détaillé).

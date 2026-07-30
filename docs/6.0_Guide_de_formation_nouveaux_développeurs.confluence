@@ -1,4 +1,4 @@
-h1. 7. Guide de formation — Nouveaux développeurs
+h1. 6. Guide de formation — Nouveaux développeurs
 
 Ce document est le *point d'entrée pédagogique* pour tout développeur rejoignant l'équipe de raccordement SSO.
 Il structure la prise en main de la documentation en 7 modules progressifs, du contexte général jusqu'à la mise en pratique sur un cas réel.
@@ -14,12 +14,12 @@ h2. Parcours pédagogique — Vue d'ensemble
 || Module || Titre || Durée || Documents à lire ||
 || *0* | Contexte & onboarding | ~2h | *0.* Migration SSO – Synthèse |
 || *1* | Concepts fondamentaux | ~2h | *0.* sections 4.1 à 4.5 (Glossaire) |
-|| *2* | OIDC — Gestion managée | ~2h | *1.* Guide OIDC managée + *4.1* Correspondance claims |
-|| *3* | OIDC — Gestion privée | ~4h | *2.* Guide OIDC privée + *4.1* Correspondance claims + *4.2* Guide visuel PKCE |
-|| *4* | SAML — Gestion privée | ~4h | *3.* Guide SAML privée + *3.1* Checklist IAM SAML |
-|| *5* | Processus & communication | ~1h | *5.* Templates de mail (5.0 à 5.5) |
-|| *6* | Déploiement | ~1h | *6.* Guides de déploiement + *6.1* Déploiement manuel |
-|| *7* | Mise en pratique | ~4h | Guides 1–3 + *8.* Suivi des vulnérabilités |
+|| *2* | OIDC — Gestion managée | ~2h | *1.1* Guide OIDC managée + *3.1* Correspondance claims |
+|| *3* | OIDC — Gestion privée | ~4h | *1.2* Guide OIDC privée + *3.1* Correspondance claims + *3.2* Guide visuel PKCE |
+|| *4* | SAML — Gestion privée | ~4h | *1.3* Guide SAML privée + *3.4* Checklist IAM SAML |
+|| *5* | Processus & communication | ~1h | *4.* Templates de mail (4.0 à 4.5) |
+|| *6* | Déploiement | ~1h | *5.* Guides de déploiement + *5.1* Déploiement manuel |
+|| *7* | Mise en pratique | ~4h | Guides 1.1–1.3 + *2.* Suivi des vulnérabilités |
 
 *Ordre recommandé :* M0 → M1 → M2 ou M3 ou M4 (selon votre premier projet) → M5 → M6 → M7.
 Les modules 2, 3 et 4 peuvent être abordés dans n'importe quel ordre après M1 ; commencez par le protocole du projet sur lequel vous intervenez.
@@ -45,7 +45,7 @@ L'authentification historique repose sur *Gardian SSO* (IdP legacy du SI). La mi
 *Les acteurs*
 
 || Acteur || Rôle ||
-|| *CAM Eagles* | Chef de projet migration : suit le planning, transmets la fiche de renseignement, cadence les jalons, cosigne les PV de recette. |
+|| *CAM Eagles* | Chef de projet migration : suit le planning, transmet la fiche de renseignement, cadence les jalons, cosigne les PV de recette. |
 || *Équipe IAM* | Configure Entra ID (côté IdP) : enregistre l'application, définit les claims/attributs émis, transmet les métadonnées IdP ou credentials (Client ID / Client Secret). |
 || *Équipe Gestion managée* | Pour les apps Cloud Place : configure le module Apache OIDC à la place de l'application (gestion managée). |
 || *Équipe de raccordement* | Vous. Adapte le code, réalise la recette SSO, accompagne ou remplace l'équipe applicative. |
@@ -63,9 +63,9 @@ L'authentification historique repose sur *Gardian SSO* (IdP legacy du SI). La mi
 Croisez 2 critères uniquement :
 
 || Protocole || Mode de gestion || Guide ||
-|| OIDC | Gestion managée (Apache, Cloud Place) | *1. Guide OIDC Gestion managée* |
-|| OIDC | Gestion privée (code applicatif gère le flux) | *2. Guide OIDC Gestion privée* |
-|| SAML | Gestion privée (code applicatif gère le flux) | *3. Guide SAML Gestion privée* |
+|| OIDC | Gestion managée (Apache, Cloud Place) | *1.1 Guide OIDC Gestion managée* |
+|| OIDC | Gestion privée (code applicatif gère le flux) | *1.2 Guide OIDC Gestion privée* |
+|| SAML | Gestion privée (code applicatif gère le flux) | *1.3 Guide SAML Gestion privée* |
 
 En cas de doute sur le protocole ou le mode, consultez le tableau de routage du *0. Migration SSO – Synthèse*.
 
@@ -143,7 +143,7 @@ Quel claim sert d'identifiant stable pour corréler un utilisateur dans une base
 
 ----
 
-h2. Module 2 — OIDC Gestion managée — Guide 1 (~2h)
+h2. Module 2 — OIDC Gestion managée — Guide 1.1 (~2h)
 
 h3. Objectifs
 
@@ -151,7 +151,7 @@ h3. Objectifs
 * expliquer ce que fait le module Apache {{mod_auth_openidc}} à la place de l'application ;
 * lire un claim dans les variables d'environnement (préfixe {{OIDC_CLAIM_...}} vs {{REDIRECT_OIDC_CLAIM_...}}) ;
 * adapter le code dans les langages courants (PHP, Python, TypeScript) ;
-* dérouler les phases A→F du tableau de suivi du guide 1.
+* dérouler les phases A→F du tableau de suivi du guide *1.1*.
 
 h3. Contenu
 
@@ -213,12 +213,12 @@ h3. Pièges à retenir
 
 h3. Lecture
 
-* *1. Guide migration OIDC – Gestion managée* — intégralité.
-* *4.1 Correspondance des claims OIDC* — table de correspondance Legacy ↔ Entra ID.
+* *1.1 Guide migration OIDC – Gestion managée* — intégralité.
+* *3.1 Correspondance des claims OIDC* — table de correspondance Legacy ↔ Entra ID.
 
 ----
 
-h2. Module 3 — OIDC Gestion privée — Guide 2 (~4h)
+h2. Module 3 — OIDC Gestion privée — Guide 1.2 (~4h)
 
 h3. Objectifs
 
@@ -234,7 +234,7 @@ h3. Contenu
 
 || Type d'application || Décision ||
 || SPA, app mobile (pas de backend sécurisé) | Utiliser *PKCE* (sans client_secret). |
-|| Application avec backend (Symfony, Spring, Node, Python...) | *client_secret_basic* ; PKCE non obligatoire par défaut, mais s'ajoute automatiquement si Entra ID impose *"Require PKCE"* ou si votre bibliothèque OIDC le génère (voir *4.2*, section 5). |
+|| Application avec backend (Symfony, Spring, Node, Python...) | *client_secret_basic* ; PKCE non obligatoire par défaut, mais s'ajoute automatiquement si Entra ID impose *"Require PKCE"* ou si votre bibliothèque OIDC le génère (voir *3.2*, section 5). |
 
 *Flux Authorization Code — les 7 étapes*
 
@@ -271,13 +271,13 @@ h3. Checklists à connaître
 
 h3. Lecture
 
-* *2. Guide migration OIDC – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.9, 5).
-* *4.2 Flux OIDC et PKCE – Guide visuel* — schémas et analogies pour bien visualiser le flux web app vs SPA.
-* *4.1 Correspondance des claims OIDC*.
+* *1.2 Guide migration OIDC – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.9, 5).
+* *3.2 Comprendre le flux OIDC et PKCE — Guide visuel* — schémas et analogies pour bien visualiser le flux web app vs SPA.
+* *3.1 Correspondance des claims OIDC*.
 
 ----
 
-h2. Module 4 — SAML Gestion privée — Guide 3 (~4h)
+h2. Module 4 — SAML Gestion privée — Guide 1.3 (~4h)
 
 h3. Objectifs
 
@@ -335,9 +335,9 @@ h3. Pièges à retenir
 
 h3. Lecture
 
-* *3. Guide migration SAML – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.8, 5, 6).
-* *4.3 Flux SAML – Guide visuel* — schémas et analogies pour bien visualiser SP-initiated vs IdP-initiated et le rôle de la signature.
-* *3.1 Checklist de demande IAM – Raccordement SAML* — informations à transmettre à l'IAM pour chaque demande de raccordement (hors production, pré-production, production).
+* *1.3 Guide migration SAML – Gestion privée* — intégralité (particulièrement sections 3, 4.1 à 4.8, 5, 6).
+* *3.3 Comprendre le flux SAML — Guide visuel* — schémas et analogies pour bien visualiser SP-initiated vs IdP-initiated et le rôle de la signature.
+* *3.4 Checklist de demande IAM – Raccordement SAML* — informations à transmettre à l'IAM pour chaque demande de raccordement (hors production, pré-production, production).
 
 ----
 
@@ -353,11 +353,11 @@ h3. Objectifs
 h3. Les templates de mail
 
 || Template || Quand l'utiliser ||
-|| *5.1 Prise en charge technique (gestion managée)* | Étape 13 du guide 1 : vous prenez en charge les modifs de code à la place de l'équipe applicative. |
-|| *5.2 Fin d'intervention technique (guide 1)* | Après avoir réalisé les modifs de code guide 1 : transmettre la MR + actions attendues. |
-|| *5.3 Prise en charge technique (gestion privée)* | Étapes 10, 18, 26 du guide 2 / étapes 10, 21, 31 du guide 3 : prise en charge OIDC ou SAML. |
-|| *5.4 Information utilisateurs* | Avant une mise en production : prévenir les utilisateurs de l'intervention. |
-|| *5.5 Fin d'intervention technique (guide 2)* | Après avoir réalisé les modifs guide 2 ou 3 : transmettre la MR + actions attendues. |
+|| *4.1 Prise en charge technique (gestion managée)* | Étape 13 du guide *1.1* : vous prenez en charge les modifs de code à la place de l'équipe applicative. |
+|| *4.2 Fin d'intervention technique (guide 1.1)* | Après la MR du guide *1.1* : transmettre la MR + actions attendues. |
+|| *4.3 Prise en charge technique (gestion privée)* | Étapes 10, 19, 27 du guide *1.2* / étapes 10, 22, 32 du guide *1.3* : prise en charge OIDC ou SAML. |
+|| *4.4 Information utilisateurs* | Avant une mise en production (guides *1.1*, *1.2*, *1.3*) : prévenir les utilisateurs de l'intervention. |
+|| *4.5 Fin d'intervention technique (guides 1.2 / 1.3)* | Après la MR des guides *1.2* ou *1.3* : transmettre la MR + actions attendues. |
 
 *Règle d'or* : enregistrer *chaque* mail envoyé dans le ticket Jira de l'application.
 
@@ -380,12 +380,12 @@ h3. Périmètre de mission — aide-mémoire
 {info}
 *Dans votre scope* : configuration Entra ID (en lien avec IAM), adaptation du code applicatif, suivi des bascules, recette SSO.
 *Hors scope par défaut* : déploiement applicatif, provisionnement d'infrastructure.
-*Exception* : si l'équipe applicative est en défaillance DevOps, vous pouvez intervenir sur le déploiement (voir *6. Guides de déploiement*).
+*Exception* : si l'équipe applicative est en défaillance DevOps, vous pouvez intervenir sur le déploiement (voir *5. Guides de déploiement*).
 {info}
 
 h3. Lecture
 
-* *5. Templates de mail* et les 5 templates 5.1 à 5.5.
+* *4. Templates de mail* et les 5 templates 4.1 à 4.5.
 
 ----
 
@@ -401,12 +401,12 @@ h3. Objectifs
 h3. Les deux modes
 
 || Mode || Quand || Guide ||
-|| *Manuel* | Déploiement à la main via MyConsole Cloud et Console Web AWS | *6.1 Déploiement manuel* |
-|| *Automatique* | Pipeline GitLab (hors production, pré-prod, prod) | *6.2 (à rédiger)* |
+|| *Manuel* | Déploiement à la main via MyConsole Cloud et Console Web AWS | *5.1 Déploiement manuel* |
+|| *Automatique* | Pipeline GitLab (hors production, pré-prod, prod) | *5.2 (à rédiger)* |
 
 h3. La clause d'exception DevOps
 
-Dans chaque étape de déploiement des guides 1 à 3, vous trouverez :
+Dans chaque étape de déploiement des guides 1.1 à 1.3, vous trouverez :
 
 _"En cas de défaillance en ressource technique DevOps côté applicatif, réaliser le déploiement ; sinon, le demander à l'équipe applicative."_
 
@@ -426,8 +426,8 @@ h3. Séquence de déploiement manuel (résumé)
 
 h3. Lecture
 
-* *6. Guides de déploiement* (vue d'ensemble).
-* *6.1 Déploiement manuel* (guide complet pas à pas).
+* *5. Guides de déploiement* (vue d'ensemble).
+* *5.1 Déploiement manuel* (guide complet pas à pas).
 
 ----
 
@@ -450,11 +450,11 @@ L'application "MonAppli" est hébergée en DataCenter ZCI. Elle authentifie les 
 
 h3. Exercice 2 — Compléter le tableau de suivi (~1h)
 
-Prendre le tableau du guide 1 et simuler la réalisation des phases A, B, C, D sur un projet fictif :
+Prendre le tableau du guide 1.1 et simuler la réalisation des phases A, B, C, D sur un projet fictif :
 * cocher les étapes réalisées ;
 * renseigner la colonne "Sortie attendue" avec des exemples concrets ;
 * noter les commentaires pertinents (ex. "claim manquant — demandé à l'IAM le DD/MM") ;
-* inclure l'audit de sécurité avant / après (voir *8. Suivi des vulnérabilités — Migration SSO*).
+* inclure l'audit de sécurité avant / après (voir *2. Suivi des vulnérabilités — Migration SSO*).
 
 h3. Exercice 3 — Diagnostiquer à partir d'un log (~1h)
 
@@ -467,7 +467,7 @@ h3. Exercice 3 — Diagnostiquer à partir d'un log (~1h)
 {noformat}
 
 *Questions :*
-# Que signifie {{invalid_grant}} ? Quelle section du guide 2 consulter ?
+# Que signifie {{invalid_grant}} ? Quelle section du guide 1.2 consulter ?
 # Pourquoi y a-t-il un {{redirect_uri_mismatch}} ? Comment le corriger ?
 # Pourquoi le claim {{role}} est-il vide ? Quelle est la procédure pour le faire émettre ?
 
@@ -481,7 +481,7 @@ h3. Quiz de clôture (~30 min)
 # Le CAM Eagles signe le PV de recette à la place de l'équipe applicative. _(Faux)_
 # Le binding HTTP-POST est utilisé pour envoyer la Response SAML vers l'ACS. _(Vrai)_
 # En gestion privée OIDC, les claims se lisent dans {{OIDC_CLAIM_...}}. _(Faux — c'est la gestion managée)_
-# PKCE est obligatoire pour les apps avec backend sécurisé. _(Faux par défaut — mais peut le devenir selon la configuration Entra ID ou la bibliothèque OIDC utilisée, voir *4.2* section 5)_
+# PKCE est obligatoire pour les apps avec backend sécurisé. _(Faux par défaut — mais peut le devenir selon la configuration Entra ID ou la bibliothèque OIDC utilisée, voir *3.2* section 5)_
 # La vérification de signature SAML peut être désactivée en développement pour tester plus vite. _(Faux)_
 
 h3. Debriefing & questions
@@ -497,16 +497,20 @@ h2. Ressources complémentaires
 h3. Documentation interne (cet espace)
 
 || Document || Utilité principale ||
-|| *0. Migration SSO – Synthèse* | Point d'entrée, glossaire, tableau de routage |
-|| *1. Guide OIDC Gestion managée* | Raccordement Apache OIDC (Cloud Place) |
-|| *2. Guide OIDC Gestion privée* | Flux Authorization Code, PKCE, validation JWT |
-|| *3. Guide SAML Gestion privée* | Flux SAML 2.0, SP/IdP, signature, ACS, SLO |
-|| *3.1 Checklist de demande IAM – Raccordement SAML* | Informations à transmettre à l'IAM pour un raccordement SAML |
-|| *4.1 Correspondance des claims OIDC* | Mapping Legacy → Entra ID |
-|| *4.2 Flux OIDC et PKCE – Guide visuel* | Schémas et analogies : web app vs SPA, mécanisme PKCE |
-|| *4.3 Flux SAML – Guide visuel* | Schémas et analogies : SP-initiated vs IdP-initiated, signature XML, SLO |
-|| *5. Templates de mail* | Communication standardisée à chaque étape |
-|| *6.1 Déploiement manuel* | Docker Compose, MyConsole Cloud, AWS Console |
+|| *0. Migration SSO – Synthèse* | Point d'entrée, glossaire, étapes communes |
+|| *1. Guides de migration SSO* | Hub de routage vers les guides d'exécution |
+|| *1.1 Guide OIDC Gestion managée* | Raccordement Apache OIDC (Cloud Place) |
+|| *1.2 Guide OIDC Gestion privée* | Flux Authorization Code, PKCE, validation JWT |
+|| *1.3 Guide SAML Gestion privée* | Flux SAML 2.0, SP/IdP, signature, ACS, SLO |
+|| *2. Suivi des vulnérabilités — Migration SSO* | Audit avant / après migration (Jira, Excel) |
+|| *3. Ressources techniques* | Hub : claims, guides visuels, checklist IAM |
+|| *3.1 Correspondance des claims OIDC* | Mapping Legacy → Entra ID |
+|| *3.2 Comprendre le flux OIDC et PKCE — Guide visuel* | Schémas web app vs SPA, PKCE |
+|| *3.3 Comprendre le flux SAML — Guide visuel* | Schémas SP/IdP-initiated, signature, SLO |
+|| *3.4 Checklist de demande IAM – Raccordement SAML* | Infos à transmettre à l'IAM (SAML) |
+|| *4. Templates de mail* | Communication standardisée à chaque étape |
+|| *5. Guides de déploiement* | Hub manuel / automatique |
+|| *5.1 Déploiement manuel* | Docker Compose, MyConsole Cloud, AWS Console |
 
 h3. Références officielles Microsoft
 

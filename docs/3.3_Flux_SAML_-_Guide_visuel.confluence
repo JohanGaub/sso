@@ -1,4 +1,4 @@
-h1. 4.3 Comprendre le flux SAML — Guide visuel
+h1. 3.3 Comprendre le flux SAML — Guide visuel
 
 *SAML* (Security Assertion Markup Language 2.0) est un protocole standard, basé sur des documents XML signés, qui permet à une application (*SP*, pour *Service Provider*) de déléguer la vérification de l'identité d'un utilisateur à un fournisseur d'identité externe (*IdP*, pour *Identity Provider*) — ici, Microsoft Entra ID.
 
@@ -23,7 +23,7 @@ Dans un flux SAML, il y a toujours trois acteurs :
 *L'analogie de la lettre officielle scellée :*
 Une *Assertion* SAML, c'est comme une lettre officielle : elle contient une identité (le *NameID*) et des informations complémentaires (les *attributs*, ex. rôle, service). Cette lettre est glissée dans une enveloppe fermée par un *cachet de cire* (la signature XML). Le SP ne fait confiance au contenu de la lettre que si le cachet est intact et correspond bien à celui de l'IdP — jamais autrement.
 
-{tip}Les définitions générales (IdP, SP, Assertion, ACS, SLO...) sont dans *0. Migration SSO – Synthèse*, section 4.2. Le détail des attributs (Legacy vers Entra ID) est dans *3. Guide migration SAML - Gestion privée*, section *Attributs (Legacy vers IdP)*, et dans *3.1 Checklist de demande IAM - Raccordement SAML*.{tip}
+{tip}Les définitions générales (IdP, SP, Assertion, ACS, SLO...) sont dans *0. Migration SSO – Synthèse*, section 4.2. Le détail des attributs (Legacy vers Entra ID) est dans *1.3 Guide migration SAML - Gestion privée*, section *Attributs (Legacy vers IdP)*, et dans *3.4 Checklist de demande IAM - Raccordement SAML*.{tip}
 
 ----
 
@@ -96,7 +96,7 @@ h3. 2.3 Ce qu'il faut retenir
 * *L'AuthnRequest* part en *HTTP-Redirect* (petite taille, tient dans une URL) ; la *Response* revient en *HTTP-POST* (contenu plus volumineux : Assertion signée complète).
 * *InResponseTo* est la protection spécifique au mode SP-initiated : le SP vérifie que la Response reçue correspond bien à une AuthnRequest qu'il a lui-même envoyée, et pas à une Response rejouée ou non sollicitée.
 * *La signature* est vérifiée avant toute autre chose (détail section 4).
-* *NameID et attributs* : voir *3. Guide migration SAML - Gestion privée*, section *Attributs (Legacy vers IdP)*, pour le détail du mapping applicatif.
+* *NameID et attributs* : voir *1.3 Guide migration SAML - Gestion privée*, section *Attributs (Legacy vers IdP)*, pour le détail du mapping applicatif.
 
 ----
 
@@ -230,7 +230,7 @@ h2. 5. Bindings : HTTP-Redirect vs HTTP-POST — pourquoi ce choix ?
 | Response (IdP vers SP) | *HTTP-POST* | Message volumineux (Assertion signée complète) : ne tiendrait pas dans une URL |
 | LogoutRequest / LogoutResponse (SLO) | *HTTP-Redirect* (le plus courant) | Message court, comme l'AuthnRequest |
 
-Un écart par rapport à ce standard (ex. Response en Redirect) doit être documenté : voir *3.1 Checklist de demande IAM - Raccordement SAML*, section *Bindings SAML*.
+Un écart par rapport à ce standard (ex. Response en Redirect) doit être documenté : voir *3.4 Checklist de demande IAM - Raccordement SAML*, section *Bindings SAML*.
 
 ----
 
@@ -261,7 +261,7 @@ Parce que SP-initiated permet de vérifier *InResponseTo*, une protection suppl�
 Cela dépend de l'implémentation de chaque SP, mais en général les autres sessions ne sont pas automatiquement invalidées : c'est pourquoi il faut prévoir un mécanisme de déconnexion locale de secours (voir section 8), même quand le SLO est activé.
 
 *"NameID et attributs, c'est la même chose ?"*
-Non. Le *NameID* est l'identifiant unique de l'utilisateur (l'équivalent d'une clé primaire). Les *attributs* sont des informations complémentaires (rôle, service, email...). Le détail est dans *3. Guide migration SAML - Gestion privée*, section *Attributs (Legacy vers IdP)*.
+Non. Le *NameID* est l'identifiant unique de l'utilisateur (l'équivalent d'une clé primaire). Les *attributs* sont des informations complémentaires (rôle, service, email...). Le détail est dans *1.3 Guide migration SAML - Gestion privée*, section *Attributs (Legacy vers IdP)*.
 
 ----
 
@@ -321,4 +321,4 @@ h2. Références
 * Certificate signing options in a SAML token (Microsoft) — https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/certificate-signing-options
 * SAML 2.0 Core (Assertions and Protocols), OASIS — https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf
 * SAML 2.0 Bindings, OASIS — https://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf
-* *Dans ce projet* : *3. Guide migration SAML - Gestion privée*, sections 3 (prérequis) et 4.1 à 4.7 (flux détaillé).
+* *Dans ce projet* : *1.3 Guide migration SAML - Gestion privée*, sections 3 (prérequis) et 4.1 à 4.7 (flux détaillé).

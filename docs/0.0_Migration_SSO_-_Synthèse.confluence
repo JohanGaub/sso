@@ -1,6 +1,6 @@
 h1. 0. Migration SSO – Synthèse en 1 page
 
-Ce document cadre la migration et oriente vers les guides 1 à 3.
+Ce document cadre la migration et oriente vers le hub *1. Guides de migration SSO* (parcours *1.1* à *1.3*).
 Chaque guide détaille l'exécution.
 
 h2. À qui s'adresse ce document ?
@@ -18,18 +18,18 @@ La mission couvre :
 
 Elle ne couvre *pas* par défaut le déploiement applicatif (hors production, pré-production, production) ni le provisionnement d'infrastructure — ces tâches sont du ressort de l'équipe applicative ou de son équipe DevOps.
 
-*Exception* : en cas de défaillance en ressource technique DevOps côté applicatif, l'équipe de raccordement peut intervenir sur le déploiement à titre exceptionnel (voir *6. Guides de déploiement*).
+*Exception* : en cas de défaillance en ressource technique DevOps côté applicatif, l'équipe de raccordement peut intervenir sur le déploiement à titre exceptionnel (voir *5. Guides de déploiement*).
 {info}
 
 h2. Mode opératoire
 
 # Vérifier les pré-requis.
-# Identifier votre guide (tableau de routage, section 3).
-# Dérouler le mode opératoire du guide.
+# Identifier votre guide via *1. Guides de migration SSO*.
+# Dérouler le mode opératoire du guide choisi (*1.1*, *1.2* ou *1.3*).
 
 h2. Les 3 environnements (référentiel)
 
-Aligné sur la *fiche de renseignement SSO* (3 champs d'URL distincts) et sur la logique des guides *1* à *3* :
+Aligné sur la *fiche de renseignement SSO* (3 champs d'URL distincts) et sur la logique des guides *1.1* à *1.3* :
 
 || Environnement || Exemples internes || Où dans les guides ||
 | *Hors production* | hors production (=recette / dév) | Phases *A*→*D* (Préparer → Basculer) |
@@ -41,7 +41,7 @@ Aligné sur la *fiche de renseignement SSO* (3 champs d'URL distincts) et sur la
 h2. 1. Pré-requis
 
 Règle simple : une ligne est considérée comme acquise uniquement quand la date est renseignée.
-Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1 à 3.
+Cette checklist couvre uniquement les *conditions d'entrée* ; l'implémentation détaillée reste dans les guides 1.1 à 1.3.
 
 || # || Prérequis local || Acteur || Résultat attendu (preuve) || Date obtenue || Commentaire / blocage ||
 | 1 | Tirer la branche "main" de l'application à partir de GitLab pour avoir le code en local sur son PC | Équipe applicative et/ou équipe de raccordement | Code visualisable sur PC |  |  |
@@ -56,7 +56,7 @@ h2. 2. Étapes communes de la migration
 h3. Tableau synthétique
 
 || Étape || Objectif || Acteurs || Sortie attendue ||
-| 1 | Choisir le parcours de migration (en fonction du protocole, du mode de gestion et de l'autonomie) | Équipe applicative ou équipe raccordement | Guide cible identifié (1, 2 ou 3). |
+| 1 | Choisir le parcours de migration (en fonction du protocole et du mode de gestion) | Équipe applicative ou équipe raccordement | Guide cible identifié (*1.1*, *1.2* ou *1.3*). |
 | 2 | Si gestion privée : définir et valider le flux d'authentification cible (OIDC Authorization Code, SAML SP/IdP-initiated, ACS, SLO). | Équipe applicative et/ou équipe raccordement | Stratégie de flux validée. |
 | 3 | Lister les claims (OIDC) / attributs (SAML) utilisés (id, email, nom, rôle, etc.) par l'application + URL d'appli et de redirection | Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur fiche de renseignement. |
 | 4 | Fournir ces informations à l'équipe IAM ou à l'équipe Gestion managée, selon l'organisation | Équipe Gestion managée ou Équipe applicative et/ou équipe raccordement | Liste de claims/attributs + URLs sur fiche de renseignement. |
@@ -74,20 +74,17 @@ h3. Tableau synthétique
 
 h3. Poursuite du suivi
 
-Le suivi détaillé (étapes, acteurs, tableaux, schémas de flux, pièges courants) se fait dans le guide détaillé choisi via le tableau de routage ci-dessous (section 3).
+Le suivi détaillé (étapes, acteurs, tableaux, schémas de flux, pièges courants) se fait dans le guide détaillé choisi via *1. Guides de migration SSO*.
 
 ----
 
 h2. 3. Choisir votre guide détaillé
 
+Hub d'exécution : *1. Guides de migration SSO* (parcours *1.1*–*1.3*). Support transverse : *2.* (audit), *3.* (ressources techniques, dont checklist SAML *3.4*), *4.* (mails), *5.* (déploiement).
+
 h3. Règle de routage
 
-Choisissez votre guide en croisant uniquement 2 critères : protocole (OIDC/SAML) et mode de gestion (managée/privée). La dernière colonne signale les décisions techniques à anticiper pour la ligne retenue.
-
-|| Protocole || Mode || Guide détaillé || Décisions clés à prévoir ||
-| OIDC | Gestion managée (claims uniquement) | 1. Guide migration OIDC - Gestion managée (hébergement Cloud Place avec module Apache) | — |
-| OIDC | Gestion privée (flux + claims) | 2. Guide migration OIDC - Gestion privée (hébergement DataCenter ZCI, Cloud Public et Cloud Place sans module Apache) | *Avec ou sans PKCE* : *avec PKCE* si SPA / app mobile (pas de backend pour stocker un secret) ; *sans PKCE* possible si l'application a un backend serveur (Symfony, Spring, etc.). Détail dans le guide 2. |
-| SAML | Gestion privée (flux + attributs) | 3. Guide migration SAML - Gestion privée (hébergement DataCenter ZCI, Cloud Public et Cloud Place sans module Apache) | — |
+Choisissez votre guide via le hub *1. Guides de migration SSO* (tableau protocole × mode + liste des documents). Critères : protocole (OIDC/SAML) et, pour l'OIDC, mode de gestion (managée/privée). *Pas de parcours SAML – gestion managée* : le SAML n'existe qu'en gestion privée.
 
 ----
 
@@ -97,7 +94,7 @@ h3. 4.1 Protocoles OIDC / OAuth 2.0
 
 || Terme || Définition ||
 | *Access Token* | Jeton OAuth2 utilisé pour accéder à des ressources protégées (API, Graph, backend applicatif...) ; envoyé en {{Authorization: Bearer ...}}. |
-| *Authorization Code (avec/sans PKCE)* | Flux OIDC dans lequel le SSO renvoie d'abord un code à usage unique et de courte durée à l'application, qui l'échange ensuite contre les tokens (ID Token, Access Token, éventuellement Refresh Token) au token endpoint. *Avec PKCE* : renforcement par {{code_verifier}} / {{code_challenge}}, recommandé dès qu'il n'y a pas de backend sécurisé. *Sans PKCE* : uniquement si l'application dispose d'un backend sécurisé portant le {{client_secret}}. Détail dans le guide 2 (OIDC gestion privée). |
+| *Authorization Code (avec/sans PKCE)* | Flux OIDC dans lequel le SSO renvoie d'abord un code à usage unique et de courte durée à l'application, qui l'échange ensuite contre les tokens (ID Token, Access Token, éventuellement Refresh Token) au token endpoint. *Avec PKCE* : renforcement par {{code_verifier}} / {{code_challenge}}, recommandé dès qu'il n'y a pas de backend sécurisé. *Sans PKCE* : uniquement si l'application dispose d'un backend sécurisé portant le {{client_secret}}. Détail dans le guide *1.2* (OIDC gestion privée). |
 | *Claim* | Champ d'un JWT (ID Token, Access Token) décrivant l'émetteur, le destinataire ou l'utilisateur. Exemples : aud, exp, iss, nonce, amr. |
 | *Discovery OIDC* | Document exposé par le SSO à l'URL {{/.well-known/openid-configuration}}. Il décrit les endpoints (authorization, token, userinfo, end_session) et l'URL des clés publiques ({{jwks_uri}}) pour vérifier les JWT. Les bibliothèques OIDC s'en servent pour configurer les URLs. |
 | *ID Token* | Jeton OIDC qui contient les informations d'identité de l'utilisateur (claims) et permet à l'application de vérifier qu'il est authentifié. |
@@ -125,7 +122,7 @@ h3. 4.4 Acteurs, systèmes & plateformes internes
 
 || Terme || Définition ||
 | *CAM* | Chargé d'Affaires Migration – interlocuteur projet (souvent au sein de l'équipe Eagles) qui suit la migration d'une application, transmet les livrables (fiche de renseignement, PV de recette) et cadence les jalons avec les équipes. |
-| *Cloud Place* | Plateforme cloud interne au SI, exploitée par le service de Gestion managée. Inclut nativement un module Apache permettant la gestion managée du SSO (claims/attributs uniquement, sans manipulation du flux côté application). |
+| *Cloud Place* | Plateforme cloud interne au SI, exploitée par le service de Gestion managée. Inclut nativement un module Apache permettant la *gestion managée OIDC* (claims uniquement, sans manipulation du flux côté application). Le SAML n'est pas proposé en gestion managée. |
 | *Cloud Public* | Hébergement sur cloud externe sans service de gestion managée interne. L'équipe applicative est autonome sur l'intégration SSO (gestion privée). |
 | *DataCenter ZCI* | Hébergement en datacenter interne (acronyme historique « ZCI ») pour les applications déployées en infrastructure dédiée. Implique une intégration SSO en gestion privée (l'équipe applicative gère le flux d'authentification). |
 | *Eagles* | Équipe projet en charge du suivi et du cadencement des étapes de migration SSO (planification, jalons, coordination inter-équipes). |

@@ -1,6 +1,6 @@
 # Guide de migration SSO actuel → SSO cible
 
-Documentation unique pour migrer des applications (PHP, Python, TypeScript, OIDC, SAML) vers un SSO cible, avec parcours adaptés au mode de gestion et au niveau d'autonomie.
+Documentation unique pour migrer des applications (PHP, Python, TypeScript) vers un SSO cible selon le protocole (OIDC ou SAML v2), avec parcours adaptés au mode de gestion et au niveau d'autonomie.
 
 ---
 
@@ -22,18 +22,21 @@ Documentation unique pour migrer des applications (PHP, Python, TypeScript, OIDC
 ### Comment utiliser ce document ?
 
 1. **Vérifier les prérequis administratifs** : une demande (création/actualisation d’application, accès hors production (dev / recette), passage en pré-prod, passage en prod) doit être traitée par l’équipe IAM ; le détail du process (qui envoie quoi, PV de test, fiche de renseignement, métadonnées prod, etc.) est décrit dans le **guide de raccordement** de l’équipe IAM.
-2. **Répondre à 3 questions** dans l’[arbre de décision](#2-arbre-de-décision-visuel) : protocole (OIDC / SAML v2), mode de gestion (managée / privée), niveau d’autonomie (autonome / accompagné / délégué).
+2. **Répondre aux questions** dans l’[arbre de décision](#2-arbre-de-décision-visuel) : protocole (OIDC / SAML v2), mode de gestion (OIDC uniquement : managée / privée), niveau d’autonomie (autonome / accompagné / délégué).
 3. **Aller à la section correspondant à vos réponses** (ex. 3.1, 5.2) et suivre les étapes du tableau (cocher au fur et à mesure). Vous trouverez en plus des exemples de code et les pièges courants à éviter.
 4. **Consulter les annexes** pour le glossaire, la FAQ et les ressources externes.
+
+*Règle importante :* il n’existe **pas** de parcours *SAML – gestion managée*. Le SAML n’est proposé qu’en **gestion privée**.
 
 ---
 
 ## 2. Arbre de décision visuel
 
-Répondez aux trois questions ci-dessous, puis reportez-vous au **tableau** pour trouver la section à consulter.
+Répondez aux questions ci-dessous, puis reportez-vous au **tableau** pour trouver la section à consulter.
 
 **Question 1** : Quel protocole utilisez-vous ? → **OIDC** ou **SAML v2**  
-**Question 2** : Votre application est-elle en **gestion managée** (modification des attributs uniquement) ou **gestion privée** (modification du flux d’authentification + attributs) ?  
+**Question 2** (OIDC uniquement) : Votre application est-elle en **gestion managée** (modification des claims uniquement) ou **gestion privée** (modification du flux d’authentification + claims) ?  
+  - Si **SAML v2** : passez directement à la question 3 — le mode est toujours **gestion privée**.  
 **Question 3** : Quel est votre niveau d’autonomie ? → **Autonome** / **Accompagné** / **Délégué**
 
 ### Tableau de routage
@@ -44,10 +47,8 @@ Répondez aux trois questions ci-dessous, puis reportez-vous au **tableau** pour
 | OIDC | Managée | Accompagné / Délégué | **3.2** | Actualiser les claims OIDC + consulter la FAQ et les contacts d'accompagnement. |
 | OIDC | Privée | Autonome | **4.1** | Reconfigurer le flux OIDC (schéma, code PHP/TypeScript/Python). |
 | OIDC | Privée | Accompagné / Délégué | **4.2** | Reconfigurer le flux OIDC + solliciter l'assistance et consulter les exemples avancés. |
-| SAML v2 | Managée | Autonome | **5.1** | Actualiser les attributs SAML (ex. XML, validation via outil en ligne). |
-| SAML v2 | Managée | Accompagné / Délégué | **5.2** | Actualiser les attributs SAML + consulter la FAQ et les contacts dédiés. |
-| SAML v2 | Privée | Autonome | **6.1** | Reconfigurer le flux SAML (diagramme, code PHP/TypeScript). |
-| SAML v2 | Privée | Accompagné / Délégué | **6.2** | Reconfigurer le flux SAML + solliciter l'assistance et consulter les exemples avancés. |
+| SAML v2 | Privée *(seul mode)* | Autonome | **5.1** | Reconfigurer le flux SAML (diagramme, code PHP/TypeScript). |
+| SAML v2 | Privée *(seul mode)* | Accompagné / Délégué | **5.2** | Reconfigurer le flux SAML + solliciter l'assistance et consulter les exemples avancés. |
 
 ---
 
@@ -68,7 +69,7 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 
 **Pièges courants**
 
-- Oublier de actualiser le **schéma de validation** des claims (liste des claims autorisés, types).
+- Oublier d'actualiser le **schéma de validation** des claims (liste des claims autorisés, types).
 - Confusion entre claims **standard** (ex. `id`, `email`, `nom`) et **personnalisés** (ex. `role`) : bien documenter la source (IdP) et le nom exact du claim.
 - Ne pas ignorer les erreurs quand l’application lit les claims :
   - **en hors production (dev / recette)** : enregistrer dans les logs ce que le SSO envoie vraiment, pour comprendre pourquoi une valeur manque ou est incorrecte ;
@@ -78,7 +79,7 @@ Le flux OIDC est géré en interne ; seuls les **attributs (claims)** doivent ê
 
 ### 3.2 OIDC – Gestion managée – Accompagné / Délégué
 
-Mêmes étapes que la section 3.1 (tableau ci-dessous).
+Même tableau qu'en section 3.1 — seul l'acteur change (l'équipe de raccordement applicatif peut co-intervenir).
 
 **Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
 
@@ -129,7 +130,7 @@ Vous devez **reconfigurer le flux OIDC** (endpoints, redirect_uri, scopes, clien
 
 ### 4.2 OIDC – Gestion privée – Accompagné / Délégué
 
-Mêmes étapes que la section 4.1 (tableau ci-dessous).
+Même tableau qu'en section 4.1 — seul l'acteur change (l'équipe de raccordement applicatif peut co-intervenir).
 
 **Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
 
@@ -144,51 +145,13 @@ Mêmes étapes que la section 4.1 (tableau ci-dessous).
 
 ---
 
-## 5. SAML v2 – Gestion managée (modification des attributs)
+## 5. SAML v2 – Gestion privée (modification du flux + attributs)
 
-Le flux SAML est géré en interne ; seuls les **attributs SAML** doivent être mis à jour (côté IdP et éventuellement SP).
-
-### 5.1 SAML v2 – Gestion managée – Autonome
-
-**Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
-
-| Étape | Acteur | Action | Durée | Étape réalisée |
-|-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l’équipe IAM. | À estimer | [ ] |
-| 2 | Équipe IAM | Configurer l’IdP pour envoyer ces attributs dans l’Assertion SAML (noms et format attendus). | À estimer | [ ] |
-| 3 | Équipe applicative | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l’application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
-| **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
-
-**Validation** : Utiliser un outil en ligne de décodage/validation SAML (ou un validateur local) pour vérifier la présence et le format des attributs dans l’Assertion reçue.
-
-**Pièges courants**
-
-- **Noms d’attributs** : différence entre URI, basic, unspecified ; s’assurer que l’IdP et l’SP utilisent le même nom (ou un mapping explicite).
-- **Multiples valeurs** : les attributs SAML sont souvent des tableaux ; prendre la première valeur ou gérer la liste selon la sémantique.
-- **Signature et chiffrement** : ne pas désactiver la vérification de signature en production.
-
----
-
-### 5.2 SAML v2 – Gestion managée – Accompagné / Délégué
-
-Mêmes étapes que la section 5.1 (tableau ci-dessous).
-
-**Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
-
-| Étape | Acteur | Action | Durée | Étape réalisée |
-|-------|--------|--------|-------|------------------|
-| 1 | Équipe applicative ou Équipe de raccordement applicatif | Identifier les attributs SAML requis (ex. id, email, nom, role) et transmettre la liste à l’équipe IAM. | À estimer | [ ] |
-| 2 | Équipe IAM | Configurer l'IdP pour envoyer ces attributs dans l'Assertion SAML (noms et format attendus). | À estimer | [ ] |
-| 3 | Équipe applicative ou Équipe de raccordement applicatif | Vérifier la réception des attributs côté SP (logs, outil de validation SAML si besoin) et adapter l'application pour les lire et les utiliser (lecture, validation, accès). | À estimer | [ ] |
-| **Total** | — | Durée totale (somme des étapes 1 à 3) | À estimer | [ ] |
-
----
-
-## 6. SAML v2 – Gestion privée (modification du flux + attributs)
+*Seul mode SAML disponible* dans ce référentiel : il n’existe pas de parcours SAML en gestion managée.
 
 Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, binding, attributs) en plus des attributs.
 
-### 6.1 SAML v2 – Gestion privée – Autonome
+### 5.1 SAML v2 – Gestion privée – Autonome
 
 **Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
 
@@ -218,9 +181,9 @@ Vous devez **reconfigurer le flux SAML** (métadonnées SP/IdP, endpoints, bindi
 
 ---
 
-### 6.2 SAML v2 – Gestion privée – Accompagné / Délégué
+### 5.2 SAML v2 – Gestion privée – Accompagné / Délégué
 
-Mêmes étapes que la section 6.1 (tableau ci-dessous).
+Même tableau qu'en section 5.1 — seul l'acteur change (l'équipe de raccordement applicatif peut co-intervenir).
 
 **Suivi des étapes à réaliser (cocher étape lorsque réalisée)**
 
@@ -234,7 +197,7 @@ Mêmes étapes que la section 6.1 (tableau ci-dessous).
 
 ---
 
-## 7. Annexes
+## 6. Annexes
 
 ### Glossaire
 
@@ -246,8 +209,8 @@ Mêmes étapes que la section 6.1 (tableau ci-dessous).
 | **Binding (SAML)** | Mode de transport des messages SAML : HTTP-POST ou HTTP-Redirect. |
 | **Claims** | Informations sur l’utilisateur fournies par le SSO, sous forme **clé–valeur** (ex. `id`, `email`, `nom`, `role`). L’application les lit dans le token pour identifier l’utilisateur et gérer les droits. |
 | **EntityID** | Identifiant unique du SP ou de l’IdP dans les métadonnées SAML. |
-| **Gestion managée** | Seuls les attributs/claims sont modifiés ; le flux est géré en interne. |
-| **Gestion privée** | Modification du flux d’authentification (client, métadonnées, endpoints) et des attributs. |
+| **Gestion managée** | *(OIDC uniquement)* Seuls les claims sont modifiés ; le flux OIDC est géré en interne (ex. module Apache). **Pas de parcours SAML managée.** |
+| **Gestion privée** | Modification du flux d’authentification (client, métadonnées, endpoints) et des attributs/claims. Seul mode disponible pour le SAML. |
 | **IdP** | Identity Provider – fournisseur d’identité (authentification). |
 | **IAM** | Identity & Access Management – équipe et services qui gèrent les identités, les habilitations et la configuration du SSO cible (environnements, applications, métadonnées). |
 | **IdP-initiated / SP-initiated** | **SP-initiated** : l’application (SP) envoie une AuthnRequest vers l’IdP. **IdP-initiated** : l’IdP envoie la Response SAML sans requête préalable. |
@@ -266,7 +229,10 @@ Mêmes étapes que la section 6.1 (tableau ci-dessous).
   Utiliser un redirect_uri autorisé pour l’environnement local (ex. `http://localhost:8000/login/check/oidc`) et un client IdP dédié dev si possible. Pour SAML, enregistrer les métadonnées SP avec l’URL locale (HTTP si accepté par l’IdP).
 
 - **Où configurer les nouveaux claims/attributs ?**  
-  Côté IdP (mapping des attributs / claims depuis la source d’identité). L’application ne fait qu’autoriser et consommer ; en gestion managée, pas de changement de flux.
+  Côté IdP (mapping des attributs / claims depuis la source d’identité). L’application ne fait qu’autoriser et consommer ; en **OIDC gestion managée**, pas de changement de flux. En **SAML**, le flux est toujours en gestion privée.
+
+- **Pourquoi pas de SAML gestion managée ?**  
+  Dans ce référentiel, le SAML n’est proposé qu’en gestion privée (reconfiguration du flux SP/IdP + attributs). Pour un parcours « claims/attributs seulement », utiliser **OIDC gestion managée**.
 
 - **Que faire en cas d’erreur « redirect_uri mismatch » (OIDC) ?**  
   Vérifier que l’URI utilisée par l’application (protocole, host, port, path) est exactement une de celles enregistrées pour le client dans l’IdP.

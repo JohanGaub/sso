@@ -1,6 +1,6 @@
-h1. 8. Suivi des vulnérabilités — Migration SSO
+h1. 2. Suivi des vulnérabilités — Migration SSO
 
-Micro-procédure commune aux guides *1.*, *2.* et *3.*. Elle sert à mesurer les vulnérabilités *avant* et *après* la migration hors production, puis à reporter le résultat (Jira + Excel).
+Micro-procédure commune aux guides *1.1*, *1.2* et *1.3*. Elle sert à mesurer les vulnérabilités *avant* et *après* la migration hors production, puis à reporter le résultat (Jira + Excel).
 
 *Hors périmètre :* le détail du travail de migration SSO (claims, raccordement, bascule) reste dans le guide choisi. Cette page décrit uniquement l'*audit de sécurité*.
 
@@ -63,6 +63,6 @@ h2. 5. Reporting
 h2. 6. Rappel dans les guides
 
 Les étapes correspondantes du *Suivi à réaliser* renvoient vers cette page :
-* guide *1. Guide migration OIDC - Gestion managée* ;
-* guide *2. Guide migration OIDC - Gestion privée* ;
-* guide *3. Guide migration SAML - Gestion privée*.
+* guide *1.1 Guide migration OIDC - Gestion managée* ;
+* guide *1.2 Guide migration OIDC - Gestion privée* ;
+* guide *1.3 Guide migration SAML - Gestion privée*.
