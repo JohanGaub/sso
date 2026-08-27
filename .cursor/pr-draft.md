@@ -30,16 +30,20 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `"docs/1.2_Guide_migration_OIDC_-_Gestion_priv\303\251e.md"`
+- `docs/3.1_Correspondance_des_claims_OIDC.md`
+- `docs/3.2_Flux_OIDC_et_PKCE_-_Guide_visuel.md`
+- `docs/3.3_Flux_SAML_-_Guide_visuel.md`
 
 ### Last commits
+- f5659e9 docs(confluence): update SAML migration guide by removing redundant steps for clarity and correcting signature verification details
+- 5744d56 docs(confluence): refine OIDC migration guide by streamlining content, enhancing clarity, and updating parameter details for better understanding
 - 6abb136 docs(confluence): update migration guides for SSO and OIDC, adding reading conventions and improving clarity in procedural steps
 - 37ffa33 docs(confluence): update migration guides for OIDC and SAML, enhance clarity and consistency, and revise section references for improved navigation
 - 80c47c0 docs(confluence): refine SSO migration introduction, improve section titles, and streamline content for clarity
-- ef0f206 docs(confluence): update SSO migration guides with improved structure and clarity, revise section references, and enhance documentation consistency
-- 5b79fc9 docs(confluence): refine OIDC and SAML migration guides for clarity and consistency, updating configuration steps and metadata handling
 
 ### Diff summary
- .cursor/pr-draft.md                                |  7 +---
- ...uide_migration_OIDC_-_Gestion_priv\303\251e.md" | 38 ++++------------------
- 2 files changed, 7 insertions(+), 38 deletions(-)
+ .cursor/pr-draft.md                          | 11 ++++---
+ docs/3.1_Correspondance_des_claims_OIDC.md   |  8 ++---
+ docs/3.2_Flux_OIDC_et_PKCE_-_Guide_visuel.md | 45 +++++++++++-----------------
+ docs/3.3_Flux_SAML_-_Guide_visuel.md         |  6 ----
+ 4 files changed, 26 insertions(+), 44 deletions(-)
