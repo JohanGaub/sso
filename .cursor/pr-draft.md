@@ -29,17 +29,18 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 ## Auto-collected context
 
 ### Changed files
-- `.cursor/pr-draft.md`
 - `"docs/6.0_Guide_de_formation_nouveaux_d\303\251veloppeurs.md"`
+- `"docs/6.0_Mode_op\303\251ratoire_migration_IA.md"`
+- `"docs/7.0_Guide_de_formation_nouveaux_d\303\251veloppeurs.md"`
 
 ### Last commits
+- 5e44c25 docs(confluence): update training guide for new developers, enhancing structure and clarity, and revising module content for improved understanding
 - fd93846 docs(confluence): correct typo in SSO Eagles migration overview document for improved clarity
 - abccbd7 docs(confluence): update OIDC and SAML guides for clarity and consistency, streamline content, and enhance technical validation details
 - f5659e9 docs(confluence): update SAML migration guide by removing redundant steps for clarity and correcting signature verification details
 - 5744d56 docs(confluence): refine OIDC migration guide by streamlining content, enhancing clarity, and updating parameter details for better understanding
-- 6abb136 docs(confluence): update migration guides for SSO and OIDC, adding reading conventions and improving clarity in procedural steps
 
 ### Diff summary
- .cursor/pr-draft.md                                |  13 +-
- ...e_de_formation_nouveaux_d\303\251veloppeurs.md" | 526 ++++++---------------
- 2 files changed, 140 insertions(+), 399 deletions(-)
+ .cursor/pr-draft.md                                |   8 +-
+ ...e_de_formation_nouveaux_d\303\251veloppeurs.md" | 301 ---------------------
+ 2 files changed, 3 insertions(+), 306 deletions(-)
