@@ -30,20 +30,16 @@ _Generated automatically by Cursor hook: `.cursor/hooks/generate-pr-draft.sh`._
 
 ### Changed files
 - `.cursor/pr-draft.md`
-- `docs/3.1_Correspondance_des_claims_OIDC.md`
-- `docs/3.2_Flux_OIDC_et_PKCE_-_Guide_visuel.md`
-- `docs/3.3_Flux_SAML_-_Guide_visuel.md`
+- `"docs/6.0_Guide_de_formation_nouveaux_d\303\251veloppeurs.md"`
 
 ### Last commits
+- fd93846 docs(confluence): correct typo in SSO Eagles migration overview document for improved clarity
+- abccbd7 docs(confluence): update OIDC and SAML guides for clarity and consistency, streamline content, and enhance technical validation details
 - f5659e9 docs(confluence): update SAML migration guide by removing redundant steps for clarity and correcting signature verification details
 - 5744d56 docs(confluence): refine OIDC migration guide by streamlining content, enhancing clarity, and updating parameter details for better understanding
 - 6abb136 docs(confluence): update migration guides for SSO and OIDC, adding reading conventions and improving clarity in procedural steps
-- 37ffa33 docs(confluence): update migration guides for OIDC and SAML, enhance clarity and consistency, and revise section references for improved navigation
-- 80c47c0 docs(confluence): refine SSO migration introduction, improve section titles, and streamline content for clarity
 
 ### Diff summary
- .cursor/pr-draft.md                          | 11 ++++---
- docs/3.1_Correspondance_des_claims_OIDC.md   |  8 ++---
- docs/3.2_Flux_OIDC_et_PKCE_-_Guide_visuel.md | 45 +++++++++++-----------------
- docs/3.3_Flux_SAML_-_Guide_visuel.md         |  6 ----
- 4 files changed, 26 insertions(+), 44 deletions(-)
+ .cursor/pr-draft.md                                |  13 +-
+ ...e_de_formation_nouveaux_d\303\251veloppeurs.md" | 526 ++++++---------------
+ 2 files changed, 140 insertions(+), 399 deletions(-)
